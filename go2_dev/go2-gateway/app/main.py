@@ -15,8 +15,10 @@ from app.core.state_store import StateStore
 from app.middleware.request_id import RequestIdMiddleware
 from app.schemas.common import error_response, ok_response
 from app.schemas.robot import MoveRequest
+from app.schemas.tasks import FallEventRequest, TargetMoveRequest
 from app.services.camera_service import CameraService
 from app.services.robot_service import RobotService
+from app.services.task_service import RobotTaskService
 
 
 def configure_logging(settings: Settings) -> None:
@@ -40,6 +42,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     state_store = StateStore(settings.robot_id, settings.state_stale_seconds)
     robot_service = RobotService(adapter, settings, state_store)
     camera_service = CameraService(adapter, state_store)
+    task_service = RobotTaskService(robot_service, camera_service)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -47,6 +50,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.adapter = adapter
         app.state.robot_service = robot_service
         app.state.camera_service = camera_service
+        app.state.task_service = task_service
         app.state.state_store = state_store
         try:
             robot_service.initialize()
@@ -89,7 +93,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/api/robot/status")
     def robot_status(request: Request) -> dict:
-        return ok_response("Robot status loaded.", data=robot_service.status(), request_id=request.state.request_id)
+        status = robot_service.status()
+        status["activeTask"] = task_service.active_task()
+        return ok_response("Robot status loaded.", data=status, request_id=request.state.request_id)
 
     @app.post("/api/robot/stand")
     def stand(request: Request) -> dict:
@@ -116,6 +122,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         result = robot_service.move(payload.vx, payload.vy, payload.wz, payload.duration, payload.control_source)
         return ok_response("Robot move command completed.", code=result["code"], request_id=request.state.request_id)
 
+    @app.post("/api/robot/events/fall")
+    def receive_fall_event(payload: FallEventRequest, request: Request) -> dict:
+        task = task_service.submit_fall_event(payload)
+        return ok_response("Fall confirmation task accepted.", data=task, request_id=request.state.request_id)
+
+    @app.post("/api/robot/tasks/target-move")
+    def target_move(payload: TargetMoveRequest, request: Request) -> dict:
+        task = task_service.submit_target_move(payload)
+        return ok_response("Target move task accepted.", data=task, request_id=request.state.request_id)
+
+    @app.get("/api/robot/tasks")
+    def list_tasks(request: Request) -> dict:
+        return ok_response("Robot tasks loaded.", data=task_service.list_tasks(), request_id=request.state.request_id)
+
+    @app.get("/api/robot/tasks/{task_id}")
+    def get_task(task_id: str, request: Request) -> dict:
+        return ok_response("Robot task loaded.", data=task_service.get_task(task_id), request_id=request.state.request_id)
+
     @app.get("/api/robot/camera/snapshot")
     def snapshot() -> Response:
         return Response(content=camera_service.snapshot(), media_type="image/jpeg")
@@ -124,4 +148,3 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
 
 app = create_app()
-

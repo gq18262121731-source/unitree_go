@@ -1,6 +1,6 @@
 # Go2 Gateway
 
-This is the first-stage Unitree Go2 EDU gateway for the local robot project. It exposes a small HTTP API for status, front-camera snapshots, stand, lie down, stop, emergency stop, and short low-speed motion.
+This is the first-stage Unitree Go2 EDU gateway for the local robot project. It exposes a small HTTP API for status, front-camera snapshots, stand, lie down, stop, emergency stop, short low-speed motion, and event-driven robot tasks for the elder-care demo loop.
 
 ## Scope
 
@@ -9,12 +9,13 @@ Implemented in this stage:
 - Mock mode for development without a robot.
 - Real adapter for `unitree_sdk2_python`.
 - FastAPI endpoints for health, status, motion, emergency stop, and JPEG snapshot.
+- Event-driven task endpoints for fall confirmation and first-stage target movement.
 - Server-side velocity and duration limits.
 - Automatic `StopMove()` after every move attempt.
 - Control lock, watchdog, shutdown stop, and stale-state protection.
 - Pytest coverage for the safety-critical paths.
 
-Not implemented in this stage: fall detection, following, SLAM, navigation, auto charge, voice, LLM agents, special actions, flips, jumps, handstand, low-level motor or joint control.
+Not implemented in this stage: autonomous SLAM navigation, following, auto charge, real speech recognition, LLM agents, special actions, flips, jumps, handstand, low-level motor or joint control.
 
 ## Environment
 
@@ -97,6 +98,29 @@ Snapshot:
 
 ```bash
 curl http://127.0.0.1:8090/api/robot/camera/snapshot --output go2_snapshot.jpg
+```
+
+Fall event to robot task:
+
+```bash
+curl -X POST http://127.0.0.1:8090/api/robot/events/fall \
+  -H "Content-Type: application/json" \
+  -d '{"event":"fall_detected","elder_id":"001","location":"bedroom","confidence":0.94}'
+```
+
+Task status:
+
+```bash
+curl http://127.0.0.1:8090/api/robot/tasks
+curl http://127.0.0.1:8090/api/robot/tasks/<taskId>
+```
+
+First-stage target movement:
+
+```bash
+curl -X POST http://127.0.0.1:8090/api/robot/tasks/target-move \
+  -H "Content-Type: application/json" \
+  -d '{"location":"bedroom"}'
 ```
 
 ## Verification Scripts

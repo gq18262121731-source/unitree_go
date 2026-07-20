@@ -13,6 +13,7 @@ class ErrorCode(str, Enum):
     INVALID_MOTION_PARAMETER = "INVALID_MOTION_PARAMETER"
     CAMERA_UNAVAILABLE = "CAMERA_UNAVAILABLE"
     CAMERA_DECODE_FAILED = "CAMERA_DECODE_FAILED"
+    TASK_NOT_FOUND = "TASK_NOT_FOUND"
     EMERGENCY_STOPPED = "EMERGENCY_STOPPED"
     INTERNAL_ERROR = "INTERNAL_ERROR"
 
@@ -23,4 +24,3 @@ class GatewayError(RuntimeError):
         self.code = code
         self.message = message
         self.http_status = http_status
-
