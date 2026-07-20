@@ -1,0 +1,2249 @@
+2026-07-13 13:45:37,100 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,100 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,164 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:45:37,164 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:45:37,164 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:45:37,164 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:45:37,184 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:45:37,184 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:45:37,184 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:45:37,184 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:45:37,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,222 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,222 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,222 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,222 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,222 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,240 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,240 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,240 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,240 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,240 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,240 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,263 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,321 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,402 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,411 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,433 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,448 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,472 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,498 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,561 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,648 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:45:37,659 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,836 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,836 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,867 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,867 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,867 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,910 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:47:38,910 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:47:38,910 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:47:38,910 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:47:38,918 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:47:38,918 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:47:38,918 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:47:38,918 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:47:38,923 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,923 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,923 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,923 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,951 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,951 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,951 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,951 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,951 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,969 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,969 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,969 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,969 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,969 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,969 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:38,988 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,009 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,028 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,046 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,128 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,137 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,172 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,193 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,213 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,276 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,360 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:47:39,372 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:43,975 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:43,975 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,019 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,019 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,019 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,052 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:52:44,052 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:52:44,052 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:52:44,052 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:52:44,060 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:52:44,060 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:52:44,060 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:52:44,060 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:52:44,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,082 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,082 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,082 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,082 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,082 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,102 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,102 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,102 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,102 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,102 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,102 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,123 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,146 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,168 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,191 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,274 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,284 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,309 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,473 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,578 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,664 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:52:44,679 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,305 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,305 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,398 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:53:27,398 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:53:27,398 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:53:27,398 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:53:27,414 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:53:27,414 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:53:27,414 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:53:27,414 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:53:27,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,435 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,435 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,435 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,435 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,435 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,454 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,454 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,454 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,454 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,454 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,454 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,474 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,495 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,516 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,538 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,620 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,629 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,691 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,715 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,796 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,885 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:53:27,898 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,197 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,197 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,246 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:54:16,246 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:54:16,246 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:54:16,246 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:54:16,253 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:54:16,253 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:54:16,253 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:54:16,253 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:54:16,256 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,256 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,256 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,256 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,294 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,294 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,294 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,294 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,294 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,334 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,354 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,374 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,473 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,502 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,526 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,542 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,567 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,590 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,650 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,738 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:54:16,753 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,471 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,471 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,518 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,559 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:57:11,559 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:57:11,559 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:57:11,559 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:57:11,577 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:57:11,577 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:57:11,577 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:57:11,577 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:57:11,583 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,583 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,583 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,583 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,602 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,602 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,602 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,602 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,602 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,625 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,625 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,625 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,625 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,625 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,625 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,649 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,668 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,688 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,714 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,795 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,803 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,825 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,850 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,866 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,917 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:11,979 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,065 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:57:12,079 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,166 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,166 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,194 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,228 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:58:31,228 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:58:31,228 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:58:31,228 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:58:31,236 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:58:31,236 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:58:31,236 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:58:31,236 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:58:31,246 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,246 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,246 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,246 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,271 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,271 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,271 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,271 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,271 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,289 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,289 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,289 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,289 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,289 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,289 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,306 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,327 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,348 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,369 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,450 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,458 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,479 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,505 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,523 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,547 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,630 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,719 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:58:31,731 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,072 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,072 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,108 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,108 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,108 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,156 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:59:15,156 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:59:15,156 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:59:15,156 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-13 13:59:15,179 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:59:15,179 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:59:15,179 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:59:15,179 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-13 13:59:15,182 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,182 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,182 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,182 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,200 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,200 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,200 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,200 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,200 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,218 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,260 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,281 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,302 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,382 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,392 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,417 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,441 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,456 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,481 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,510 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,571 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,661 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-13 13:59:15,674 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,178 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,178 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,238 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,280 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 10:49:03,280 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 10:49:03,280 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 10:49:03,280 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 10:49:03,289 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 10:49:03,289 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 10:49:03,289 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 10:49:03,289 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 10:49:03,295 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,295 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,295 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,295 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,316 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,337 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,357 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,376 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,394 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,416 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,495 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.061
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,504 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,527 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,552 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,570 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,596 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,620 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,681 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,767 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:49:03,781 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 10:57:08,152 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,754 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,754 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,784 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,784 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,784 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,807 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:03:14,807 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:03:14,807 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:03:14,807 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:03:14,822 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:03:14,822 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:03:14,822 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:03:14,822 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:03:14,848 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,848 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,848 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,848 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,874 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,874 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,874 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,874 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,874 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,891 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,908 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,926 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,944 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:14,963 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,042 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,052 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,081 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,112 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,131 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,157 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,181 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,209 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,272 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,361 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:03:15,380 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:04:08,388 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,735 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,777 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,777 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,777 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,827 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:06:32,827 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:06:32,827 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:06:32,827 INFO go2_gateway.robot command=STAND source=api code=0
+2026-07-14 11:06:32,840 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:06:32,840 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:06:32,840 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:06:32,840 INFO go2_gateway.robot command=LIE_DOWN source=api code=0
+2026-07-14 11:06:32,844 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,844 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,844 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,844 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,864 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,864 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,864 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,864 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,864 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,886 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,886 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,886 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,886 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,886 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,886 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,909 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,931 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,950 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:32,973 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,055 INFO go2_gateway.robot motion complete source=api vx=0.1 vy=0.0 wz=0.0 duration=0.05 code=0 elapsed=0.062
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,063 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,085 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,111 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,128 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,151 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,175 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,198 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,262 WARNING go2_gateway.watchdog Watchdog stopping robot: control heartbeat timeout
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,347 INFO go2_gateway.robot stop source=emergency:api code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:06:33,361 INFO go2_gateway.robot stop source=shutdown code=0
+2026-07-14 11:07:23,242 INFO go2_gateway.robot stop source=shutdown code=0

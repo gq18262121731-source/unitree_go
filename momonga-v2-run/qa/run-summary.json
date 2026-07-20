@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "spriteVersionNumber": 2,
+  "run_dir": "E:\\笨笨狗\\momonga-v2-run",
+  "spritesheet": "E:\\笨笨狗\\momonga-v2-run\\final\\spritesheet-extended.webp",
+  "validation": "E:\\笨笨狗\\momonga-v2-run\\final\\validation-installed.json",
+  "chroma_despill": "E:\\笨笨狗\\momonga-v2-run\\qa\\chroma-despill-extended.json",
+  "contact_sheet": "E:\\笨笨狗\\momonga-v2-run\\qa\\contact-sheet-extended.png",
+  "direction_sheet": "E:\\笨笨狗\\momonga-v2-run\\qa\\look-directions.png",
+  "direction_semantics": "E:\\笨笨狗\\momonga-v2-run\\qa\\direction-semantics.json",
+  "blind_direction_validation": "E:\\笨笨狗\\momonga-v2-run\\qa\\direction-blind-validation.json",
+  "continuity": "E:\\笨笨狗\\momonga-v2-run\\qa\\look-continuity.json",
+  "review": "E:\\笨笨狗\\momonga-v2-run\\qa\\review.json",
+  "package": "C:\\Users\\Test1\\.codex\\pets\\momonga",
+  "backup": "E:\\笨笨狗\\momonga-v2-run\\momonga-v1-backup.webp"
+}

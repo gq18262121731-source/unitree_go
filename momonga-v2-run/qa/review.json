@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [],
+  "upgrade_note": "Rows 0-8 are preserved byte-for-byte from the installed Momonga v1 atlas and were visually reviewed in qa/contact-sheet.png. Final v2 atlas validation and the single despill pass cover the complete 11-row package."
+}
