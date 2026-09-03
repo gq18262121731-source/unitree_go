@@ -1,0 +1,16 @@
+Multi thread started 
+lidar_type: 5
+~~~~/home/test1/phase672_pointlio_ws/src/point_lio/ doesn't exist
+first lidar time1.78522e+09
+[INFO] [1786765556.144853341] [laserMapping]: IMU Initializing: 1.0 %
+[WARN] [1786765556.145382850] [laserMapping]: Reset ImuProcess
+[INFO] [1786765556.146058138] [laserMapping]: IMU Initializing: 3.0 %
+[INFO] [1786765556.146567349] [laserMapping]: IMU Initializing: 5.0 %
+[INFO] [1786765556.147209129] [laserMapping]: IMU Initializing: 7.0 %
+[INFO] [1786765556.148048955] [laserMapping]: IMU Initializing: 10.0 %
+[INFO] [1786765556.214411798] [laserMapping]: IMU Initializing: 18.0 %
+[INFO] [1786765556.278041776] [laserMapping]: IMU Initializing: 42.0 %
+[INFO] [1786765556.344182788] [laserMapping]: IMU Initializing: 82.0 %
+[INFO] [1786765556.345314835] [laserMapping]: IMU Initializing: 100.0 %
+[WARN] [1786765867.624393966] [laserMapping]: catch sig 2
+Rebuild thread terminated normally

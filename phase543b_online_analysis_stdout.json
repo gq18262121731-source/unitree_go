@@ -1,0 +1,575 @@
+﻿{
+  "motion": {
+    "counts": {
+      "/odom": 17802,
+      "/utlidar/cloud": 1849,
+      "/utlidar/cloud_base": 1849,
+      "/utlidar/cloud_deskewed": 1635,
+      "/utlidar/robot_odom": 17801
+    },
+    "duration_seconds": 120.10769155000162,
+    "estimated_hz": {
+      "/odom": 148.21698569228525,
+      "/utlidar/cloud": 15.394517837604507,
+      "/utlidar/cloud_base": 15.394517837604507,
+      "/utlidar/cloud_deskewed": 13.612783485388517,
+      "/utlidar/robot_odom": 148.2086598308263
+    },
+    "frames": {
+      "/odom": {
+        "odom": 17802
+      },
+      "/odom child": {
+        "base_link": 17802
+      },
+      "/utlidar/cloud": {
+        "utlidar_lidar": 1849
+      },
+      "/utlidar/cloud_base": {
+        "base_link": 1849
+      },
+      "/utlidar/cloud_deskewed": {
+        "odom": 1635
+      },
+      "/utlidar/robot_odom": {
+        "odom": 17801
+      },
+      "/utlidar/robot_odom child": {
+        "base_link": 17801
+      }
+    },
+    "lidar_state": {
+      "cloud_frequency_hz": {
+        "count": 596,
+        "max": 15.451178550720215,
+        "mean": 15.405415770191475,
+        "median": 15.409175872802734,
+        "min": 15.31734561920166,
+        "p95": 15.41512131690979,
+        "std": 0.011123287399602982
+      },
+      "cloud_packet_loss_rate": {
+        "count": 596,
+        "max": 0.5524861812591553,
+        "mean": 0.0037079609480480218,
+        "median": 0.0,
+        "min": 0.0,
+        "p95": 0.0,
+        "std": 0.04510929183719115
+      },
+      "dirty_percentage": {
+        "count": 596,
+        "max": 1.0,
+        "mean": 0.9714765100671141,
+        "median": 1.0,
+        "min": 0.0,
+        "p95": 1.0,
+        "std": 0.16646291014797998
+      },
+      "imu_frequency_hz": {
+        "count": 596,
+        "max": 257.4765930175781,
+        "mean": 250.68588853362422,
+        "median": 251.10391235351562,
+        "min": 242.78326416015625,
+        "p95": 252.50174713134766,
+        "std": 1.4196215467658913
+      },
+      "imu_packet_loss_rate": {
+        "count": 596,
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p95": 0.0,
+        "std": 0.0
+      },
+      "nonzero_error_samples": 0,
+      "samples": 596,
+      "software_versions": [
+        "1.0.0.38"
+      ]
+    },
+    "motion": {
+      "angular_speed_radps": {
+        "count": 17801,
+        "max": 2.0316808404331463,
+        "mean": 0.12932875853586226,
+        "median": 0.027179901841830487,
+        "min": 0.0,
+        "p95": 0.5175233532166836,
+        "std": 0.20424790077508012
+      },
+      "linear_speed_mps": {
+        "count": 17801,
+        "max": 1.1184120799860853,
+        "mean": 0.1254687212340229,
+        "median": 0.03328572948187354,
+        "min": 2.783848097313196e-06,
+        "p95": 0.37897183481078156,
+        "std": 0.1353566644214897
+      },
+      "moving_fraction": 0.47002977360822423,
+      "net_displacement_m": 1.8140078725363638,
+      "path_length_m": 12.76147767549981,
+      "position_span_m": [
+        1.9633436799049377,
+        1.7999312430620193,
+        0.03350093960762024
+      ],
+      "total_rotation_rad": 14.500907900298971
+    },
+    "odom_compensated_continuity": {
+      "fraction_within_10cm": {
+        "count": 616,
+        "max": 0.6428571428571429,
+        "mean": 0.4355751391465677,
+        "median": 0.4407142857142857,
+        "min": 0.31,
+        "p95": 0.5346428571428571,
+        "std": 0.0662188261058594
+      },
+      "median_nearest_neighbor_m": {
+        "count": 616,
+        "max": 0.26097969825487266,
+        "mean": 0.14609954150935198,
+        "median": 0.1362994493908784,
+        "min": 0.03720698212229783,
+        "p95": 0.23013545228966234,
+        "std": 0.047179242703099436
+      },
+      "p95_nearest_neighbor_m": {
+        "count": 616,
+        "max": 3.718583550073136,
+        "mean": 1.7472733282465702,
+        "median": 1.6218957525808442,
+        "min": 0.8465777542449147,
+        "p95": 2.7919337561980155,
+        "std": 0.5116562382066662
+      },
+      "pairs": 616
+    },
+    "pair_checks": {
+      "fixed_transform_residual_m": {
+        "count": 901705,
+        "max": 2.892692099993352e-06,
+        "mean": 1.3114359307918605e-07,
+        "median": 7.460769588537102e-08,
+        "min": 3.742252881570409e-10,
+        "p95": 4.3165154284383647e-07,
+        "std": 1.5372101554971944e-07
+      },
+      "metadata_match_ratio": {
+        "count": 617,
+        "max": 1.0,
+        "mean": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "p95": 1.0,
+        "std": 0.0
+      },
+      "nearest_odom_delta_ms": {
+        "count": 616,
+        "max": 14.402628,
+        "mean": 0.17315845779220776,
+        "median": 0.0873805,
+        "min": -8.675337,
+        "p95": 3.19862425,
+        "std": 2.2104324349046354
+      },
+      "pairs": 617
+    },
+    "point_counts": {
+      "/utlidar/cloud": {
+        "count": 1849,
+        "max": 4195.0,
+        "mean": 4117.591671173607,
+        "median": 4121.0,
+        "min": 3973.0,
+        "p95": 4160.0,
+        "std": 29.314326738913852
+      },
+      "/utlidar/cloud_base": {
+        "count": 1849,
+        "max": 1823.0,
+        "mean": 1460.9772850189293,
+        "median": 1463.0,
+        "min": 1136.0,
+        "p95": 1686.6,
+        "std": 145.58393832010896
+      },
+      "/utlidar/cloud_deskewed": {
+        "count": 1635,
+        "max": 11780.0,
+        "mean": 11460.425076452599,
+        "median": 11463.0,
+        "min": 11136.0,
+        "p95": 11686.3,
+        "std": 145.83838730646372
+      }
+    },
+    "raw_base_exact_stamp_matches": 1849,
+    "raw_base_stamp_match_ratio": 1.0,
+    "stamp_checks": {
+      "/odom": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 17801,
+          "max": 44.954539,
+          "mean": 6.740326787933262,
+          "median": 6.664514,
+          "min": 4.008293,
+          "p95": 7.205725,
+          "std": 1.4220643688257315
+        },
+        "samples": 17802
+      },
+      "/utlidar/cloud": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 1848,
+          "max": 77.127218,
+          "mean": 64.91352882196969,
+          "median": 64.97442749999999,
+          "min": 51.829815,
+          "p95": 67.70176885,
+          "std": 1.7294858298721703
+        },
+        "samples": 1849
+      },
+      "/utlidar/cloud_base": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 1848,
+          "max": 77.127218,
+          "mean": 64.91352882196969,
+          "median": 64.97442749999999,
+          "min": 51.829815,
+          "p95": 67.70176885,
+          "std": 1.7294858298721703
+        },
+        "samples": 1849
+      },
+      "/utlidar/cloud_deskewed": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 1634,
+          "max": 389.527559,
+          "mean": 73.41521591738065,
+          "median": 64.9882555,
+          "min": 62.539101,
+          "p95": 194.44407195,
+          "std": 36.04628556609717
+        },
+        "samples": 1635
+      },
+      "/utlidar/robot_odom": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 17800,
+          "max": 44.954539,
+          "mean": 6.7410852534269665,
+          "median": 6.664514,
+          "min": 4.008293,
+          "p95": 7.20336485,
+          "std": 1.4095614178594416
+        },
+        "samples": 17801
+      }
+    }
+  },
+  "notes": [
+    "All robot motion was performed by the onsite user.",
+    "No control topic, SLAM, Nav2, or new TF was published.",
+    "Nearest-neighbor continuity is scene dependent and is not a direct deskew metric."
+  ],
+  "static": {
+    "counts": {
+      "/odom": 4483,
+      "/utlidar/cloud": 463,
+      "/utlidar/cloud_base": 463,
+      "/utlidar/cloud_deskewed": 455,
+      "/utlidar/robot_odom": 4489
+    },
+    "duration_seconds": 30.087297906007734,
+    "estimated_hz": {
+      "/odom": 148.999754448034,
+      "/utlidar/cloud": 15.388553716136459,
+      "/utlidar/cloud_base": 15.388553716136459,
+      "/utlidar/cloud_deskewed": 15.122660779356563,
+      "/utlidar/robot_odom": 149.19917415061892
+    },
+    "frames": {
+      "/odom": {
+        "odom": 4483
+      },
+      "/odom child": {
+        "base_link": 4483
+      },
+      "/utlidar/cloud": {
+        "utlidar_lidar": 463
+      },
+      "/utlidar/cloud_base": {
+        "base_link": 463
+      },
+      "/utlidar/cloud_deskewed": {
+        "odom": 455
+      },
+      "/utlidar/robot_odom": {
+        "odom": 4489
+      },
+      "/utlidar/robot_odom child": {
+        "base_link": 4489
+      }
+    },
+    "lidar_state": {
+      "cloud_frequency_hz": {
+        "count": 150,
+        "max": 15.45340633392334,
+        "mean": 15.410158176422119,
+        "median": 15.410076141357422,
+        "min": 15.377032279968262,
+        "p95": 15.42138934135437,
+        "std": 0.008454472251262756
+      },
+      "cloud_packet_loss_rate": {
+        "count": 150,
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p95": 0.0,
+        "std": 0.0
+      },
+      "dirty_percentage": {
+        "count": 150,
+        "max": 1.0,
+        "mean": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "p95": 1.0,
+        "std": 0.0
+      },
+      "imu_frequency_hz": {
+        "count": 150,
+        "max": 259.58990478515625,
+        "mean": 250.80895273844402,
+        "median": 251.2022705078125,
+        "min": 245.66708374023438,
+        "p95": 252.4210983276367,
+        "std": 1.5863323707929005
+      },
+      "imu_packet_loss_rate": {
+        "count": 150,
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p95": 0.0,
+        "std": 0.0
+      },
+      "nonzero_error_samples": 0,
+      "samples": 150,
+      "software_versions": [
+        "1.0.0.38"
+      ]
+    },
+    "motion": {
+      "angular_speed_radps": {
+        "count": 4489,
+        "max": 0.038717632084173975,
+        "mean": 0.014191668026995532,
+        "median": 0.013724970830579152,
+        "min": 0.0010652643395587802,
+        "p95": 0.02384384176501721,
+        "std": 0.005648279912962886
+      },
+      "linear_speed_mps": {
+        "count": 4489,
+        "max": 0.0471630952898919,
+        "mean": 0.03662853801860843,
+        "median": 0.036292899441257916,
+        "min": 0.03362750642467307,
+        "p95": 0.039842937906558705,
+        "std": 0.0016321893655629402
+      },
+      "moving_fraction": 0.0,
+      "net_displacement_m": 0.0037821505177081565,
+      "path_length_m": 0.0566445408033228,
+      "position_span_m": [
+        0.0020063742995262146,
+        0.0033314675092697144,
+        0.0009329617023468018
+      ],
+      "total_rotation_rad": 0.1510114176281375
+    },
+    "odom_compensated_continuity": {
+      "fraction_within_10cm": {
+        "count": 154,
+        "max": 0.6385714285714286,
+        "mean": 0.5105194805194806,
+        "median": 0.5064285714285715,
+        "min": 0.38857142857142857,
+        "p95": 0.62,
+        "std": 0.07154291741408202
+      },
+      "median_nearest_neighbor_m": {
+        "count": 154,
+        "max": 0.1739863760775022,
+        "mean": 0.10133942242993998,
+        "median": 0.09682771300251236,
+        "min": 0.0629999614412157,
+        "p95": 0.15137249597790536,
+        "std": 0.02894057051559332
+      },
+      "p95_nearest_neighbor_m": {
+        "count": 154,
+        "max": 2.1414113562406487,
+        "mean": 0.9896005370798193,
+        "median": 0.9082758772134911,
+        "min": 0.5342871655370437,
+        "p95": 1.7148051999347544,
+        "std": 0.3481334568542218
+      },
+      "pairs": 154
+    },
+    "pair_checks": {
+      "fixed_transform_residual_m": {
+        "count": 209462,
+        "max": 2.750791132723206e-06,
+        "mean": 1.0392245027447248e-07,
+        "median": 6.476132406116809e-08,
+        "min": 1.1642736040832425e-09,
+        "p95": 3.047770763643385e-07,
+        "std": 1.293155524353721e-07
+      },
+      "metadata_match_ratio": {
+        "count": 155,
+        "max": 1.0,
+        "mean": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "p95": 1.0,
+        "std": 0.0
+      },
+      "nearest_odom_delta_ms": {
+        "count": 154,
+        "max": 3.458977,
+        "mean": 0.254579948051948,
+        "median": 0.576616,
+        "min": -3.82638,
+        "p95": 3.0272243499999996,
+        "std": 1.9325084360410307
+      },
+      "pairs": 155
+    },
+    "point_counts": {
+      "/utlidar/cloud": {
+        "count": 463,
+        "max": 4184.0,
+        "mean": 4129.365010799136,
+        "median": 4131.0,
+        "min": 4045.0,
+        "p95": 4168.0,
+        "std": 25.6742054068285
+      },
+      "/utlidar/cloud_base": {
+        "count": 463,
+        "max": 1659.0,
+        "mean": 1350.8704103671707,
+        "median": 1353.0,
+        "min": 1062.0,
+        "p95": 1622.9,
+        "std": 175.1640035250768
+      },
+      "/utlidar/cloud_deskewed": {
+        "count": 455,
+        "max": 11659.0,
+        "mean": 11351.164835164835,
+        "median": 11353.0,
+        "min": 11062.0,
+        "p95": 11623.9,
+        "std": 174.54846386021802
+      }
+    },
+    "raw_base_exact_stamp_matches": 463,
+    "raw_base_stamp_match_ratio": 1.0,
+    "stamp_checks": {
+      "/odom": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 4482,
+          "max": 33.292771,
+          "mean": 6.691115607764392,
+          "median": 6.6638,
+          "min": 4.005671,
+          "p95": 7.10507625,
+          "std": 1.1452677535915887
+        },
+        "samples": 4483
+      },
+      "/utlidar/cloud": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 462,
+          "max": 72.383643,
+          "mean": 64.89784841341991,
+          "median": 64.9756195,
+          "min": 56.705951,
+          "p95": 68.15897205,
+          "std": 1.9989130425005934
+        },
+        "samples": 463
+      },
+      "/utlidar/cloud_base": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 462,
+          "max": 72.383643,
+          "mean": 64.89784841341991,
+          "median": 64.9756195,
+          "min": 56.705951,
+          "p95": 68.15897205,
+          "std": 1.9989130425005934
+        },
+        "samples": 463
+      },
+      "/utlidar/cloud_deskewed": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 454,
+          "max": 195.251703,
+          "mean": 66.03797784361234,
+          "median": 64.97585749999999,
+          "min": 61.585426,
+          "p95": 65.5413629,
+          "std": 12.095974454140922
+        },
+        "samples": 455
+      },
+      "/utlidar/robot_odom": {
+        "backward_jumps": 0,
+        "duplicates": 0,
+        "interval_ms": {
+          "count": 4488,
+          "max": 32.215596,
+          "mean": 6.68363238614082,
+          "median": 6.663799,
+          "min": 4.005671,
+          "p95": 7.102811499999998,
+          "std": 1.0701583824774148
+        },
+        "samples": 4489
+      }
+    }
+  }
+}

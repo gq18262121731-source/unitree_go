@@ -1,0 +1,11 @@
+start=2026-07-28T18:25:42+08:00
+bag=/home/go2/go2_validation/bags/phase545_20260728_135403_lab_demo_3x3
+ros_domain_id=145
+ros_localhost_only=1
+rmw=rmw_cyclonedds_cpp
+pointlio_start=PASS
+bag_play_status=0
+point_failed_during_play=0
+pcd_saved=PASS
+pcd_bytes=86441117
+end=2026-07-28T18:35:42+08:00

@@ -1,0 +1,5 @@
+/home/go2/phase54_ros2_ws/install_merged/share/unitree_tf_bridge
+/home/go2/phase54_ros2_ws/install_merged/share/ament_index/resource_index/packages/unitree_tf_bridge
+/home/go2/phase54_ros2_ws/install_merged/share/colcon-core/packages/unitree_tf_bridge
+/home/go2/phase54_ros2_ws/install_merged/lib/unitree_tf_bridge
+/home/go2/phase54_ros2_ws/install_merged/lib/python3.10/site-packages/unitree_tf_bridge

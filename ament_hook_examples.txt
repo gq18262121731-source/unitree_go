@@ -1,0 +1,10 @@
+/opt/ros/humble/share/ament_cmake_core/environment/ament_prefix_path.dsv:1:prepend-non-duplicate;AMENT_PREFIX_PATH;
+/opt/ros/humble/share/ament_cmake_core/environment/ament_prefix_path.sh:4:ament_prepend_unique_value AMENT_PREFIX_PATH "$AMENT_CURRENT_PREFIX"
+/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.bat:5:call:ament_prepend_unique_value AMENT_PREFIX_PATH "%AMENT_CURRENT_PREFIX%"
+/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh:4:ament_prepend_unique_value AMENT_PREFIX_PATH "$AMENT_CURRENT_PREFIX"
+/opt/ros/humble/share/ament_cmake_core/cmake/ament_cmake_environment_hooks-extras.cmake:41:  "prepend-non-duplicate;AMENT_PREFIX_PATH;")
+/opt/ros/humble/share/ament_cmake_core/cmake/environment/ament_cmake_environment_package_hook.cmake:33:  set(prefix_path "$ENV{AMENT_PREFIX_PATH}")
+/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_index_get_prefix_path.cmake:20:# :param SKIP_AMENT_PREFIX_PATH: if set skip adding the paths from the
+/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_index_get_prefix_path.cmake:21:#   environment variable ``AMENT_PREFIX_PATH``
+/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_index_get_prefix_path.cmake:22:# :type SKIP_AMENT_PREFIX_PATH: option
+/opt/ros/humble/share/ament_cmake_core/cmake/index/ament_index_get_prefix_path.cmake:30:    "SKIP_AMENT_PREFIX_PATH;SKIP_BINARY_DIR" "" "" ${ARGN})

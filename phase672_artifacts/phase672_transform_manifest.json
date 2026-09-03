@@ -1,0 +1,83 @@
+{
+  "phase": "6.7.2",
+  "mode": "strictly_offline_community_adapter_reproduction",
+  "source": {
+    "repository": "https://github.com/jizhang-cmu/autonomy_stack_go2",
+    "branch": "foxy-humble",
+    "commit": "43d5f54b389b251713f0097893c30fa76c870d54",
+    "calibration_path": "src/utilities/calibrate_imu/src/calibrate_imu.cpp",
+    "transform_path": "src/utilities/transform_sensors/transform_sensors/transform_everything.py"
+  },
+  "safety": {
+    "robot_connected": false,
+    "ros_publishers_created": false,
+    "motion_api_called": false,
+    "cmd_vel_published": false,
+    "online_calibration_node_run": false
+  },
+  "interpretation": "Full community Go2 adapter reproduction: cloud transform/filter plus gyro transform/calibration and zero acceleration in the Point-LIO IMU stream. This is not proof that the device acceleration field has been physically corrected.",
+  "inputs": {
+    "static_bag": "E:\\笨笨狗\\phase548_capture\\selected\\phase548_20260729_131744_level_static",
+    "yaw_ccw_bag": "E:\\笨笨狗\\phase548_capture\\selected\\phase548_20260729_133703_yaw_ccw_manual",
+    "pointlio_failure_bag": "E:\\笨笨狗\\phase546_ros1_input\\phase545_20260728_135403_lab_demo_3x3",
+    "input_db3_sha256": {
+      "phase545_20260728_135403_lab_demo_3x3_0.db3": "7ea0dc3ed9b4c49bc1b93c9bcdd263d0cdb7d8faa2e195943906dca9b9863b5b"
+    }
+  },
+  "calibration": {
+    "acc_bias_x": 2.3476958363675906,
+    "acc_bias_y": 0.00021690886036593285,
+    "acc_bias_z": -19.346329699065898,
+    "ang_bias_x": 0.0025493850965765405,
+    "ang_bias_y": -0.0002469990289644707,
+    "ang_bias_z": 7.976198749826939e-05,
+    "ang_z2x_proj": 0.16036386328026833,
+    "ang_z2y_proj": -0.20315381279209913,
+    "static_samples": 2486,
+    "yaw_samples": 4869,
+    "yaw_integrated_z_radians": 22.39027248420188
+  },
+  "calibration_diagnostics": {
+    "static_transformed_acc_mean": [
+      2.3476958363675906,
+      0.00021690886036593285,
+      -9.536329699065895
+    ],
+    "static_transformed_gyro_mean": [
+      0.0025493850965765405,
+      -0.0002469990289644707,
+      7.976198749826939e-05
+    ],
+    "yaw_corrected_gyro_mean": [
+      -0.18322709353747885,
+      0.23211764731495765,
+      1.1425709619956734
+    ]
+  },
+  "transform": {
+    "imu_axis_rotation_degrees": 15.1,
+    "cloud_pitch_radians": 2.8782025850555555,
+    "cloud_z_offset_meters": -0.046825,
+    "pointlio_imu_linear_acceleration": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "message_counts": {
+      "/utlidar/transformed_cloud": 4615,
+      "/utlidar/transformed_imu": 75021,
+      "/utlidar/robot_odom": 44853,
+      "/odom": 44853
+    },
+    "cloud_points_input": 19013973,
+    "cloud_points_output": 17624168,
+    "cloud_keep_ratio": 0.9269061231968722
+  },
+  "outputs": {
+    "bag": "E:\\笨笨狗\\phase672_bags\\phase545_go2_community_transform",
+    "db3_sha256": {
+      "phase545_go2_community_transform.db3": "91126e74b33033049d5795e4bcb7df2ada82149cc6eadb59150221cd62b6c914"
+    },
+    "experimental_calibration_yaml": "E:\\笨笨狗\\phase672_artifacts\\phase672_experimental_imu_calib_data.yaml"
+  }
+}

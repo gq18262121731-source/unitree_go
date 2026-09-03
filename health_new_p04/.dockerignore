@@ -1,0 +1,14 @@
+.git
+.env
+.env.local
+.env.*.local
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+mobile/
+frontend/
+logs/
+runtime_logs/
+.idea/
+.vscode/
+.agents/

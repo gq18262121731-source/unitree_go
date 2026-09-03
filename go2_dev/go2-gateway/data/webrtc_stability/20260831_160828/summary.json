@@ -1,0 +1,63 @@
+{
+  "runId": "20260831_160828",
+  "robotIp": "192.168.8.252",
+  "startedGroups": [
+    "A"
+  ],
+  "interrupted": true,
+  "configuration": {
+    "durationSecondsPerGroup": 30.0,
+    "sampleIntervalSeconds": 0.5,
+    "staleSeconds": 3.0,
+    "cooldownSeconds": 5.0,
+    "audioHub": false,
+    "followController": false,
+    "reconnectPolicy": "hard_transport_only",
+    "reconnectBackoffSeconds": [
+      2,
+      4,
+      6,
+      8,
+      10
+    ]
+  },
+  "results": [
+    {
+      "group": "A",
+      "profile": {
+        "name": "A",
+        "video": true,
+        "uwb": true,
+        "sport": true,
+        "low_state": true,
+        "multiple_state": true,
+        "audio_hub": false
+      },
+      "startedAt": "2026-08-31T16:08:28.916711+08:00",
+      "finishedAt": "2026-08-31T16:08:58.978322+08:00",
+      "requestedDurationSeconds": 30.0,
+      "observedDurationSeconds": 30.062000000005355,
+      "sampleCount": 57,
+      "reconnectCount": 0,
+      "disconnectCount": 0,
+      "consentExpiredCount": 0,
+      "sportStateStaleEpisodes": 0,
+      "videoStaleEpisodes": 0,
+      "uwbStaleEpisodes": 0,
+      "longestContinuousOnlineSeconds": 28.343999999997322,
+      "lastDisconnectReason": null,
+      "lastDiagnosticReason": null,
+      "recentDisconnects": [],
+      "subscribedTopics": [
+        "rt/lf/sportmodestate",
+        "rt/sportmodestate",
+        "rt/uwbstate",
+        "rt/multiplestate",
+        "rt/lf/lowstate",
+        "rt/lowstate"
+      ],
+      "samplesPath": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\webrtc_stability\\20260831_160828\\group_A_samples.jsonl",
+      "error": null
+    }
+  ]
+}

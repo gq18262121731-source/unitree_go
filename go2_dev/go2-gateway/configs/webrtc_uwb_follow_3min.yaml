@@ -1,0 +1,43 @@
+wireless_uwb_follow:
+  duration_seconds: 180
+  control_rate_hz: 4
+  uwb_stale_timeout_seconds: 1.0
+
+  # Companion V2 keeps walking turns gentler than in-place alignment.
+  max_vx_mps: 0.504
+  max_wz_radps: 1.10
+  normal_max_wz_radps: 0.90
+
+  # Enter alignment only for a large error; hysteresis prevents mode chatter.
+  alignment_enter_error_deg: 45
+  alignment_exit_error_deg: 30
+  alignment_turn_speed_radps: 1.10
+
+  # Reach the 0.504 m/s cap at 2.0 m without increasing the 4 Hz RPC rate.
+  full_speed_distance_m: 2.0
+  distance_speed_curve_exponent: 1.4
+  turn_slowdown_start_error_deg: 30
+  turn_slowdown_min_scale: 0.65
+
+  require_video_fresh: true
+  # Formal WebRTC companion mode does not subscribe to LowState. SportState,
+  # UWB, MultiState and the transport itself remain the readiness inputs.
+  require_low_state_fresh: false
+  # UwbState.enabled_from_app is the formal readiness gate. MultiState is not
+  # used by planning, risk handling or motion control, so keep that topic off.
+  require_uwb_switch: false
+
+  # This firmware's WebRTC bridge omits UwbState.error_state entirely. The
+  # omission is accepted only while every explicit health gate above is good;
+  # a later explicit non-zero value remains an immediate latched stop.
+  allow_missing_error_state: true
+
+  # UWB loss pauses motion without ending the enabled companion session.
+  # Recovery is deliberately stricter than the immediate stale-stop edge.
+  auto_recover_uwb_stale: true
+  recover_max_age_seconds: 0.50
+  recover_consecutive_samples: 3
+  recover_min_duration_seconds: 0.50
+  # Escalate telemetry after a prolonged dropout, but keep the stopped worker
+  # alive so a later stable signal can recover without a new START.
+  uwb_fault_escalation_seconds: 5.0

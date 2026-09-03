@@ -1,0 +1,8 @@
+{"kind":"robot","topic":"rt/lowstate","received_timestamp_ns":1700000000000000000,"payload":{"battery_percentage":91,"source":"lowstate"}}
+{"kind":"lidar","topic":"/utlidar/cloud","received_timestamp_ns":1700000000100000000,"source_timestamp_ns":1700000000099000000,"frame_id":"utlidar_lidar","payload":{"points":4211,"fields":["x","y","z","intensity","time","ring"]}}
+{"kind":"imu","topic":"/utlidar/imu","received_timestamp_ns":1700000000101000000,"source_timestamp_ns":1700000000100000000,"frame_id":"utlidar_imu","payload":{"linear_acceleration":[0.1,0.2,10.3],"angular_velocity":[0.0,0.0,0.0]}}
+{"kind":"odometry","topic":"/odom","received_timestamp_ns":1700000000102000000,"source_timestamp_ns":1700000000101000000,"frame_id":"odom","payload":{"child_frame_id":"base_link","position":[0.0,0.0,0.0]}}
+{"kind":"lidar","topic":"/utlidar/cloud","received_timestamp_ns":1700000000166000000,"source_timestamp_ns":1700000000165000000,"frame_id":"utlidar_lidar","payload":{"points":4198,"fields":["x","y","z","intensity","time","ring"]}}
+{"kind":"imu","topic":"/utlidar/imu","received_timestamp_ns":1700000000105000000,"source_timestamp_ns":1700000000104000000,"frame_id":"utlidar_imu","payload":{"linear_acceleration":[0.1,0.2,10.3],"angular_velocity":[0.0,0.0,0.0]}}
+{"kind":"odometry","topic":"/odom","received_timestamp_ns":1700000000109000000,"source_timestamp_ns":1700000000108000000,"frame_id":"odom","payload":{"child_frame_id":"base_link","position":[0.0,0.0,0.0]}}
+

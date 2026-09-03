@@ -1,0 +1,50 @@
+{
+  "phase": "5.4.6",
+  "result": "FAIL_HOLD",
+  "hypothesis_test": {
+    "ros2_only_failure": "REJECTED",
+    "official_ros1_on_go2_bag": "FAIL",
+    "official_ros1_sample_sanity": "PASS"
+  },
+  "input_equivalence": {
+    "ros2_to_ros1_conversion_exact": true,
+    "cloud_messages": 4615,
+    "imu_messages": 75021,
+    "cloud_header_and_payload_hash_match": true,
+    "imu_header_and_payload_hash_match": true
+  },
+  "ros2_port": {
+    "initialization": "PASS",
+    "static_stage": "PASS",
+    "motion_stage": "FAIL",
+    "first_radius_1m_seconds": 190.962154388,
+    "first_radius_10m_seconds": 206.462687015,
+    "net_displacement_m": 29461.384401179228,
+    "map": "FAIL"
+  },
+  "official_ros1_go2_bag": {
+    "node_start_and_input": "PASS",
+    "trajectory": "FAIL",
+    "process_exit": "SIGSEGV_-11",
+    "processed_sensor_duration_seconds": 151.94763827323914,
+    "first_radius_1m_seconds": 4.8021461963653564,
+    "first_radius_10m_seconds": 7.009703636169434,
+    "net_displacement_m": 122692.92904725453,
+    "pcd_saved": false
+  },
+  "official_ros1_sample_first_60s": {
+    "run": "PASS",
+    "process_exit": "CLEAN_SIGINT",
+    "trajectory_duration_seconds": 59.58500599861145,
+    "net_displacement_m": 10.89535516000901,
+    "path_length_m": 25.095975119922365,
+    "pcd_saved": true,
+    "pcd_bytes": 30720603
+  },
+  "decision": {
+    "phase_5_5": "HOLD_NOT_ENTERED",
+    "nav2": "NOT_ENTERED",
+    "tf_modified": false,
+    "robot_control_used": false
+  }
+}

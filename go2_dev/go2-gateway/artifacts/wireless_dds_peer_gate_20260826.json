@@ -1,0 +1,56 @@
+{
+  "interface": "eth2",
+  "peer": "192.168.8.252",
+  "subscriberOnly": true,
+  "publisherCreated": false,
+  "sportClientCreated": false,
+  "motionCommandsSent": false,
+  "stoppedOnFirstSamples": false,
+  "results": [
+    {
+      "domainId": 0,
+      "discoveryMode": "multicast-peer",
+      "ddsInitialized": true,
+      "sportSampleCount": 0,
+      "lowSampleCount": 0,
+      "sportTimeoutCode": "SPORT_STATE_TIMEOUT",
+      "lowTimeoutCode": "LOW_STATE_TIMEOUT",
+      "errorCode": "DDS_NO_ROBOT_SAMPLES",
+      "probeReturnCode": 1
+    },
+    {
+      "domainId": 0,
+      "discoveryMode": "unicast-peer",
+      "ddsInitialized": true,
+      "sportSampleCount": 0,
+      "lowSampleCount": 0,
+      "sportTimeoutCode": "SPORT_STATE_TIMEOUT",
+      "lowTimeoutCode": "LOW_STATE_TIMEOUT",
+      "errorCode": "DDS_NO_ROBOT_SAMPLES",
+      "probeReturnCode": 1
+    },
+    {
+      "domainId": 10,
+      "discoveryMode": "multicast-peer",
+      "ddsInitialized": true,
+      "sportSampleCount": 0,
+      "lowSampleCount": 0,
+      "sportTimeoutCode": "SPORT_STATE_TIMEOUT",
+      "lowTimeoutCode": "LOW_STATE_TIMEOUT",
+      "errorCode": "DDS_NO_ROBOT_SAMPLES",
+      "probeReturnCode": 1
+    },
+    {
+      "domainId": 10,
+      "discoveryMode": "unicast-peer",
+      "ddsInitialized": true,
+      "sportSampleCount": 0,
+      "lowSampleCount": 0,
+      "sportTimeoutCode": "SPORT_STATE_TIMEOUT",
+      "lowTimeoutCode": "LOW_STATE_TIMEOUT",
+      "errorCode": "DDS_NO_ROBOT_SAMPLES",
+      "probeReturnCode": 1
+    }
+  ],
+  "status": "WIRELESS_DDS_NO_SAMPLES_IN_MATRIX"
+}

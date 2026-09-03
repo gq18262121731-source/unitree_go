@@ -1,0 +1,65 @@
+{
+  "transport": "WebRTCDataChannel",
+  "connectionMode": "LocalSTA",
+  "robotIp": "192.168.8.252",
+  "stage": "forward-pulse",
+  "videoEnabled": false,
+  "audioEnabled": false,
+  "connected": true,
+  "sportStateReceived": true,
+  "motionCommandsSent": 5,
+  "completed": true,
+  "reason": "forward_pulse_stopped",
+  "stateTopic": "rt/lf/sportmodestate",
+  "startPose": {
+    "x": 0.112866,
+    "y": 0.347811,
+    "yaw": -0.561608
+  },
+  "preStop": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "zeroVelocity": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "postZeroStop": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "pulse": {
+    "speedMps": 0.23,
+    "durationS": 0.4,
+    "maximumCommandedDistanceM": 0.092
+  },
+  "forwardMove": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "pulseStop": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "endPose": {
+    "x": 0.145948,
+    "y": 0.327242,
+    "yaw": -0.559545
+  },
+  "measuredForwardProgressM": 0.03895457814323413,
+  "measuredLateralDriftM": 0.000208150625,
+  "measuredYawChangeDeg": 0.118201193135,
+  "stateSampleCounts": {
+    "rt/lf/sportmodestate": 20
+  },
+  "latestStateFresh": true,
+  "physicalObservation": {
+    "movedForward": true,
+    "normalFourLegGait": true,
+    "noObviousLateralOrYawMotion": true,
+    "stoppedAfterPulse": true,
+    "noContinuedMotion": true,
+    "remoteImmediateTakeover": true
+  },
+  "gateStatus": "WEBRTC_MINIMAL_MOTION_TRANSPORT_GATE_PASS"
+}

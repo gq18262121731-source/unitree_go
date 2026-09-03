@@ -1,0 +1,61 @@
+{
+  "topics": {
+    "cloud": "/unilidar/cloud",
+    "imu": "/unilidar/imu"
+  },
+  "cloud": {
+    "frame_id": "unilidar_lidar",
+    "fields": {
+      "x": {
+        "offset": 0,
+        "datatype": 7,
+        "count": 1
+      },
+      "y": {
+        "offset": 4,
+        "datatype": 7,
+        "count": 1
+      },
+      "z": {
+        "offset": 8,
+        "datatype": 7,
+        "count": 1
+      },
+      "intensity": {
+        "offset": 16,
+        "datatype": 7,
+        "count": 1
+      },
+      "ring": {
+        "offset": 20,
+        "datatype": 4,
+        "count": 1
+      },
+      "time": {
+        "offset": 24,
+        "datatype": 7,
+        "count": 1
+      }
+    },
+    "point_step": 32,
+    "width": 2033,
+    "height": 1,
+    "is_dense": true,
+    "first_point_time_seconds": 0.0,
+    "last_point_time_seconds": 0.09677914530038834
+  },
+  "imu": {
+    "frame_id": "unilidar_imu",
+    "linear_acceleration": [
+      -9.709754943847656,
+      -0.10081425309181213,
+      0.3058036267757416
+    ],
+    "linear_acceleration_norm": 9.715092405188418,
+    "angular_velocity": [
+      0.002303345361724496,
+      0.006947698071599007,
+      0.0028555006720125675
+    ]
+  }
+}

@@ -14,6 +14,34 @@ class FutureResolver:
             self.pending_callbacks[key].append(future)
         else:
             self.pending_callbacks[key] = [future]
+        if hasattr(future, "add_done_callback"):
+            future.add_done_callback(
+                lambda completed, pending_key=key: self._discard_completed(
+                    pending_key, completed
+                )
+            )
+
+    def _discard_completed(self, key, completed):
+        callbacks = self.pending_callbacks.get(key)
+        if not callbacks:
+            return
+        remaining = [future for future in callbacks if future is not completed]
+        if remaining:
+            self.pending_callbacks[key] = remaining
+        else:
+            self.pending_callbacks.pop(key, None)
+            self.chunk_data_storage.pop(key, None)
+
+    def _resolve_pending(self, key, message):
+        callbacks = self.pending_callbacks.pop(key, [])
+        for future in callbacks:
+            # asyncio.wait_for cancels the underlying Future on timeout. A
+            # response can still arrive from Go2 afterwards; it is stale and
+            # must not be applied to a cancelled/already-completed Future.
+            if future is None or future.done():
+                continue
+            future.set_result(message)
+        self.chunk_data_storage.pop(key, None)
 
     def run_resolve_for_topic(self, message):
         if not message.get("type"):
@@ -57,11 +85,7 @@ class FutureResolver:
                     del self.chunk_data_storage[key]
 
         # Resolve the pending future with the final message
-        if key in self.pending_callbacks:
-            for future in self.pending_callbacks[key]:
-                if future:
-                    future.set_result(message)  # Resolve the future with the message
-            del self.pending_callbacks[key]
+        self._resolve_pending(key, message)
 
     def merge_array_buffers(self, buffers):
         total_length = sum(len(buf) for buf in buffers)
@@ -110,11 +134,7 @@ class FutureResolver:
                 del self.chunk_data_storage[key]  # Clean up the storage
 
         # Resolve the pending future with the final message
-        if key in self.pending_callbacks:
-            for future in self.pending_callbacks[key]:
-                if future:
-                    future.set_result(message)  # Resolve the future with the message
-            del self.pending_callbacks[key]
+        self._resolve_pending(key, message)
 
     def generate_message_key(self, message_type, topic, identifier):
         return identifier or f"{message_type} $ {topic}"

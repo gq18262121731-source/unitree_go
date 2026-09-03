@@ -1,0 +1,144 @@
+﻿{
+  "output": "E:\\\u7b28\u7b28\u72d7\\phase548_analysis.json",
+  "segments": [
+    "level_static",
+    "pitch_nose_down_hold",
+    "pitch_nose_up_hold",
+    "roll_left_down_hold",
+    "roll_right_down_hold",
+    "yaw_ccw_manual",
+    "yaw_cw_manual"
+  ],
+  "axis_comparison": {
+    "gravity_means_xyz": {
+      "level_static": [
+        -0.21687744464330427,
+        0.00040592759601238104,
+        9.807414126998593
+      ],
+      "pitch_nose_down_hold": [
+        -3.610980002840309,
+        0.012476284443732562,
+        9.80576497324012
+      ],
+      "pitch_nose_up_hold": [
+        3.350470680534427,
+        0.008874448145437407,
+        9.811234020924159
+      ],
+      "roll_left_down_hold": [
+        8.160618082055302,
+        -0.009786873497007752,
+        9.78475245857825
+      ],
+      "roll_right_down_hold": [
+        -12.063726117786247,
+        0.0008397165286521633,
+        9.823501153936638
+      ],
+      "yaw_ccw_manual": [
+        -1.1857733403400676,
+        0.2123537878378561,
+        9.702740487452497
+      ],
+      "yaw_cw_manual": [
+        -1.1797698743935074,
+        0.40763288264750713,
+        9.719220129209539
+      ]
+    },
+    "pitch_nose_down_minus_up": [
+      -6.961450683374736,
+      0.003601836298295155,
+      -0.005469047684039552
+    ],
+    "pitch_dominant_imu_axis": "x",
+    "pitch_axis_sign_for_nose_down_vs_up": "negative",
+    "roll_left_down_minus_right_down": [
+      20.22434419984155,
+      -0.010626590025659915,
+      -0.038748695358387764
+    ],
+    "roll_dominant_imu_axis": "x",
+    "roll_axis_sign_for_left_down_vs_right_down": "positive",
+    "yaw_ccw_gyro_integral_xyz": [
+      2.4284548258393444,
+      -4.557186157449985,
+      -22.54039705048984
+    ],
+    "yaw_cw_gyro_integral_xyz": [
+      -2.070899677716816,
+      3.1836401342129363,
+      17.266232492323297
+    ],
+    "yaw_ccw_minus_cw_integral": [
+      4.499354503556161,
+      -7.740826291662922,
+      -39.80662954281314
+    ],
+    "yaw_dominant_imu_axis": "z",
+    "yaw_axis_sign_for_ccw_vs_cw": "negative",
+    "distinct_dominant_axes": false,
+    "level_gravity_norm": 9.809811815178913,
+    "level_gravity_tilt_from_positive_z_degrees": 1.2668129358880413,
+    "static_specific_force_invariance_check": {
+      "segments": [
+        "level_static",
+        "pitch_nose_down_hold",
+        "pitch_nose_up_hold",
+        "roll_left_down_hold",
+        "roll_right_down_hold"
+      ],
+      "acceleration_means_xyz": [
+        [
+          -0.21687744464330427,
+          0.00040592759601238104,
+          9.807414126998593
+        ],
+        [
+          -3.610980002840309,
+          0.012476284443732562,
+          9.80576497324012
+        ],
+        [
+          3.350470680534427,
+          0.008874448145437407,
+          9.811234020924159
+        ],
+        [
+          8.160618082055302,
+          -0.009786873497007752,
+          9.78475245857825
+        ],
+        [
+          -12.063726117786247,
+          0.0008397165286521633,
+          9.823501153936638
+        ]
+      ],
+      "acceleration_norms": [
+        9.809811815178913,
+        10.449514770983814,
+        10.367547711502965,
+        12.741160227377799,
+        15.557463272380762
+      ],
+      "z_mean": 9.806533346735552,
+      "z_std_across_segment_means": 0.012536156346040014,
+      "imu_pitch_degrees": [
+        -1.3029451684665259,
+        -20.30545930182905,
+        18.86006157804907,
+        40.163511414672726,
+        -49.81148913457116
+      ],
+      "fit_ax_equals_a_tan_pitch_plus_b": {
+        "a": 9.973890336216087,
+        "b": -0.09611404922555652,
+        "r_squared": 0.999590342875525,
+        "rmse_meters_per_second_squared": 0.1380489744962463
+      },
+      "expected_for_raw_stationary_specific_force": "vector norm remains approximately g as orientation changes"
+    }
+  }
+}

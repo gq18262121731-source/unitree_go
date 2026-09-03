@@ -1,0 +1,12 @@
+
+Files:             phase548_20260729_133703_yaw_ccw_manual_0.db3
+Bag size:          42.3 MiB
+Storage id:        sqlite3
+Duration:          19.602006340s
+Start:             Jul 29 2026 13:37:03.896028072 (1785303423.896028072)
+End:               Jul 29 2026 13:37:23.498034412 (1785303443.498034412)
+Messages:          8109
+Topic information: Topic: /utlidar/cloud | Type: sensor_msgs/msg/PointCloud2 | Count: 302 | Serialization Format: cdr
+                   Topic: /utlidar/imu | Type: sensor_msgs/msg/Imu | Count: 4869 | Serialization Format: cdr
+                   Topic: /utlidar/robot_odom | Type: nav_msgs/msg/Odometry | Count: 2938 | Serialization Format: cdr
+

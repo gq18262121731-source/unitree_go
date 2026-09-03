@@ -1,0 +1,54 @@
+nohup: ignoring input
+[INFO] [launch]: All log files can be found below /home/go2/.ros/log/2026-07-26-17-41-09-345219-go2-ros2-vm-3273
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [unitree_sensor_bridge_node-1]: process started with pid [3274]
+[unitree_sensor_bridge_node-1] [INFO] [1785058869.423823072] [unitree_sensor_bridge]: Read-only bridge started: /utlidar/cloud -> /sensor/lidar, /utlidar/imu -> /sensor/imu, /utlidar/robot_odom -> /odom
+[unitree_sensor_bridge_node-1] [INFO] [1785058874.424625200] [unitree_sensor_bridge]: forwarded totals: lidar=75 imu=1226 odom=737
+[unitree_sensor_bridge_node-1] [INFO] [1785058879.424156167] [unitree_sensor_bridge]: forwarded totals: lidar=152 imu=2468 odom=1482
+[unitree_sensor_bridge_node-1] [INFO] [1785058884.424031506] [unitree_sensor_bridge]: forwarded totals: lidar=229 imu=3715 odom=2232
+[unitree_sensor_bridge_node-1] [INFO] [1785058889.424453602] [unitree_sensor_bridge]: forwarded totals: lidar=306 imu=4948 odom=2982
+[unitree_sensor_bridge_node-1] [INFO] [1785058894.424220942] [unitree_sensor_bridge]: forwarded totals: lidar=383 imu=6192 odom=3732
+[unitree_sensor_bridge_node-1] [INFO] [1785058899.424492624] [unitree_sensor_bridge]: forwarded totals: lidar=460 imu=7430 odom=4479
+[unitree_sensor_bridge_node-1] [INFO] [1785058904.424312936] [unitree_sensor_bridge]: forwarded totals: lidar=536 imu=8668 odom=5230
+[unitree_sensor_bridge_node-1] [INFO] [1785058909.423944329] [unitree_sensor_bridge]: forwarded totals: lidar=613 imu=9915 odom=5982
+[unitree_sensor_bridge_node-1] [INFO] [1785058914.424383301] [unitree_sensor_bridge]: forwarded totals: lidar=690 imu=11158 odom=6731
+[unitree_sensor_bridge_node-1] [INFO] [1785058919.424393232] [unitree_sensor_bridge]: forwarded totals: lidar=767 imu=12390 odom=7483
+[unitree_sensor_bridge_node-1] [INFO] [1785058924.424080278] [unitree_sensor_bridge]: forwarded totals: lidar=844 imu=13626 odom=8231
+[unitree_sensor_bridge_node-1] [INFO] [1785058929.424084969] [unitree_sensor_bridge]: forwarded totals: lidar=920 imu=14867 odom=8976
+[unitree_sensor_bridge_node-1] [INFO] [1785058934.424453625] [unitree_sensor_bridge]: forwarded totals: lidar=997 imu=16115 odom=9722
+[unitree_sensor_bridge_node-1] [INFO] [1785058939.424113319] [unitree_sensor_bridge]: forwarded totals: lidar=1074 imu=17360 odom=10472
+[unitree_sensor_bridge_node-1] [INFO] [1785058944.425277412] [unitree_sensor_bridge]: forwarded totals: lidar=1151 imu=18604 odom=11221
+[unitree_sensor_bridge_node-1] [INFO] [1785058949.424472347] [unitree_sensor_bridge]: forwarded totals: lidar=1227 imu=19847 odom=11970
+[unitree_sensor_bridge_node-1] [INFO] [1785058954.424178076] [unitree_sensor_bridge]: forwarded totals: lidar=1304 imu=21083 odom=12717
+[unitree_sensor_bridge_node-1] [INFO] [1785058959.424177153] [unitree_sensor_bridge]: forwarded totals: lidar=1381 imu=22325 odom=13461
+[unitree_sensor_bridge_node-1] [INFO] [1785058964.424242186] [unitree_sensor_bridge]: forwarded totals: lidar=1458 imu=23562 odom=14204
+[unitree_sensor_bridge_node-1] [INFO] [1785058969.424438166] [unitree_sensor_bridge]: forwarded totals: lidar=1535 imu=24804 odom=14950
+[unitree_sensor_bridge_node-1] [INFO] [1785058974.424263007] [unitree_sensor_bridge]: forwarded totals: lidar=1612 imu=26050 odom=15692
+[unitree_sensor_bridge_node-1] [INFO] [1785058979.424353120] [unitree_sensor_bridge]: forwarded totals: lidar=1689 imu=27289 odom=16435
+[unitree_sensor_bridge_node-1] [INFO] [1785058984.424198079] [unitree_sensor_bridge]: forwarded totals: lidar=1765 imu=28526 odom=17178
+[unitree_sensor_bridge_node-1] [INFO] [1785058989.424524783] [unitree_sensor_bridge]: forwarded totals: lidar=1842 imu=29768 odom=17929
+[unitree_sensor_bridge_node-1] [INFO] [1785058994.425154803] [unitree_sensor_bridge]: forwarded totals: lidar=1919 imu=31014 odom=18683
+[unitree_sensor_bridge_node-1] [INFO] [1785058999.424129945] [unitree_sensor_bridge]: forwarded totals: lidar=1996 imu=32254 odom=19430
+[unitree_sensor_bridge_node-1] [INFO] [1785059004.424202414] [unitree_sensor_bridge]: forwarded totals: lidar=2073 imu=33498 odom=20177
+[unitree_sensor_bridge_node-1] [INFO] [1785059009.424210296] [unitree_sensor_bridge]: forwarded totals: lidar=2150 imu=34738 odom=20918
+[unitree_sensor_bridge_node-1] [INFO] [1785059014.424313252] [unitree_sensor_bridge]: forwarded totals: lidar=2227 imu=35983 odom=21668
+[unitree_sensor_bridge_node-1] [INFO] [1785059019.424264976] [unitree_sensor_bridge]: forwarded totals: lidar=2304 imu=37226 odom=22420
+[unitree_sensor_bridge_node-1] [INFO] [1785059024.424266708] [unitree_sensor_bridge]: forwarded totals: lidar=2380 imu=38467 odom=23167
+[unitree_sensor_bridge_node-1] [INFO] [1785059029.424899593] [unitree_sensor_bridge]: forwarded totals: lidar=2457 imu=39710 odom=23915
+[unitree_sensor_bridge_node-1] [INFO] [1785059034.424347872] [unitree_sensor_bridge]: forwarded totals: lidar=2534 imu=40941 odom=24666
+[unitree_sensor_bridge_node-1] [INFO] [1785059039.425161529] [unitree_sensor_bridge]: forwarded totals: lidar=2611 imu=42178 odom=25417
+[unitree_sensor_bridge_node-1] [INFO] [1785059044.424773023] [unitree_sensor_bridge]: forwarded totals: lidar=2688 imu=43418 odom=26166
+[unitree_sensor_bridge_node-1] [INFO] [1785059049.425227838] [unitree_sensor_bridge]: forwarded totals: lidar=2765 imu=44661 odom=26908
+[unitree_sensor_bridge_node-1] [INFO] [1785059054.424804609] [unitree_sensor_bridge]: forwarded totals: lidar=2842 imu=45896 odom=27662
+[unitree_sensor_bridge_node-1] [INFO] [1785059059.424453551] [unitree_sensor_bridge]: forwarded totals: lidar=2918 imu=47141 odom=28415
+[unitree_sensor_bridge_node-1] [INFO] [1785059064.425351555] [unitree_sensor_bridge]: forwarded totals: lidar=2995 imu=48379 odom=29164
+[unitree_sensor_bridge_node-1] [INFO] [1785059069.424464139] [unitree_sensor_bridge]: forwarded totals: lidar=3072 imu=49625 odom=29913
+[unitree_sensor_bridge_node-1] [INFO] [1785059074.424714798] [unitree_sensor_bridge]: forwarded totals: lidar=3149 imu=50858 odom=30660
+[unitree_sensor_bridge_node-1] [INFO] [1785059079.424292041] [unitree_sensor_bridge]: forwarded totals: lidar=3226 imu=52099 odom=31412
+[unitree_sensor_bridge_node-1] [INFO] [1785059084.424348111] [unitree_sensor_bridge]: forwarded totals: lidar=3303 imu=53335 odom=32157
+[unitree_sensor_bridge_node-1] [INFO] [1785059089.424834813] [unitree_sensor_bridge]: forwarded totals: lidar=3379 imu=54578 odom=32907
+[unitree_sensor_bridge_node-1] [INFO] [1785059094.424309109] [unitree_sensor_bridge]: forwarded totals: lidar=3456 imu=55812 odom=33657
+[unitree_sensor_bridge_node-1] [INFO] [1785059099.424364347] [unitree_sensor_bridge]: forwarded totals: lidar=3533 imu=57052 odom=34403
+[unitree_sensor_bridge_node-1] [INFO] [1785059104.424289518] [unitree_sensor_bridge]: forwarded totals: lidar=3610 imu=58293 odom=35146
+[unitree_sensor_bridge_node-1] [INFO] [1785059109.424864540] [unitree_sensor_bridge]: forwarded totals: lidar=3687 imu=59531 odom=35895
+[unitree_sensor_bridge_node-1] [INFO] [1785059114.425028157] [unitree_sensor_bridge]: forwarded totals: lidar=3764 imu=60771 odom=36637

@@ -1,0 +1,17 @@
+phase=6.7.2
+mode=strictly_offline
+start=2026-08-15T11:45:50+08:00
+bag=/mnt/e/笨笨狗/phase672_bags/phase545_go2_community_transform
+params=/mnt/e/笨笨狗/phase672_artifacts/phase672_utlidar.yaml
+ros_domain_id=172
+network_interface=dummy0_isolated_netns
+cyclonedds_uri=file:///mnt/e/笨笨狗/phase672_artifacts/phase672_cyclonedds_netns.xml
+rmw=rmw_cyclonedds_cpp
+robot_connected=false
+motion_publishers=false
+pointlio_start=PASS
+bag_play_status=0
+point_failed_during_play=0
+pcd_saved=PASS
+pcd_bytes=87174973
+end=2026-08-15T11:51:45+08:00

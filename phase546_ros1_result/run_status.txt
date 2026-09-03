@@ -1,0 +1,2 @@
+pcd_saved=FAIL
+bag_play_status=0

@@ -1,0 +1,482 @@
+{
+  "phase": "5.4.10-A",
+  "duration_seconds": 60.00948037998751,
+  "safety": {
+    "publishers_created": 0,
+    "request_topics_published": [],
+    "motion_control": "NOT_USED",
+    "slam_started": false,
+    "tf_published": false
+  },
+  "observed_graph_types": {
+    "/api/slam_operate/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/slam_operate/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/lio_sam_ros2/mapping/odometry": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/slam_info": [
+      "std_msgs/msg/String"
+    ],
+    "/slam_key_info": [
+      "std_msgs/msg/String"
+    ],
+    "/uslam/client_command": [
+      "std_msgs/msg/String"
+    ],
+    "/uslam/cloud_map": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/frontend/cloud_world_ds": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/frontend/odom": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/uslam/localization/cloud_world": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/localization/odom": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/uslam/map_file_pub": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/navigation/global_path": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/server_log": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/client_command": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/mapping_cmd": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/switch": [
+      "std_msgs/msg/String"
+    ]
+  },
+  "endpoints": {
+    "/api/slam_operate/request": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "unitree_api/msg/Request"
+        }
+      ],
+      "subscriptions": []
+    },
+    "/api/slam_operate/response": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "unitree_api/msg/Response"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "unitree_api/msg/Response"
+        }
+      ]
+    },
+    "/lio_sam_ros2/mapping/odometry": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "nav_msgs/msg/Odometry"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ]
+    },
+    "/slam_info": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "/slam_key_info": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "/uslam/client_command": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "/uslam/cloud_map": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "subscriptions": [
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ]
+    },
+    "/uslam/frontend/cloud_world_ds": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ]
+    },
+    "/uslam/frontend/odom": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "nav_msgs/msg/Odometry"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ]
+    },
+    "/uslam/localization/cloud_world": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ]
+    },
+    "/uslam/localization/odom": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "nav_msgs/msg/Odometry"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ]
+    },
+    "/uslam/map_file_pub": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "subscriptions": [
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ]
+    },
+    "/uslam/navigation/global_path": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ]
+    },
+    "/uslam/server_log": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "phase5410a_internal_slam_passive_probe",
+          "node_namespace": "/",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "/utlidar/client_command": {
+      "publishers": [],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "/utlidar/mapping_cmd": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "subscriptions": []
+    },
+    "/utlidar/switch": {
+      "publishers": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "subscriptions": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    }
+  },
+  "topics": {
+    "/api/slam_operate/response": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/lio_sam_ros2/mapping/odometry": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/slam_info": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/slam_key_info": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/cloud_map": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/frontend/cloud_world_ds": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/frontend/odom": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/localization/cloud_world": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/localization/odom": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/map_file_pub": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/navigation/global_path": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    },
+    "/uslam/server_log": {
+      "samples": 0,
+      "estimated_hz": 0.0,
+      "frames": {},
+      "child_frames": {},
+      "timestamp_backward": 0,
+      "point_count": {
+        "min": null,
+        "max": null
+      },
+      "text_samples": []
+    }
+  }
+}

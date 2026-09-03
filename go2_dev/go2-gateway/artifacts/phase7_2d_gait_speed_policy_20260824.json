@@ -1,0 +1,34 @@
+{
+  "phase": "7.2-D",
+  "date": "2026-08-24",
+  "software_gate": "PASS",
+  "live_gate": "READY_NOT_RUN",
+  "real_motion_calls_this_change": 0,
+  "policy": {
+    "enabled_for_real_uwb_follow": true,
+    "enabled_by_default_for_mock": false,
+    "minimum_walking_vx_mps": 0.2,
+    "maximum_walking_vx_mps": 0.3,
+    "forward_start_error_m": 0.25,
+    "forward_stop_error_m": 0.1,
+    "maximum_abs_wz_radps": 0.3,
+    "vy_mps": 0.0,
+    "active_reverse_enabled": false,
+    "refresh_frequency_hz": 5.0
+  },
+  "live_limits": {
+    "c1_max_successful_refreshes": 5,
+    "uwb_follow_live_max_successful_refreshes": 15,
+    "recommended_first_live_refreshes": 10,
+    "additional_confirmation": "UWB_FOLLOW_LIVE_GATE"
+  },
+  "verification": {
+    "targeted_tests": {
+      "status": "PASS",
+      "count": 76
+    },
+    "full_python_suite": "PASS",
+    "ubuntu_20_04_python": "3.8.10",
+    "python_compile": "PASS"
+  }
+}

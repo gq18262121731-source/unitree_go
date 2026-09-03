@@ -10,6 +10,7 @@ if str(ROOT) not in sys.path:
 
 from app.config import load_settings
 from app.core.state_store import StateStore
+from app.gateway.go2_gateway import Go2Gateway
 from app.services.camera_service import CameraService
 from scripts.adapter_factory import build_adapter
 
@@ -28,11 +29,12 @@ def main() -> None:
 
     settings = load_settings()
     adapter = build_adapter(settings)
+    gateway = Go2Gateway(adapter)
     store = StateStore(settings.robot_id, settings.state_stale_seconds)
-    service = CameraService(adapter, store)
+    service = CameraService(gateway, store, settings)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    adapter.initialize()
+    gateway.connect()
     try:
         for index in range(1, args.count + 1):
             jpeg = service.snapshot()
@@ -40,7 +42,7 @@ def main() -> None:
             output.write_bytes(jpeg)
             print(f"Saved {output}")
     finally:
-        adapter.close()
+        gateway.close()
 
 
 if __name__ == "__main__":

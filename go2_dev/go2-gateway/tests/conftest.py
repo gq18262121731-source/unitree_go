@@ -16,7 +16,7 @@ from app.main import create_app
 
 @pytest.fixture
 def settings() -> Settings:
-    return Settings(mode="mock", state_stale_seconds=2.0)
+    return Settings(mode="mock", state_stale_seconds=2.0, task_audit_enabled=False)
 
 
 @pytest.fixture
@@ -24,4 +24,3 @@ def client(settings: Settings):
     app = create_app(settings)
     with TestClient(app) as test_client:
         yield test_client
-

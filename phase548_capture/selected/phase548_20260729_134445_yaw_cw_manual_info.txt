@@ -1,0 +1,12 @@
+
+Files:             phase548_20260729_134445_yaw_cw_manual_0.db3
+Bag size:          42.2 MiB
+Storage id:        sqlite3
+Duration:          19.568204512s
+Start:             Jul 29 2026 13:44:45.590735584 (1785303885.590735584)
+End:               Jul 29 2026 13:45:05.158940096 (1785303905.158940096)
+Messages:          8099
+Topic information: Topic: /utlidar/robot_odom | Type: nav_msgs/msg/Odometry | Count: 2933 | Serialization Format: cdr
+                   Topic: /utlidar/imu | Type: sensor_msgs/msg/Imu | Count: 4865 | Serialization Format: cdr
+                   Topic: /utlidar/cloud | Type: sensor_msgs/msg/PointCloud2 | Count: 301 | Serialization Format: cdr
+

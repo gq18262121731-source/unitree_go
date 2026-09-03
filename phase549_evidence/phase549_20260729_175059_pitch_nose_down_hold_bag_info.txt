@@ -1,0 +1,12 @@
+
+Files:             phase549_20260729_175059_pitch_nose_down_hold_utlidar_0.db3
+Bag size:          48.8 MiB
+Storage id:        sqlite3
+Duration:          22.662793981s
+Start:             Jul 29 2026 17:50:59.800741361 (1785318659.800741361)
+End:               Jul 29 2026 17:51:22.463535342 (1785318682.463535342)
+Messages:          9431
+Topic information: Topic: /utlidar/robot_odom | Type: nav_msgs/msg/Odometry | Count: 3407 | Serialization Format: cdr
+                   Topic: /utlidar/imu | Type: sensor_msgs/msg/Imu | Count: 5676 | Serialization Format: cdr
+                   Topic: /utlidar/cloud | Type: sensor_msgs/msg/PointCloud2 | Count: 348 | Serialization Format: cdr
+

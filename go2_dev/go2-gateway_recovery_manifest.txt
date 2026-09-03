@@ -1,0 +1,78 @@
+Go2 Gateway Recovery Protection Manifest
+========================================
+
+Generated at: 2026-07-23T21:04:41+08:00
+Source path: E:\笨笨狗\go2_dev\go2-gateway
+Source directory modified: no
+Recorded test baseline: python -m pytest -q => 250 passed
+Required provider contract: provider=mock
+Required motion contract: real_motion_enabled=false
+
+Top-level entries
+-----------------
+.env.example
+.gitignore
+.pytest_cache
+app
+callback-demo.err
+callback-demo.out
+CURRENT_ARCHITECTURE_REPORT.md
+data
+demo
+docs
+ENV_ACCEPTANCE.md
+FIRST_STAGE_EXECUTION_REPORT.md
+GIT_HANDOFF.md
+GO2_EDU_REFERENCE.md
+go2_snapshot.jpg
+HEALTH_NEW_INTEGRATION.md
+logs
+PIP_FREEZE_CURRENT_WINDOWS.txt
+pytest.ini
+README.md
+requirements.txt
+RESUME_READONLY_VERIFICATION.md
+scripts
+SDK_COMMIT.txt
+tests
+tools
+WSL_DDS_FINAL_CHECK.md
+
+Inventory
+---------
+Total files including caches/logs/runtime artifacts: 1422
+Total bytes including caches/logs/runtime artifacts: 11915675
+
+Source-only aggregate hashes
+----------------------------
+Algorithm: SHA-256 over sorted lines "<file_sha256>  <relative_path>" encoded as UTF-8.
+Excluded from these aggregate hashes: __pycache__, .pytest_cache, logs, data, *.pyc, *.pyo.
+
+app:
+  files: 57
+  aggregate_sha256: 1ada23751537c2967ab4c12384d122c8643319497614dbd3d2ae27c1e4f4d6a0
+
+tests:
+  files: 24
+  aggregate_sha256: 1aa64c7548d34edee0ebc9eac84ad8dda4817fbebaa73129eb94b6d676443be8
+
+docs:
+  files: 4
+  aggregate_sha256: df2ffc9bbd9d6d2fe669f256470f91767687f5cf79dafae13e9e12f73fe03b9c
+
+Key file hashes
+---------------
+pytest.ini:
+  sha256: cbac475f3b20b697b4320e83e349043d347fde5ff72c771d3e8d479ea0dc1ff5
+
+README.md:
+  sha256: fbe2243749ff21c172db22a853a5bccc363a31dbd0f62461da6a0afcc316ee89
+
+requirements.txt:
+  sha256: 5763f0a2d525933b8824f449ee94bc362c42f7d30d84697be59588d010e7d4e8
+
+Recovery boundary
+-----------------
+This manifest records the accepted source directory before recovery.
+No git init, file migration, deletion, move, or overwrite has been performed.
+The 250-passed result is the accepted pre-recovery baseline and was not rerun during manifest generation.

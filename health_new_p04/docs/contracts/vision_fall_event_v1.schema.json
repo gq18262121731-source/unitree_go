@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vision_fall_event_v1.schema.json",
+  "title": "Vision Fall Event V1",
+  "type": "object",
+  "required": ["schema_version", "incident_id", "event_type", "timestamp", "camera_id", "source", "metadata"],
+  "properties": {
+    "schema_version": {"const": "companion_fall_event.v1"},
+    "event_id": {"type": ["string", "null"], "maxLength": 160},
+    "incident_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "event_type": {
+      "enum": ["FALL_SUSPECTED", "FALL_CONFIRMED", "FALL_DISMISSED", "RECOVERY_SUSPECTED", "RECOVERY_CONFIRMED"]
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "camera_id": {"type": "string", "minLength": 1, "maxLength": 80},
+    "elder_id": {"type": ["string", "null"], "maxLength": 160},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "source": {"const": "vision_service"},
+    "visual_decision": {"type": "object"},
+    "keyframes": {
+      "type": "object",
+      "properties": {
+        "status": {"enum": ["ready", "degraded"]},
+        "requested_offsets_ms": {"type": "array", "items": {"type": "integer"}},
+        "resolved_offsets_ms": {"type": "array", "items": {"type": "integer"}},
+        "missing_offsets_ms": {"type": "array", "items": {"type": "integer"}}
+      },
+      "additionalProperties": true
+    },
+    "injury": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["suspected", "source"],
+          "properties": {
+            "suspected": {"const": true},
+            "source": {"const": "manual_confirmation"}
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "qwen_review": {"$ref": "#/$defs/qwenReview"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "qwenReview": {
+      "type": "object",
+      "required": ["analysis_status", "review_result", "confidence"],
+      "properties": {
+        "analysis_status": {"type": "string"},
+        "review_result": {"enum": ["likely_fall", "likely_false_positive", "uncertain"]},
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "posture": {"type": "string"},
+        "movement_level": {"type": "string"},
+        "attempt_to_stand": {"type": "string"},
+        "persistent_ground_state": {"type": "string"},
+        "possible_help_gesture": {"type": "string"},
+        "visibility": {"type": "string"},
+        "occlusion": {"type": "string"},
+        "scene_risks": {"type": "array", "items": {"type": "string"}},
+        "summary": {"type": "string"},
+        "review_points": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "uncertainties": {"type": "array", "items": {"type": "string"}},
+        "community_advice": {"type": "string"},
+        "model_role": {"type": "string"},
+        "model_name": {"type": "string"},
+        "latency_ms": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

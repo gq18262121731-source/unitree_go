@@ -1,0 +1,737 @@
+{
+  "duration_seconds": 5.004639555991162,
+  "graph": {
+    "nodes": [
+      {
+        "name": "phase544_uslam_readonly_probe",
+        "namespace": "/"
+      }
+    ],
+    "publishers": {
+      "/uslam/client_command": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "/uslam/cloud_map": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/frontend/cloud_world_ds": [],
+      "/uslam/frontend/odom": [],
+      "/uslam/localization/cloud_world": [],
+      "/uslam/localization/odom": [],
+      "/uslam/map_file_pub": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/map_file_sub": [],
+      "/uslam/navigation/global_path": [],
+      "/uslam/server_log": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "/utlidar/client_command": [],
+      "/utlidar/cloud_base": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/utlidar/cloud_deskewed": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/utlidar/mapping_cmd": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "/utlidar/robot_odom": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ],
+      "/utlidar/switch": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "subscriptions": {
+      "/uslam/client_command": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "/uslam/cloud_map": [
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/frontend/cloud_world_ds": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/frontend/odom": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "nav_msgs/msg/Odometry"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ],
+      "/uslam/localization/cloud_world": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/localization/odom": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "nav_msgs/msg/Odometry"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ],
+      "/uslam/map_file_pub": [
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/map_file_sub": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/navigation/global_path": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/uslam/server_log": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 1
+          },
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "std_msgs/msg/String"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "/utlidar/client_command": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ],
+      "/utlidar/cloud_base": [
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/utlidar/cloud_deskewed": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        },
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "sensor_msgs/msg/PointCloud2"
+        }
+      ],
+      "/utlidar/mapping_cmd": [],
+      "/utlidar/robot_odom": [
+        {
+          "node_name": "phase544_uslam_readonly_probe",
+          "node_namespace": "/",
+          "qos": {
+            "depth": 5,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "nav_msgs/msg/Odometry"
+        }
+      ],
+      "/utlidar/switch": [
+        {
+          "node_name": "_CREATED_BY_BARE_DDS_APP_",
+          "node_namespace": "_CREATED_BY_BARE_DDS_APP_",
+          "qos": {
+            "depth": 1,
+            "durability": 2,
+            "history": 1,
+            "reliability": 2
+          },
+          "topic_type": "std_msgs/msg/String"
+        }
+      ]
+    },
+    "topic_types": {
+      "/uslam/client_command": [
+        "std_msgs/msg/String"
+      ],
+      "/uslam/cloud_map": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/uslam/frontend/cloud_world_ds": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/uslam/frontend/odom": [
+        "nav_msgs/msg/Odometry"
+      ],
+      "/uslam/localization/cloud_world": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/uslam/localization/odom": [
+        "nav_msgs/msg/Odometry"
+      ],
+      "/uslam/map_file_pub": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/uslam/map_file_sub": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/uslam/navigation/global_path": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/uslam/server_log": [
+        "std_msgs/msg/String"
+      ],
+      "/utlidar/client_command": [
+        "std_msgs/msg/String"
+      ],
+      "/utlidar/cloud": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/cloud_base": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/cloud_deskewed": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/grid_map": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/height_map": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/height_map_array": [
+        "unitree_go/msg/HeightMap"
+      ],
+      "/utlidar/imu": [
+        "sensor_msgs/msg/Imu"
+      ],
+      "/utlidar/lidar_state": [
+        "unitree_go/msg/LidarState"
+      ],
+      "/utlidar/mapping_cmd": [
+        "std_msgs/msg/String"
+      ],
+      "/utlidar/range_info": [
+        "geometry_msgs/msg/PointStamped"
+      ],
+      "/utlidar/range_map": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/robot_odom": [
+        "nav_msgs/msg/Odometry"
+      ],
+      "/utlidar/robot_pose": [
+        "geometry_msgs/msg/PoseStamped"
+      ],
+      "/utlidar/server_log": [
+        "std_msgs/msg/String"
+      ],
+      "/utlidar/switch": [
+        "std_msgs/msg/String"
+      ],
+      "/utlidar/voxel_map": [
+        "sensor_msgs/msg/PointCloud2"
+      ],
+      "/utlidar/voxel_map_compressed": [
+        "unitree_go/msg/VoxelMapCompressed"
+      ]
+    }
+  },
+  "safety": {
+    "command_topics_published": [],
+    "command_topics_subscribed": [],
+    "publishers_created": 0,
+    "slam_started": false
+  },
+  "topics": {
+    "/uslam/cloud_map": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/frontend/cloud_world_ds": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/frontend/odom": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/localization/cloud_world": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/localization/odom": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/map_file_pub": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/map_file_sub": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/navigation/global_path": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/uslam/server_log": {
+      "child_frames": {},
+      "estimated_hz": 0.0,
+      "frames": {},
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 0,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/utlidar/cloud_base": {
+      "child_frames": {},
+      "estimated_hz": 15.385723414950363,
+      "frames": {
+        "base_link": 77
+      },
+      "point_count": {
+        "max": 1752,
+        "mean": 1504.3376623376623,
+        "min": 1283
+      },
+      "samples": 77,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/utlidar/cloud_deskewed": {
+      "child_frames": {},
+      "estimated_hz": 14.986094235341263,
+      "frames": {
+        "odom": 75
+      },
+      "point_count": {
+        "max": 11738,
+        "mean": 11503.813333333334,
+        "min": 11283
+      },
+      "samples": 75,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    },
+    "/utlidar/robot_odom": {
+      "child_frames": {
+        "base_link": 746
+      },
+      "estimated_hz": 149.06168399419442,
+      "frames": {
+        "odom": 746
+      },
+      "point_count": {
+        "max": null,
+        "mean": null,
+        "min": null
+      },
+      "samples": 746,
+      "stamp_backward_jumps": 0,
+      "stamp_duplicates": 0,
+      "text_samples": []
+    }
+  }
+}

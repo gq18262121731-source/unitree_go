@@ -1,0 +1,501 @@
+{
+  "checkpoint_count": 359,
+  "checks": {
+    "duration_reached": true,
+    "imu_frequency_200_to_300_hz": true,
+    "imu_samples": true,
+    "lidar_frequency_10_to_20_hz": true,
+    "lidar_samples": true,
+    "localization_disabled": true,
+    "motion_disabled": true,
+    "navigation_disabled": true,
+    "odometry_frequency_100_to_200_hz": true,
+    "odometry_samples": true,
+    "rss_growth_under_50_mb": true,
+    "stale_checkpoints_zero": true,
+    "timestamp_rollback_zero": true,
+    "topics_fresh": true,
+    "unexpected_error_absent": true
+  },
+  "completed": true,
+  "elapsed_seconds": 1800.7942227600142,
+  "error": null,
+  "event_counts": {
+    "imu": 446155,
+    "lidar": 27720,
+    "odometry": 267745
+  },
+  "intervals": {
+    "imu": {
+      "duplicate_count": 0,
+      "maximum_ms": 857.978582,
+      "mean_ms": 4.034295291977467,
+      "minimum_ms": 0.059366,
+      "p50_ms_recent_window": 4.491091,
+      "p95_ms_recent_window": 13.478756,
+      "positive_intervals": 446154,
+      "recent_window_size": 10000,
+      "rollback_count": 0,
+      "samples": 446155,
+      "standard_deviation_ms": 2.2526243441622023
+    },
+    "lidar": {
+      "duplicate_count": 0,
+      "maximum_ms": 909.167289,
+      "mean_ms": 64.9315629661965,
+      "minimum_ms": 50.046205,
+      "p50_ms_recent_window": 64.977646,
+      "p95_ms_recent_window": 65.65547,
+      "positive_intervals": 27719,
+      "recent_window_size": 10000,
+      "rollback_count": 0,
+      "samples": 27720,
+      "standard_deviation_ms": 5.212108197330166
+    },
+    "odometry": {
+      "duplicate_count": 0,
+      "maximum_ms": 916.479349,
+      "mean_ms": 6.722525716740598,
+      "minimum_ms": 4.000425,
+      "p50_ms_recent_window": 6.6683295000000005,
+      "p95_ms_recent_window": 8.291721,
+      "positive_intervals": 267744,
+      "recent_window_size": 10000,
+      "rollback_count": 0,
+      "samples": 267745,
+      "standard_deviation_ms": 2.4317423336991153
+    }
+  },
+  "passed": true,
+  "phase": "6.1-B",
+  "provider": {
+    "capabilities": {
+      "imu": true,
+      "lidar": true,
+      "localization": false,
+      "motion": false,
+      "navigation": false,
+      "odometry": true
+    },
+    "generated_at": "2026-07-30T05:00:18.827513+00:00",
+    "health": {
+      "sensor_online_is_navigation_ready": false,
+      "status": "READONLY_WITH_SEMANTIC_HOLD"
+    },
+    "localization": {
+      "available": false,
+      "reason": "INTERNAL_LOCALIZATION_NOT_VALIDATED",
+      "source": null
+    },
+    "motion": {
+      "commands_supported": [],
+      "enabled": false,
+      "reason": "PHASE_6_1_READONLY_BOUNDARY"
+    },
+    "navigation": {
+      "available": false,
+      "reason": "PHASE_5_5_HOLD"
+    },
+    "provider": "unitree_readonly",
+    "real_motion_enabled": false,
+    "robot": {
+      "firmware": "V1.1.15",
+      "hardware": "V2.0",
+      "model": "Go2 X EDU",
+      "online": true,
+      "telemetry": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      }
+    },
+    "schema_version": "1.0",
+    "sensors": {
+      "imu": {
+        "available": true,
+        "frame": "utlidar_imu",
+        "frequency_hz": 247.864,
+        "fresh": true,
+        "last_received_at": "2026-07-30T05:00:18.369429+00:00",
+        "last_source_timestamp": "2026-07-30T04:59:42.682762+00:00",
+        "sample_age_ms": 458.084,
+        "sample_count": 446155,
+        "semantic_note": "/utlidar/imu raw-specific-force semantics failed Phase 5.4.8/5.4.9 audit",
+        "semantic_valid": false,
+        "timestamp_rollback_count": 0,
+        "topic": "/sensor/imu",
+        "value": {
+          "angular_velocity": [
+            0.0013928189873695374,
+            -2.09583668038249e-05,
+            0.0034482870250940323
+          ],
+          "linear_acceleration": [
+            3.1715610027313232,
+            0.0001734178513288498,
+            9.918140411376953
+          ]
+        }
+      },
+      "lidar": {
+        "available": true,
+        "frame": "utlidar_lidar",
+        "frequency_hz": 15.401,
+        "fresh": true,
+        "last_received_at": "2026-07-30T05:00:18.258559+00:00",
+        "last_source_timestamp": "2026-07-30T04:59:42.566184+00:00",
+        "sample_age_ms": 568.954,
+        "sample_count": 27720,
+        "semantic_valid": true,
+        "timestamp_rollback_count": 0,
+        "topic": "/sensor/lidar",
+        "value": {
+          "fields": [
+            "x",
+            "y",
+            "z",
+            "intensity",
+            "ring",
+            "time"
+          ],
+          "point_step": 32,
+          "points": 4025
+        }
+      },
+      "lidar_state": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      },
+      "odometry": {
+        "available": true,
+        "frame": "odom",
+        "frequency_hz": 148.749,
+        "fresh": true,
+        "last_received_at": "2026-07-30T05:00:18.346661+00:00",
+        "last_source_timestamp": "2026-07-30T04:59:42.683151+00:00",
+        "sample_age_ms": 480.852,
+        "sample_count": 267745,
+        "semantic_valid": true,
+        "timestamp_rollback_count": 0,
+        "topic": "/odom",
+        "value": {
+          "child_frame_id": "base_link",
+          "position": [
+            0.021665016189217567,
+            -0.07643277943134308,
+            0.3128570318222046
+          ]
+        }
+      }
+    },
+    "transport": {
+      "errors": [],
+      "healthy": true,
+      "source": "ros2"
+    }
+  },
+  "recent_checkpoints": [
+    {
+      "elapsed_seconds": 1680.8127135859686,
+      "imu_fresh": true,
+      "imu_samples": 420420,
+      "lidar_fresh": true,
+      "lidar_samples": 25894,
+      "odometry_fresh": true,
+      "odometry_samples": 251258,
+      "process_cpu_seconds": 484.157733747,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1685.8137705510017,
+      "imu_fresh": true,
+      "imu_samples": 421671,
+      "lidar_fresh": true,
+      "lidar_samples": 25972,
+      "odometry_fresh": true,
+      "odometry_samples": 252007,
+      "process_cpu_seconds": 485.829457292,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1690.819003031007,
+      "imu_fresh": true,
+      "imu_samples": 422923,
+      "lidar_fresh": true,
+      "lidar_samples": 26049,
+      "odometry_fresh": true,
+      "odometry_samples": 252759,
+      "process_cpu_seconds": 487.41516887,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1695.8195402409765,
+      "imu_fresh": true,
+      "imu_samples": 424178,
+      "lidar_fresh": true,
+      "lidar_samples": 26126,
+      "odometry_fresh": true,
+      "odometry_samples": 253509,
+      "process_cpu_seconds": 488.914379714,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1700.8237782779615,
+      "imu_fresh": true,
+      "imu_samples": 425432,
+      "lidar_fresh": true,
+      "lidar_samples": 26203,
+      "odometry_fresh": true,
+      "odometry_samples": 254260,
+      "process_cpu_seconds": 490.55361,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1705.8260396879632,
+      "imu_fresh": true,
+      "imu_samples": 426685,
+      "lidar_fresh": true,
+      "lidar_samples": 26280,
+      "odometry_fresh": true,
+      "odometry_samples": 255004,
+      "process_cpu_seconds": 492.413484893,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1710.8260879509617,
+      "imu_fresh": true,
+      "imu_samples": 427929,
+      "lidar_fresh": true,
+      "lidar_samples": 26357,
+      "odometry_fresh": true,
+      "odometry_samples": 255758,
+      "process_cpu_seconds": 494.148942465,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1715.8335638180142,
+      "imu_fresh": true,
+      "imu_samples": 429179,
+      "lidar_fresh": true,
+      "lidar_samples": 26434,
+      "odometry_fresh": true,
+      "odometry_samples": 256509,
+      "process_cpu_seconds": 495.928047727,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1720.8345418800018,
+      "imu_fresh": true,
+      "imu_samples": 430433,
+      "lidar_fresh": true,
+      "lidar_samples": 26511,
+      "odometry_fresh": true,
+      "odometry_samples": 257263,
+      "process_cpu_seconds": 497.68994525,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1725.8408871529973,
+      "imu_fresh": true,
+      "imu_samples": 431683,
+      "lidar_fresh": true,
+      "lidar_samples": 26588,
+      "odometry_fresh": true,
+      "odometry_samples": 258005,
+      "process_cpu_seconds": 499.387860039,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1730.8433897229843,
+      "imu_fresh": true,
+      "imu_samples": 432937,
+      "lidar_fresh": true,
+      "lidar_samples": 26665,
+      "odometry_fresh": true,
+      "odometry_samples": 258748,
+      "process_cpu_seconds": 501.14560793,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1735.8458359389915,
+      "imu_fresh": true,
+      "imu_samples": 434179,
+      "lidar_fresh": true,
+      "lidar_samples": 26742,
+      "odometry_fresh": true,
+      "odometry_samples": 259491,
+      "process_cpu_seconds": 503.311495587,
+      "rss_mb": 57.40625
+    },
+    {
+      "elapsed_seconds": 1740.8476862370153,
+      "imu_fresh": true,
+      "imu_samples": 435411,
+      "lidar_fresh": true,
+      "lidar_samples": 26819,
+      "odometry_fresh": true,
+      "odometry_samples": 260232,
+      "process_cpu_seconds": 505.703460474,
+      "rss_mb": 57.41015625
+    },
+    {
+      "elapsed_seconds": 1745.8482811789727,
+      "imu_fresh": true,
+      "imu_samples": 436661,
+      "lidar_fresh": true,
+      "lidar_samples": 26896,
+      "odometry_fresh": true,
+      "odometry_samples": 260979,
+      "process_cpu_seconds": 507.696838726,
+      "rss_mb": 57.41796875
+    },
+    {
+      "elapsed_seconds": 1750.8491886439733,
+      "imu_fresh": true,
+      "imu_samples": 437912,
+      "lidar_fresh": true,
+      "lidar_samples": 26973,
+      "odometry_fresh": true,
+      "odometry_samples": 261726,
+      "process_cpu_seconds": 509.562332509,
+      "rss_mb": 57.4296875
+    },
+    {
+      "elapsed_seconds": 1755.8499331179773,
+      "imu_fresh": true,
+      "imu_samples": 439165,
+      "lidar_fresh": true,
+      "lidar_samples": 27050,
+      "odometry_fresh": true,
+      "odometry_samples": 262479,
+      "process_cpu_seconds": 511.404394472,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1760.8502283859998,
+      "imu_fresh": true,
+      "imu_samples": 440150,
+      "lidar_fresh": true,
+      "lidar_samples": 27114,
+      "odometry_fresh": true,
+      "odometry_samples": 263078,
+      "process_cpu_seconds": 513.512122939,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1765.850382753997,
+      "imu_fresh": true,
+      "imu_samples": 441037,
+      "lidar_fresh": true,
+      "lidar_samples": 27191,
+      "odometry_fresh": true,
+      "odometry_samples": 263747,
+      "process_cpu_seconds": 518.730297359,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1770.8510675830184,
+      "imu_fresh": true,
+      "imu_samples": 441892,
+      "lidar_fresh": true,
+      "lidar_samples": 27268,
+      "odometry_fresh": true,
+      "odometry_samples": 264395,
+      "process_cpu_seconds": 523.827314795,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1775.8545131040155,
+      "imu_fresh": true,
+      "imu_samples": 442556,
+      "lidar_fresh": true,
+      "lidar_samples": 27345,
+      "odometry_fresh": true,
+      "odometry_samples": 264958,
+      "process_cpu_seconds": 529.284072799,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1780.8614549529739,
+      "imu_fresh": true,
+      "imu_samples": 443515,
+      "lidar_fresh": true,
+      "lidar_samples": 27422,
+      "odometry_fresh": true,
+      "odometry_samples": 265621,
+      "process_cpu_seconds": 533.3555611,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1785.8621261949884,
+      "imu_fresh": true,
+      "imu_samples": 444340,
+      "lidar_fresh": true,
+      "lidar_samples": 27499,
+      "odometry_fresh": true,
+      "odometry_samples": 266244,
+      "process_cpu_seconds": 538.113078232,
+      "rss_mb": 57.43359375
+    },
+    {
+      "elapsed_seconds": 1790.865660492971,
+      "imu_fresh": true,
+      "imu_samples": 445056,
+      "lidar_fresh": true,
+      "lidar_samples": 27576,
+      "odometry_fresh": true,
+      "odometry_samples": 266847,
+      "process_cpu_seconds": 543.350064296,
+      "rss_mb": 57.4453125
+    },
+    {
+      "elapsed_seconds": 1795.8659852870042,
+      "imu_fresh": true,
+      "imu_samples": 445661,
+      "lidar_fresh": true,
+      "lidar_samples": 27651,
+      "odometry_fresh": true,
+      "odometry_samples": 267339,
+      "process_cpu_seconds": 548.288750344,
+      "rss_mb": 57.453125
+    }
+  ],
+  "resource": {
+    "high_water_mb": 57.20703125,
+    "process_cpu_seconds": 553.483129043,
+    "rss_growth_mb": 0.6015625,
+    "rss_mb": 53.43359375,
+    "rss_slope_mb_per_minute": 0.020043239557199586
+  },
+  "safety": {
+    "motion_control": "NOT_USED",
+    "publishers_created": 0,
+    "slam_started": false,
+    "tf_published": false
+  },
+  "stale_checkpoint_counts": {
+    "imu": 0,
+    "lidar": 0,
+    "odometry": 0
+  },
+  "started_at": "2026-07-30T04:30:18.033284+00:00",
+  "target_duration_seconds": 1800.0,
+  "updated_at": "2026-07-30T05:00:18.833885+00:00"
+}

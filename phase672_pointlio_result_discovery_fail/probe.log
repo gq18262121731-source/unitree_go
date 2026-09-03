@@ -1,0 +1,2 @@
+1786764545.463616 [172]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[INFO] [1786764860.507590601] [phase545_pointlio_probe]: saved 0 odometry samples to /mnt/e/笨笨狗/phase672_pointlio_result/pointlio_odom.json

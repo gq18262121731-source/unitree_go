@@ -1,0 +1,27 @@
+{
+  "base_frame": "base_link",
+  "base_points": 1284,
+  "base_to_radar_rpy_rad": [
+    0.0,
+    2.8782,
+    0.0
+  ],
+  "base_to_radar_xyz_m": [
+    0.28945,
+    0.0,
+    -0.046825
+  ],
+  "comparison": "nearest transformed raw point for each cloud_base point",
+  "error_max_m": 3.0812821124176337,
+  "error_mean_m": 0.2925380079583119,
+  "error_p95_m": 0.918631250306898,
+  "error_rms_m": 0.5168911381579752,
+  "matched_stamp_ns": 1785059992351552486,
+  "pass": false,
+  "raw_frame": "utlidar_lidar",
+  "raw_points": 4075,
+  "source": "unitreerobotics/unitree_ros robots/go2_description/urdf/go2_description.urdf",
+  "source_joint": "radar_joint",
+  "threshold_rms_m": 0.002,
+  "valid_base_points": 1284
+}

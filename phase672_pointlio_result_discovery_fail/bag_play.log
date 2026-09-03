@@ -1,0 +1,9 @@
+stdin is not a terminal device. Keyboard handling disabled.1786764550.421508 [172]       ros2: selected interface "lo" is not multicast-capable: disabling multicast
+[INFO] [1786764550.496590663] [rosbag2_storage]: Opened database '/mnt/e/笨笨狗/phase672_bags/phase545_go2_community_transform/phase545_go2_community_transform.db3' for READ_ONLY.
+[INFO] [1786764550.497040876] [rosbag2_player]: Set rate to 1
+[INFO] [1786764550.500965351] [rosbag2_player]: Adding keyboard callbacks.
+[INFO] [1786764550.501393852] [rosbag2_player]: Press SPACE for Pause/Resume
+[INFO] [1786764550.501727910] [rosbag2_player]: Press CURSOR_RIGHT for Play Next Message
+[INFO] [1786764550.502010069] [rosbag2_player]: Press CURSOR_UP for Increase Rate 10%
+[INFO] [1786764550.502436551] [rosbag2_player]: Press CURSOR_DOWN for Decrease Rate 10%
+[INFO] [1786764550.507835048] [rosbag2_storage]: Opened database '/mnt/e/笨笨狗/phase672_bags/phase545_go2_community_transform/phase545_go2_community_transform.db3' for READ_ONLY.

@@ -1,0 +1,21 @@
+stamp: 1785063252.4276736
+firmware_version: ''
+software_version: 1.0.0.38
+sdk_version: ''
+sys_rotation_speed: 12931.0341796875
+com_rotation_speed: 260.4686584472656
+error_state: 0
+cloud_frequency: 15.389286994934082
+cloud_packet_loss_rate: 1.1049723625183105
+cloud_size: 59353
+cloud_scan_num: 210
+imu_frequency: 248.0142364501953
+imu_packet_loss_rate: 0.0
+imu_rpy:
+- -145.79649353027344
+- 20.064115524291992
+- 0.01567044109106064
+serial_recv_stamp: 1785063252.4276001
+serial_buffer_size: 0
+serial_buffer_read: 270
+---

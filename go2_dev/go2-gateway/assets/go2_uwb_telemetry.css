@@ -1,0 +1,262 @@
+:root {
+  color-scheme: dark;
+  font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  background: #091018;
+  color: #e8f0f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#react-entry-point {
+  width: 100%;
+  min-width: 980px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #091018;
+}
+
+.telemetry-shell {
+  display: grid;
+  grid-template-rows: 64px 126px minmax(0, 1fr) 40px auto;
+  width: 100vw;
+  height: 100vh;
+  padding: 0 28px;
+  background: #091018;
+}
+
+.page-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #233442;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.header-rule {
+  position: absolute;
+  left: 0;
+  width: 54px;
+  height: 3px;
+  background: #27c2d1;
+}
+
+.mock-label {
+  position: absolute;
+  right: 0;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid #8b6d32;
+  color: #f0ad4e;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1.22fr 1.22fr 0.9fr 0.9fr;
+  align-items: center;
+  border-bottom: 1px solid #233442;
+}
+
+.metric {
+  position: relative;
+  min-width: 0;
+  padding: 0 34px;
+}
+
+.metric:first-child {
+  padding-left: 8px;
+}
+
+.metric + .metric::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  width: 1px;
+  background: #233442;
+}
+
+.metric-label {
+  margin-bottom: 8px;
+  color: #8093a1;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.metric-variable {
+  font-size: 11px;
+  opacity: 0.65;
+}
+
+.metric-value {
+  overflow: hidden;
+  color: #e8f0f5;
+  font-variant-numeric: tabular-nums;
+  font-weight: 550;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metric-primary .metric-value {
+  font-size: clamp(38px, 3.4vw, 54px);
+}
+
+.metric-primary:first-child .metric-value {
+  color: #27c2d1;
+}
+
+.metric-secondary .metric-value {
+  font-size: clamp(26px, 2.25vw, 36px);
+}
+
+.monitor-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1px;
+  min-height: 0;
+  margin-top: 12px;
+  background: #233442;
+  border: 1px solid #233442;
+}
+
+.chart-panel {
+  display: grid;
+  grid-template-rows: 42px minmax(0, 1fr);
+  min-height: 0;
+  background: #0d1721;
+}
+
+.position-panel {
+  grid-row: 1 / span 2;
+}
+
+.chart-panel h2 {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 18px;
+  border-bottom: 1px solid #1d2b36;
+  color: #d9e5eb;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.chart-panel h2::before {
+  content: "";
+  width: 3px;
+  height: 15px;
+  margin-right: 9px;
+  background: #27c2d1;
+}
+
+.telemetry-graph,
+.telemetry-graph .js-plotly-plot,
+.telemetry-graph .plot-container,
+.telemetry-graph .svg-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0;
+}
+
+.runtime-status {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+  padding-left: 8px;
+  border-top: 1px solid #233442;
+  color: #8093a1;
+  font-size: 12px;
+}
+
+.status-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.status-label {
+  color: #a9bac4;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.status-ok {
+  background: #42c98a;
+}
+
+.status-waiting {
+  background: #687985;
+}
+
+.status-error {
+  background: #ef6b73;
+}
+
+.status-unavailable {
+  background: #f0ad4e;
+}
+
+.debug-panel {
+  position: fixed;
+  right: 28px;
+  bottom: 46px;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 1px;
+  max-width: 680px;
+  padding: 1px;
+  border: 1px solid #344957;
+  background: #344957;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 35%);
+  z-index: 20;
+}
+
+.debug-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 10px;
+  background: #101c26;
+  color: #8093a1;
+  font-size: 11px;
+}
+
+.debug-item code {
+  color: #c9d6dd;
+  font-family: Consolas, monospace;
+}
+
+@media (max-height: 760px) {
+  .telemetry-shell {
+    grid-template-rows: 54px 104px minmax(0, 1fr) 34px auto;
+  }
+
+  .page-header h1 {
+    font-size: 21px;
+  }
+
+  .chart-panel {
+    grid-template-rows: 36px minmax(0, 1fr);
+  }
+}

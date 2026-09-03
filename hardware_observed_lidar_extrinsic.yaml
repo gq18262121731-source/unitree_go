@@ -1,0 +1,25 @@
+# EXPERIMENTAL OBSERVATION ONLY - DO NOT PUBLISH AS TF
+source: observed_from_cloud_base
+confidence: experimental
+official_calibration: false
+publish_tf: false
+parent_frame: base_link
+child_frame: utlidar_lidar
+translation_xyz_m: [0.2821600275, 0.0000000170, -0.0000000349]
+quaternion_xyzw: [-0.8713116353, 0.4730810194, -0.1146184836, 0.0622333233]
+rpy_rad: [-2.920720112, -0.141323991, -1.010529934]
+rotation_matrix_row_major:
+  - [0.526113905, -0.810135815, 0.258619645]
+  - [-0.838668172, -0.544642725, 0.000001579]
+  - [0.140854029, -0.216896895, -0.965979233]
+evidence:
+  capture: phase542_motion_clouds.npz
+  analysis: phase542_motion_analysis.json
+  exact_stamp_match_ratio: 1.0
+  residual_mean_m: 0.000000090234
+  residual_max_m: 0.000001442140
+limitations:
+  - Not sourced from official calibration/API/IDL.
+  - Matrix maps lidar-frame points into base_link coordinates (p_base = R * p_lidar + t).
+  - TF semantics would be parent base_link, child utlidar_lidar; publication remains forbidden.
+  - Do not invert or publish until provenance and online validation gates pass.

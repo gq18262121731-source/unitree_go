@@ -5,4 +5,6 @@ numpy
 opencv-python-headless
 pytest
 httpx
-
+PyYAML>=6.0,<7.0
+dash>=2.17,<4.0
+plotly>=5.20,<7.0

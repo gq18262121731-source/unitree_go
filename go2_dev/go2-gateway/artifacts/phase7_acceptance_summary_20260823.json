@@ -1,0 +1,226 @@
+{
+  "report_date": "2026-08-23",
+  "overall": "PHASE_7_2A_OFFLINE_PASS_LIVE_WAITING_REAL_MOTION_CLOSED",
+  "read_only": true,
+  "motion_calls": 0,
+  "motion_execution_enabled": false,
+  "uwb": {
+    "phase": "7.1",
+    "verdict": "PASS",
+    "bearing_source": "orientation_est",
+    "bearing_unit": "radians",
+    "bearing_sign": 1,
+    "bearing_zero_offset_rad": 0.55,
+    "left_positive": true,
+    "right_negative": true,
+    "powercycle": {
+      "last_sample_before_off_seconds": 10.75,
+      "first_sample_after_recovery_seconds": 32.907,
+      "receive_gap_seconds": 22.157,
+      "lowstate_remained_available": true,
+      "stale_timeout_seconds": 2.0,
+      "stale_produces_zero_motion": true,
+      "automatic_resume_allowed": false
+    },
+    "yaw_calibration": {
+      "sample_count": 254,
+      "accepted_sample_count": 254,
+      "observed_rate_hz": 5.08,
+      "maximum_receive_gap_seconds": 0.969
+    }
+  },
+  "dry_run": {
+    "phase": "7.1-B",
+    "verdict": "PASS_DRY_RUN",
+    "real_executor_remained_disabled": true,
+    "move_count": 0,
+    "dropout_replay": {
+      "sample_count": 85,
+      "accepted_sample_count": 85,
+      "maximum_receive_gap_seconds": 22.157,
+      "decision_reason": "uwb_stale",
+      "zero_motion": true
+    },
+    "direction_replay": {
+      "sample_count": 254,
+      "accepted_sample_count": 254,
+      "front_mean_bearing_rad": 0.0037295184563845302,
+      "front_mean_wz": -0.3906029807194725,
+      "left_mean_bearing_rad": 0.6633543399409968,
+      "left_mean_wz": 0.2636812300892634,
+      "right_mean_bearing_rad": -0.44335214880204926,
+      "right_mean_wz": -0.5,
+      "desired_right_rear_pose": {
+        "back_distance_m": 1.5,
+        "right_offset_m": 0.5,
+        "distance_m": 1.5811388300841898,
+        "bearing_rad": 0.3217505543966422,
+        "vx": 0.0,
+        "wz": 0.0
+      }
+    }
+  },
+  "lidar": {
+    "phase": "7.1-C",
+    "verdict": "FUNCTIONAL_TRANSITIONS_PASS_ABSOLUTE_DISTANCE_HOLD",
+    "topic": "rt/utlidar/cloud_base",
+    "frame": "base_link",
+    "frequency_hz_range": [15.34, 15.44],
+    "median_points_per_cloud_range": [1543.5, 1573.0],
+    "decode_error_count": 0,
+    "manual_distance_datum": "ground projection of longitudinal midpoint between front and rear hip-axis center lines",
+    "manual_distance_datum_confirmed_by_operator": true,
+    "front_shell_measurement_hypothesis_rejected": true,
+    "horizontal_radial_distance_inflation_m_range": [0.006, 0.012],
+    "candidate_roi_min_z_m": -0.25,
+    "production_roi_min_z_m": -0.35,
+    "candidate_frozen_to_production": false,
+    "functional_checks": {
+      "clear_baseline": true,
+      "slow_at_0p80m": true,
+      "direct_stop_transition": true,
+      "stop_latch": true,
+      "clear_after_actual_obstacle_removal": true,
+      "slow_release_requires_three_clear_samples": true
+    },
+    "formal_positions": [
+      {
+        "expected_distance_m": 2.0,
+        "expected_level": "CLEAR",
+        "stable_level": "CLEAR",
+        "median_distance_m": null,
+        "distance_error_m": null,
+        "note": "At roi_max_x boundary; no ROI points"
+      },
+      {
+        "expected_distance_m": 1.5,
+        "expected_level": "CLEAR",
+        "stable_level": "CLEAR",
+        "median_distance_m": 1.6518460991595232,
+        "distance_error_m": 0.15184609915952318
+      },
+      {
+        "expected_distance_m": 1.2,
+        "expected_level": "SLOW",
+        "stable_level": "CLEAR",
+        "median_distance_m": 1.3165612090611982,
+        "distance_error_m": 0.11656120906119827,
+        "verdict": "HOLD_LEVEL"
+      },
+      {
+        "expected_distance_m": 0.8,
+        "expected_level": "SLOW",
+        "stable_level": "SLOW",
+        "median_distance_m": 0.9074050530440285,
+        "distance_error_m": 0.10740505304402848,
+        "source": "continuous_hysteresis_session"
+      },
+      {
+        "expected_distance_m": 0.65,
+        "expected_level": "STOP",
+        "stable_level": "STOP",
+        "median_distance_m": 0.788621715172751,
+        "distance_error_m": 0.13862171517275101,
+        "note": "Observed while STOP was latched"
+      },
+      {
+        "expected_distance_m": 0.5,
+        "expected_level": "STOP",
+        "stable_level": "STOP",
+        "median_distance_m": 0.6718059434132698,
+        "distance_error_m": 0.17180594341326982,
+        "distance_within_0p15m_tolerance": false
+      }
+    ],
+    "direct_stop": {
+      "sample_count": 616,
+      "clear_count": 466,
+      "slow_count": 104,
+      "stop_count": 46,
+      "direct_stop_zone_count": 2,
+      "minimum_distance_m": 0.6037221746955762,
+      "final_stable_level": "STOP"
+    },
+    "recovery_retry": {
+      "sample_count": 616,
+      "clear_count": 616,
+      "final_stable_level": "CLEAR",
+      "passed": true
+    }
+  },
+  "tests": {
+    "targeted_phase7_tests": "27 passed",
+    "full_suite_collected": 400,
+    "full_suite_unrelated_failures": 1,
+    "unrelated_failure": "tests/test_robot_tasks.py::test_task_audit_log_endpoint_returns_recent_entries",
+    "isolated_rerun_passed": true
+  },
+  "lidar_c2": {
+    "verdict": "GEOMETRY_REPEATABLE_THRESHOLD_CALIBRATION_HOLD",
+    "manual_datum_confirmed": true,
+    "radial_fit": {
+      "slope": 1.0426539940033905,
+      "intercept_m": 0.0757839780427604,
+      "r_squared": 0.9970197557755638
+    },
+    "physical_1p20m_slow_with_current_threshold": false,
+    "physical_0p65m_direct_stop_with_current_threshold": false,
+    "physical_0p50m_direct_stop": true,
+    "clear_recovery": true,
+    "candidate_slow_distance_m_for_readonly_validation": 1.4,
+    "candidate_stop_distance_m_for_readonly_validation": 0.8,
+    "production_parameters_modified": false,
+    "motion_calls": 0
+  },
+  "lidar_c3": {
+    "verdict": "OPERATOR_ACCEPTED_REFERENCE_BOARD_PASS_WITH_WAIVERS",
+    "candidate_config": {
+      "slow_distance_m": 1.4,
+      "stop_distance_m": 0.8,
+      "roi_min_z_m": -0.25
+    },
+    "reference_board_state_chain": {
+      "clear_baseline": "CLEAR",
+      "physical_1p50m": "CLEAR",
+      "physical_1p20m": "SLOW",
+      "physical_0p80m": "SLOW_NO_CLEAR",
+      "physical_0p65m": "STOP_143_DIRECT_FRAMES",
+      "physical_0p50m": "STOP_154_DIRECT_FRAMES",
+      "clear_after_removal": "CLEAR"
+    },
+    "operator_accepted_distance_error": true,
+    "live_three_frame_recovery_transition_captured": false,
+    "low_obstacle_coverage": "NOT_RUN_WAIVED_FOR_NOW",
+    "shutdown_invalid_sample_observed": true,
+    "production_config_modified": false,
+    "motion_calls": 0
+  },
+  "phase7_2a": {
+    "verdict": "PASS_OFFLINE_CONTROL_MAPPING",
+    "historical_uwb_samples": 931,
+    "timeline_rows": 936,
+    "captured_dropout_seconds": 22.157,
+    "all_mapping_checks_passed": true,
+    "targeted_tests": "30 passed",
+    "python_compile_check": "PASS",
+    "live_tool_prepared_not_run": true,
+    "live_uwb_control_dry_run": "WAITING_FOR_ROBOT",
+    "real_motion": "CLOSED",
+    "motion_calls": 0,
+    "dds_publishers": 0
+  },
+  "gates": {
+    "phase7_1_uwb": "PASS",
+    "phase7_1b_dry_run": "PASS",
+    "phase7_1c_functional_transitions": "PASS",
+    "phase7_1c_absolute_distance": "HOLD",
+    "phase7_1c2_geometry_repeatability": "PASS",
+    "phase7_1c2_physical_threshold_mapping": "HOLD",
+    "phase7_1c3_reference_board_thresholds": "OPERATOR_ACCEPTED",
+    "phase7_1c3_low_obstacle_coverage": "NOT_RUN_WAIVED_FOR_NOW",
+    "production_candidate_config_write": "NOT_DONE",
+    "phase7_2a_offline_control_mapping": "PASS",
+    "phase7_2a_live_uwb_dryrun": "WAITING_FOR_ROBOT",
+    "phase7_2_real_motion": "CLOSED"
+  }
+}

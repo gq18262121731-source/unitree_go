@@ -1,0 +1,53 @@
+# Go2 Companion real-hardware field profile.
+# Edit values only while the robot is stopped, then restart the real runtime.
+follow:
+  # Companion V2: a closer indoor monitoring envelope.
+  target_distance_m: 1.35
+  target_bearing_deg: 18.435
+  start_distance_m: 1.20
+  stop_distance_m: 1.05
+
+  walk_min_mps: 0.24
+  vx_max_mps: 0.504
+  wz_max_radps: 1.10
+
+  bearing_deadband_deg: 5
+  person_stop_hold_s: 1.5
+  uwb_timeout_s: 2.0
+
+  # Keep the calibrated elder-follow envelope aligned with gateway hard limits.
+  control_frequency_hz: 10
+  hard_min_distance_m: 1.0
+  hard_max_distance_m: 2.5
+  # Base proportional term; the wireless curve reaches 0.504 m/s at 2.0 m.
+  kx: 0.40
+  ky: 0.80
+
+lidar:
+  slow_distance_m: 0.70
+  stop_distance_m: 0.50
+  slow_scale: 0.35
+
+  # Preserve the calibrated sensing volume while changing control thresholds.
+  roi_min_z_m: -0.25
+  roi_width_m: 0.90
+  roi_min_x_m: 0.10
+  roi_max_x_m: 2.00
+  roi_max_z_m: 0.65
+
+  stale_timeout_s: 0.35
+  minimum_cloud_points: 10
+  minimum_obstacle_points: 3
+  clear_samples_required: 3
+
+view_adjust:
+  enabled: true
+  max_wz_radps: 0.20
+  target_bearing_deg: 0
+  deadband_deg: 8
+  gain: 0.80
+
+safety:
+  require_manual_resume_after_preempt: true
+  # 4 Hz WebRTC control plus RPC latency margin; watchdog remains fail-safe.
+  watchdog_s: 1.25

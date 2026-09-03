@@ -1,0 +1,30 @@
+{
+  "ros2": {
+    "/utlidar/cloud": {
+      "count": 4615,
+      "header_stamps_sha256": "8317fe598779083473e54ee22a2046fa1012407be2a06d781c5592974808a470",
+      "payload_sha256": "33dc92680cc83897e4408242c0f30c717abcdbda5485c0ac989de63a41c1fc41"
+    },
+    "/utlidar/imu": {
+      "count": 75021,
+      "header_stamps_sha256": "413c4774d05b2efe49e74fb2e854081d1b649cd0ec10df5efeffb48496087b12",
+      "payload_sha256": "bef65b4ee105b79bbedd2b2ef16e2a4b0c116ec4c16d94f20daaf0b4a523e706"
+    }
+  },
+  "ros1": {
+    "/utlidar/cloud": {
+      "count": 4615,
+      "header_stamps_sha256": "8317fe598779083473e54ee22a2046fa1012407be2a06d781c5592974808a470",
+      "payload_sha256": "33dc92680cc83897e4408242c0f30c717abcdbda5485c0ac989de63a41c1fc41"
+    },
+    "/utlidar/imu": {
+      "count": 75021,
+      "header_stamps_sha256": "413c4774d05b2efe49e74fb2e854081d1b649cd0ec10df5efeffb48496087b12",
+      "payload_sha256": "bef65b4ee105b79bbedd2b2ef16e2a4b0c116ec4c16d94f20daaf0b4a523e706"
+    }
+  },
+  "exact_match": {
+    "/utlidar/cloud": true,
+    "/utlidar/imu": true
+  }
+}

@@ -1,0 +1,16 @@
+python=/usr/bin/python3
+sys.path:
+  /home/go2/go2-readonly-adapter/tools
+  /home/go2/go2-readonly-adapter/src
+  /opt/ros/humble/local/lib/python3.10/dist-packages
+  /opt/ros/humble/lib/python3.10/site-packages
+  /usr/lib/python310.zip
+  /usr/lib/python3.10
+  /usr/lib/python3.10/lib-dynload
+  /usr/local/lib/python3.10/dist-packages
+  /usr/lib/python3/dist-packages
+PASS rclpy /opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py
+PASS rclpy.node /opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py
+PASS rclpy.qos /opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/qos.py
+PASS sensor_msgs.msg /opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/__init__.py
+PASS nav_msgs.msg /opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/__init__.py

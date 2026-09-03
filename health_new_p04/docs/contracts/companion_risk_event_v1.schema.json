@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "companion_risk_event_v1.schema.json",
+  "title": "Companion Risk Event V1",
+  "type": "object",
+  "required": ["schema_version", "event_type", "incident_id", "timestamp", "source"],
+  "properties": {
+    "schema_version": {"const": "companion_risk_event.v1"},
+    "event_type": {
+      "enum": [
+        "NON_FALL",
+        "FALL_SUSPECTED",
+        "FALL_CONFIRMED",
+        "FALL_DISMISSED",
+        "RECOVERY_SUSPECTED",
+        "RECOVERY_CONFIRMED"
+      ]
+    },
+    "incident_id": {"type": "string", "minLength": 1, "maxLength": 160},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "source": {"type": "string", "minLength": 1, "maxLength": 120},
+    "camera_id": {"type": ["string", "null"], "maxLength": 80},
+    "elder_id": {"type": ["string", "null"], "maxLength": 160},
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,139 @@
+PHASE_5_4_5_PREFLIGHT
+timestamp=2026-07-28T13:45:55+08:00
+hostname=go2-ros2-vm
+ros_distro=humble
+rmw=rmw_cyclonedds_cpp
+cyclonedds_uri=file:///home/go2/phase53_ros2_ws/src/unitree_sensor_bridge/config/cyclonedds_go2.xml
+
+[system]
+Ubuntu 22.04.5 LTS
+6.8.0-136-generic
+Asia/Shanghai
+yes
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2        98G   15G   79G  16% /
+
+[rosbag2]
+record_command=PASS
+
+[forbidden_process_check]
+forbidden_processes=NONE
+
+[relevant_topics]
+/odom
+/utlidar/client_command
+/utlidar/cloud
+/utlidar/cloud_base
+/utlidar/cloud_deskewed
+/utlidar/grid_map
+/utlidar/height_map
+/utlidar/height_map_array
+/utlidar/imu
+/utlidar/lidar_state
+/utlidar/mapping_cmd
+/utlidar/range_info
+/utlidar/range_map
+/utlidar/robot_odom
+/utlidar/robot_pose
+/utlidar/server_log
+/utlidar/switch
+/utlidar/voxel_map
+/utlidar/voxel_map_compressed
+
+[required_topic_gate]
+/utlidar/cloud=PASS
+/utlidar/cloud_base=PASS
+/utlidar/imu=PASS
+/utlidar/robot_odom=PASS
+/utlidar/lidar_state=PASS
+
+[topic_types]
+/odom [nav_msgs/msg/Odometry]
+/utlidar/cloud [sensor_msgs/msg/PointCloud2]
+/utlidar/cloud_base [sensor_msgs/msg/PointCloud2]
+/utlidar/cloud_deskewed [sensor_msgs/msg/PointCloud2]
+/utlidar/imu [sensor_msgs/msg/Imu]
+/utlidar/lidar_state [unitree_go/msg/LidarState]
+/utlidar/robot_odom [nav_msgs/msg/Odometry]
+
+[lidar_state_once]
+stamp: 1785217537.4273076
+firmware_version: ''
+software_version: 1.0.0.38
+sdk_version: ''
+sys_rotation_speed: 12944.9833984375
+com_rotation_speed: 260.43023681640625
+error_state: 0
+dirty_percentage: 1
+cloud_frequency: 15.412169456481934
+cloud_packet_loss_rate: 0.0
+cloud_size: 61821
+cloud_scan_num: 210
+imu_frequency: 249.3438720703125
+imu_packet_loss_rate: 0.0
+imu_rpy:
+- 154.7494354248047
+- 19.05856704711914
+- -0.025475958362221718
+serial_recv_stamp: 1785217537.427064
+serial_buffer_size: 0
+serial_buffer_read: 60
+---
+
+[short_rate_checks]
+--- /utlidar/cloud
+average rate: 15.450
+	min: 0.059s max: 0.070s std dev: 0.00284s window: 17
+average rate: 15.411
+	min: 0.057s max: 0.074s std dev: 0.00339s window: 33
+average rate: 15.422
+	min: 0.033s max: 0.097s std dev: 0.00710s window: 49
+average rate: 15.401
+	min: 0.033s max: 0.097s std dev: 0.00676s window: 65
+average rate: 15.416
+	min: 0.033s max: 0.097s std dev: 0.00639s window: 81
+average rate: 15.413
+	min: 0.033s max: 0.097s std dev: 0.00603s window: 97
+--- /utlidar/cloud_base
+average rate: 15.420
+	min: 0.056s max: 0.076s std dev: 0.00368s window: 17
+average rate: 15.409
+	min: 0.056s max: 0.076s std dev: 0.00275s window: 33
+average rate: 15.411
+	min: 0.056s max: 0.076s std dev: 0.00302s window: 49
+average rate: 15.419
+	min: 0.051s max: 0.079s std dev: 0.00369s window: 65
+average rate: 15.411
+	min: 0.051s max: 0.079s std dev: 0.00333s window: 81
+average rate: 15.414
+	min: 0.051s max: 0.079s std dev: 0.00329s window: 97
+--- /utlidar/imu
+average rate: 250.632
+	min: 0.000s max: 0.016s std dev: 0.00212s window: 251
+average rate: 250.262
+	min: 0.000s max: 0.016s std dev: 0.00188s window: 501
+average rate: 249.960
+	min: 0.000s max: 0.016s std dev: 0.00175s window: 751
+average rate: 249.965
+	min: 0.000s max: 0.016s std dev: 0.00167s window: 1002
+average rate: 250.268
+	min: 0.000s max: 0.016s std dev: 0.00166s window: 1254
+average rate: 250.348
+	min: 0.000s max: 0.016s std dev: 0.00162s window: 1505
+average rate: 250.126
+	min: 0.000s max: 0.019s std dev: 0.00172s window: 1754
+--- /utlidar/robot_odom
+average rate: 151.046
+	min: 0.003s max: 0.009s std dev: 0.00059s window: 153
+average rate: 149.542
+	min: 0.003s max: 0.019s std dev: 0.00104s window: 302
+average rate: 148.208
+	min: 0.000s max: 0.024s std dev: 0.00145s window: 448
+average rate: 148.786
+	min: 0.000s max: 0.024s std dev: 0.00150s window: 599
+average rate: 149.094
+	min: 0.000s max: 0.024s std dev: 0.00145s window: 750
+average rate: 149.417
+	min: 0.000s max: 0.024s std dev: 0.00155s window: 902
+
+required_topic_gate=PASS

@@ -1,0 +1,89 @@
+Multi thread started 
+lidar_type: 5
+~~~~/home/est1/phase546_ros1_ws/src/point_lio_unilidar/ file opened
+first lidar time1.69536e+09
+[33m[WARN] [1785239441.975083210]: Reset ImuProcess[0m
+[33m[WARN] [1785239510.560620366]: catch sig 2[0m
+[0m[INFO] [1785239441.973652856]: IMU Initializing: 1.0 %[0m
+[0m[INFO] [1785239442.072668864]: IMU Initializing: 18.0 %[0m
+[0m[INFO] [1785239442.172802310]: IMU Initializing: 60.0 %[0m
+[0m[INFO] [1785239442.172843239]: IMU Initializing: 100.0 %[0m
+Saving map to file: /home/est1/phase546_ros1_ws/src/point_lio_unilidar/PCD/scans.pcd
+Rebuild thread terminated normally
+... logging to /home/est1/.ros/log/8af39fe4-8a7a-11f1-b2d0-1b719fb27400/roslaunch-Test-509.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/home/est1/phase546_ros1_ws/src/point_lio_unilidar/launch/mapping_unilidar_l1.launch
+[1mstarted roslaunch server http://127.0.0.1:53801/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /laserMapping/check_satu: True
+ * /laserMapping/common/con_frame: False
+ * /laserMapping/common/con_frame_num: 1
+ * /laserMapping/common/cut_frame: False
+ * /laserMapping/common/cut_frame_time_interval: 0.1
+ * /laserMapping/common/imu_topic: /unilidar/imu
+ * /laserMapping/common/lid_topic: /unilidar/cloud
+ * /laserMapping/common/time_lag_imu_to_lidar: 0.0
+ * /laserMapping/cube_side_length: 1000.0
+ * /laserMapping/filter_size_map: 0.1
+ * /laserMapping/filter_size_surf: 0.1
+ * /laserMapping/init_map_size: 10
+ * /laserMapping/mapping/acc_cov_input: 0.1
+ * /laserMapping/mapping/acc_cov_output: 500
+ * /laserMapping/mapping/acc_norm: 9.81
+ * /laserMapping/mapping/b_acc_cov: 0.0001
+ * /laserMapping/mapping/b_gyr_cov: 0.0001
+ * /laserMapping/mapping/det_range: 100.0
+ * /laserMapping/mapping/extrinsic_R: [1, 0, 0, 0, 1, 0...
+ * /laserMapping/mapping/extrinsic_T: [0.007698, 0.0146...
+ * /laserMapping/mapping/extrinsic_est_en: False
+ * /laserMapping/mapping/fov_degree: 180
+ * /laserMapping/mapping/gravity: [0.0, 0.0, -9.81]
+ * /laserMapping/mapping/gravity_align: True
+ * /laserMapping/mapping/gravity_init: [0.0, 0.0, -9.81]
+ * /laserMapping/mapping/gyr_cov_input: 0.01
+ * /laserMapping/mapping/gyr_cov_output: 1000
+ * /laserMapping/mapping/imu_en: True
+ * /laserMapping/mapping/imu_meas_acc_cov: 0.1
+ * /laserMapping/mapping/imu_meas_omg_cov: 0.1
+ * /laserMapping/mapping/imu_time_inte: 0.004
+ * /laserMapping/mapping/lidar_meas_cov: 0.01
+ * /laserMapping/mapping/match_s: 81
+ * /laserMapping/mapping/plane_thr: 0.1
+ * /laserMapping/mapping/satu_acc: 30.0
+ * /laserMapping/mapping/satu_gyro: 35
+ * /laserMapping/mapping/start_in_aggressive_motion: False
+ * /laserMapping/odometry/publish_odometry_without_downsample: enable
+ * /laserMapping/pcd_save/interval: -1
+ * /laserMapping/pcd_save/pcd_save_en: True
+ * /laserMapping/point_filter_num: 1
+ * /laserMapping/preprocess/blind: 0.5
+ * /laserMapping/preprocess/lidar_type: 5
+ * /laserMapping/preprocess/scan_line: 18
+ * /laserMapping/preprocess/timestamp_unit: 0
+ * /laserMapping/prop_at_freq_of_imu: True
+ * /laserMapping/publish/path_en: True
+ * /laserMapping/publish/scan_bodyframe_pub_en: False
+ * /laserMapping/publish/scan_publish_en: True
+ * /laserMapping/runtime_pos_log_enable: False
+ * /laserMapping/space_down_sample: True
+ * /laserMapping/use_imu_as_input: False
+ * /rosdistro: noetic
+ * /rosversion: 1.17.4
+
+NODES
+  /
+    laserMapping (point_lio_unilidar/pointlio_mapping)
+
+[1mROS_MASTER_URI=http://127.0.0.1:11346[0m
+]2;/home/est1/phase546_ros1_ws/src/point_lio_unilidar/launch/mapping_unilidar_l1.launch http://127.0.0.1:11346
+[1mprocess[laserMapping-1]: started with pid [559][0m
+[laserMapping-1] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

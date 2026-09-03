@@ -1,0 +1,15 @@
+nohup: ignoring input
+[INFO] [launch]: All log files can be found below /home/go2/.ros/log/2026-07-26-18-17-37-056128-go2-ros2-vm-3728
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [unitree_tf_bridge_node-1]: process started with pid [3729]
+[unitree_tf_bridge_node-1] [INFO] [1785061057.619109784] [unitree_tf_bridge]: published official Unitree L1 static TF: utlidar_lidar -> utlidar_imu
+[unitree_tf_bridge_node-1] [INFO] [1785061057.619708530] [unitree_tf_bridge]: read-only TF bridge started: odom -> base_link from /odom
+[unitree_tf_bridge_node-1] [WARN] [1785061057.620631155] [unitree_tf_bridge]: base_link -> utlidar_lidar is intentionally NOT published: the official URDF radar pose failed validation against cloud_base
+[unitree_tf_bridge_node-1] [INFO] [1785061062.601877640] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=735 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061067.601396010] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=1485 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061072.601555183] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=2236 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061077.602496315] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=2988 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061082.601861206] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=3728 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061087.601489174] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=4479 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061092.601478250] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=5225 rejected=0
+[unitree_tf_bridge_node-1] [INFO] [1785061097.601596563] [unitree_tf_bridge]: TF totals: odom_to_base_forwarded=5966 rejected=0

@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.16)
+project(phase542_sdk_api_probe LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(BUILD_EXAMPLES OFF CACHE BOOL "Do not build SDK2 examples" FORCE)
+
+add_subdirectory(unitree_sdk2)
+
+add_executable(phase542_sdk_api_probe phase542_sdk_api_probe.cpp)
+target_link_libraries(phase542_sdk_api_probe PRIVATE unitree_sdk2)

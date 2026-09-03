@@ -1,0 +1,10 @@
+phase=5.4.8
+label=level_static
+duration_seconds=30
+bag_dir=/home/go2/go2_validation/phase548/phase548_20260729_131744_level_static
+start_time=2026-07-29T13:17:44,413150829+08:00
+topics=/utlidar/cloud,/utlidar/imu,/utlidar/robot_odom
+control_topics=NONE
+slam=NOT_STARTED
+end_time=2026-07-29T13:18:14,666853187+08:00
+recorder_exit_status=0

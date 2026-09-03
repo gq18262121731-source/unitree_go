@@ -1,0 +1,16 @@
+topic=rt/utlidar/lidar_state
+stamp=1785068698.827681
+firmware_version=
+software_version=1.0.0.38
+sdk_version=
+sys_rotation_speed=12931.034180
+com_rotation_speed=260.704071
+error_state=0
+dirty_percentage=83
+cloud_frequency=15.393104
+cloud_packet_loss_rate=0.000000
+cloud_size=9879
+cloud_scan_num=210
+imu_frequency=248.134720
+imu_packet_loss_rate=0.000000
+publisher_count=0

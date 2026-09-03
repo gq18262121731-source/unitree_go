@@ -1,0 +1,17 @@
+# OFFLINE_CANDIDATE_ONLY: Phase 5.4.3-A
+# Do not launch on the robot and do not treat this as TF calibration.
+# Generated from phase542_motion_clouds.npz; requires online/RViz validation.
+pointcloud_to_laserscan:
+  ros__parameters:
+    target_frame: base_link
+    transform_tolerance: 0.05
+    min_height: -0.250
+    max_height: 0.050
+    angle_min: -1.919862177
+    angle_max: 1.919862177
+    angle_increment: 0.017453293
+    scan_time: 0.066
+    range_min: 0.300
+    range_max: 5.000
+    use_inf: true
+    inf_epsilon: 1.0

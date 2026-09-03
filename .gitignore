@@ -1,0 +1,45 @@
+# Local secrets and machine-bound credentials
+.env
+.env.*
+!**/.env.example
+*.dpapi
+**/.go2_aes_key*
+
+# Python environments and caches
+**/.venv*/
+**/venv/
+**/*_venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.tmp_pytest/
+**/.mypy_cache/
+**/.ruff_cache/
+*.py[cod]
+
+# JavaScript, Flutter, and IDE state
+**/node_modules/
+**/.dart_tool/
+**/.gradle/
+**/.idea/
+**/.vscode/
+**/.git.upload-excluded
+
+# Generated build trees
+**/build/
+**/install/
+
+# Runtime voice data and expanded release bundles
+**/data/voice/dynamic_cache/
+**/data/voice/speech_cache/
+**/data/voice/mic_*.wav
+/go2_dev/go2-gateway/artifacts/portable/
+
+# Workstation-only downloads and temporary validation data
+/_tmp_go2_dpapi_validation/
+/Rufus/
+/ubuntu-*.iso
+/rufus*.exe
+/vc_redist*.exe
+Thumbs.db
+.DS_Store
+*.tmp

@@ -1,0 +1,39 @@
+{
+  "phase": "7.2-B",
+  "gate": "T5_FIRST_REAL_FORWARD_PULSE",
+  "date": "2026-08-23",
+  "verdict": "PASS",
+  "go2_ip": "192.168.123.161",
+  "host_ip": "192.168.123.222",
+  "network_interface": "eth0",
+  "preflight_stop": {
+    "mode": "real",
+    "action": "stop",
+    "execution_result": "safety_stopped",
+    "exit_code": 0
+  },
+  "pulse": {
+    "timestamp": "2026-08-23T11:32:40.425064+00:00",
+    "vx_mps": 0.05,
+    "vy_mps": 0.0,
+    "wz_radps": 0.0,
+    "duration_seconds": 0.2,
+    "theoretical_displacement_m": 0.01,
+    "temporary_joystick_handoff": false,
+    "sdk_code": 0,
+    "execution_result": "sent",
+    "nonzero_move_calls": 1
+  },
+  "operator_observation": {
+    "forward_direction_correct": true,
+    "stopped_immediately": true,
+    "lateral_motion_or_sudden_acceleration_or_posture_anomaly": false,
+    "original_remote_takeover_available": true
+  },
+  "postconditions": {
+    "residual_motion_processes": 0,
+    "phase7_motion_execution_default": false,
+    "go2_ping": true,
+    "continuous_follow_started": false
+  }
+}

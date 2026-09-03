@@ -1,0 +1,2 @@
+1785234342.510004 [145]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[INFO] [1785234668.981640726] [phase545_pointlio_probe]: saved 634361 odometry samples to /home/go2/go2_validation/phase545_pointlio_result/pointlio_odom.json

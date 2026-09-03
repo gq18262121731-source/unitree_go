@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import os
 import struct
 from .msgs.pub_sub import WebRTCDataChannelPubSub
 from .lidar.lidar_decoder_unified import UnifiedLidarDecoder
@@ -25,7 +26,12 @@ class WebRTCDataChannel:
         self.validaton = WebRTCDataChannelValidaton(self.channel, self.pub_sub)
         self.rtc_inner_req = WebRTCDataChannelRTCInnerReq(self.conn, self.channel, self.pub_sub)
 
-        self.set_decoder(decoder_type = 'libvoxel')
+        self.lidar_enabled = os.getenv("GO2_LIDAR_ENABLED", "true").strip().lower() in {
+            "1", "true", "yes", "on"
+        }
+        self.decoder = None
+        if self.lidar_enabled:
+            self.set_decoder(decoder_type='libvoxel')
 
         #Event handler for Validation succeed
         def on_validate():
@@ -140,7 +146,7 @@ class WebRTCDataChannel:
         topic = decoded_json.get("topic", "")
 
         # Only decode with lidar decoder for lidar topics
-        if "utlidar" in topic:
+        if "utlidar" in topic and self.lidar_enabled:
             decoded_data = self.decoder.decode(binary_data, decoded_json['data'])
             decoded_json['data']['data'] = decoded_data
         else:
@@ -157,9 +163,15 @@ class WebRTCDataChannel:
 
         decoded_json = json.loads(json_data.decode('utf-8'))
 
-        decoded_data = self.decoder.decode(binary_data, decoded_json['data'])
-
-        decoded_json['data']['data'] = decoded_data
+        if self.lidar_enabled:
+            decoded_json['data']['data'] = self.decoder.decode(
+                binary_data, decoded_json['data']
+            )
+        else:
+            # The active Go2 runtime deliberately does not subscribe to LiDAR.
+            # Keep unexpected binary packets opaque instead of loading/using a
+            # point-cloud decoder on the UWB/video/voice path.
+            decoded_json['data']['data'] = binary_data
         return decoded_json
 
     
@@ -210,6 +222,7 @@ class WebRTCDataChannel:
 
         # Create an instance of UnifiedLidarDecoder with the specified type
         self.decoder = UnifiedLidarDecoder(decoder_type=decoder_type)
+        self.lidar_enabled = True
         print_status("Lidar Decoder", f"🧊 {self.decoder.get_decoder_name()}")
     
     

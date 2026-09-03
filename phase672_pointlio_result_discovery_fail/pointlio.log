@@ -1,0 +1,5 @@
+1786764545.572362 [172] pointlio_m: selected interface "lo" is not multicast-capable: disabling multicast
+Multi thread started 
+lidar_type: 5
+~~~~/home/test1/phase672_pointlio_ws/src/point_lio/ doesn't exist
+[INFO] [1786764984.832512621] [rclcpp]: signal_handler(SIGINT/SIGTERM)

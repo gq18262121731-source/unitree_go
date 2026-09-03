@@ -1,0 +1,14 @@
+path:         /mnt/e/笨笨狗/phase546_ros1_result/pointlio_output.bag
+version:      2.0
+duration:     4:47s (287s)
+start:        Jul 28 2026 19:38:32.02 (1785238712.02)
+end:          Jul 28 2026 19:43:19.27 (1785238999.27)
+size:         155.0 MB
+messages:     4683
+compression:  lz4 [269/269 chunks; 70.73%]
+uncompressed: 218.9 MB @ 780.3 KB/s
+compressed:   154.8 MB @ 551.9 KB/s (70.73%)
+types:        nav_msgs/Odometry [cd5e73d190d741a2f92e81eda573aca7]
+              nav_msgs/Path     [6227e2b7e9cce15051f669a5e197bbf7]
+topics:       /pointlio/odom   2342 msgs    : nav_msgs/Odometry
+              /pointlio/path   2341 msgs    : nav_msgs/Path

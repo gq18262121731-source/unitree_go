@@ -1,0 +1,94 @@
+{
+  "phase": "6.7.2",
+  "same_source_bag": true,
+  "baseline": {
+    "route": "raw /utlidar/cloud + /utlidar/imu",
+    "net_displacement_m": 29461.384401179228,
+    "path_length_10hz_m": 30203.565629073197,
+    "max_radius_from_start_m": 29461.384401179224,
+    "first_radius_threshold_crossing_s": {
+      "1.0": 190.962154388,
+      "10.0": 206.462687015,
+      "100.0": 210.920542955,
+      "1000.0": 222.244958162,
+      "10000.0": 258.922657013,
+      "5.0": 205.752685785
+    }
+  },
+  "community_adapter": {
+    "raw_samples": 1677512,
+    "unique_samples": 1674478,
+    "duplicate_stamps": 3034,
+    "backward_jumps": 1,
+    "duration_seconds": 299.039900065,
+    "finite_positions": true,
+    "net_displacement_m": 7.451528686901434,
+    "path_length_10hz_m": 58.78101019357996,
+    "max_radius_from_start_m": 8.080631055929382,
+    "position_span_m": [
+      7.377525557083091,
+      5.4161953000278915,
+      3.610185309051867
+    ],
+    "net_yaw_change_deg": -4282.129938877998,
+    "first_radius_threshold_crossing_s": {
+      "1.0": 212.80172801,
+      "5.0": 256.272985697,
+      "10.0": null,
+      "100.0": null,
+      "1000.0": null,
+      "10000.0": null
+    }
+  },
+  "community_adapter_map": {
+    "points": 2724210,
+    "finite_ratio": 1.0,
+    "robust_p0_1_m": [
+      -8.9894437789917,
+      -6.466704368591309,
+      -5.497853755950928
+    ],
+    "robust_p99_9_m": [
+      5.626971244812012,
+      6.408622741699219,
+      3.178129196166992
+    ],
+    "robust_span_m": [
+      14.616415023803711,
+      12.875327110290527,
+      8.675983428955078
+    ],
+    "fraction_within_radius_m": {
+      "5.0": 0.7993579790104287,
+      "10.0": 0.9960906097547546,
+      "20.0": 1.0,
+      "100.0": 1.0
+    }
+  },
+  "bag_robot_odom_reference": {
+    "role": "onboard_odometry_reference_not_ground_truth",
+    "net_displacement_m": 0.2201980177029092,
+    "path_length_10hz_m": 18.086554816945576,
+    "position_span_m": [
+      3.0103899240493774,
+      2.5182677507400513,
+      0.043379247188568115
+    ],
+    "net_yaw_change_deg": 643.8218987824005,
+    "absolute_yaw_travel_10hz_deg": 1179.0395992526371
+  },
+  "ratios": {
+    "net_displacement_new_over_baseline": 0.00025292527280568585,
+    "net_displacement_reduction_percent": 99.97470747271943,
+    "path_length_new_over_robot_odom": 3.2499838022500067,
+    "closed_loop_error_new_over_robot_odom": 33.84012610392808
+  },
+  "gate": {
+    "catastrophic_divergence_eliminated": true,
+    "trajectory_consistency_with_robot_odom": false,
+    "phase_5_4_hold_released": false,
+    "phase_5_5_authorized": false,
+    "decision": "PARTIAL_IMPROVEMENT_HOLD",
+    "reason": "The community adapter removes the 29 km explosion, but the closed-loop error, path length, and yaw remain inconsistent with onboard odometry."
+  }
+}

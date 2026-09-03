@@ -1,0 +1,17 @@
+[INFO] [launch]: All log files can be found below /home/go2/.ros/log/2026-07-28-18-25-42-547525-go2-ros2-vm-13822
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [pointlio_mapping-1]: process started with pid [13834]
+[pointlio_mapping-1] 1785234342.673789 [145] pointlio_m: selected interface "lo" is not multicast-capable: disabling multicast
+[pointlio_mapping-1] Multi thread started 
+[pointlio_mapping-1] lidar_type: 5
+[pointlio_mapping-1] ~~~~/home/go2/phase545_pointlio_ws/src/point_lio_ros2_src/ doesn't exist
+[pointlio_mapping-1] first lidar time1.78522e+09
+[pointlio_mapping-1] [INFO] [1785234347.700446611] [laserMapping]: IMU Initializing: 1.0 %
+[pointlio_mapping-1] [WARN] [1785234347.700870609] [laserMapping]: Reset ImuProcess
+[pointlio_mapping-1] [INFO] [1785234347.767857434] [laserMapping]: IMU Initializing: 6.0 %
+[pointlio_mapping-1] [INFO] [1785234347.831781166] [laserMapping]: IMU Initializing: 27.0 %
+[pointlio_mapping-1] [INFO] [1785234347.894097228] [laserMapping]: IMU Initializing: 65.0 %
+[pointlio_mapping-1] [INFO] [1785234347.894202079] [laserMapping]: IMU Initializing: 100.0 %
+[pointlio_mapping-1] [WARN] [1785234942.440568616] [laserMapping]: catch sig 2
+[pointlio_mapping-1] Rebuild thread terminated normally
+[INFO] [pointlio_mapping-1]: process has finished cleanly [pid 13834]

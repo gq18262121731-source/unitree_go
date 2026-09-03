@@ -1,0 +1,4 @@
+3273 /usr/bin/python3 /opt/ros/humble/bin/ros2 launch unitree_sensor_bridge unitree_sensor_bridge.launch.py
+3274 /home/go2/phase53_ros2_ws/install/unitree_sensor_bridge/lib/unitree_sensor_bridge/unitree_sensor_bridge_node --ros-args -r __node:=unitree_sensor_bridge --params-file /tmp/launch_params_hy9l84c6
+3851 /usr/bin/python3 /opt/ros/humble/bin/ros2 launch unitree_sensor_bridge unitree_sensor_bridge.launch.py
+3852 /home/go2/phase53_ros2_ws/install/unitree_sensor_bridge/lib/unitree_sensor_bridge/unitree_sensor_bridge_node --ros-args -r __node:=unitree_sensor_bridge --params-file /tmp/launch_params__ir4hvty

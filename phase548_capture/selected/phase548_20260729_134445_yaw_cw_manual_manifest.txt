@@ -1,0 +1,10 @@
+phase=5.4.8
+label=yaw_cw_manual
+duration_seconds=20
+bag_dir=/home/go2/go2_validation/phase548/phase548_20260729_134445_yaw_cw_manual
+start_time=2026-07-29T13:44:45,155949144+08:00
+topics=/utlidar/cloud,/utlidar/imu,/utlidar/robot_odom
+control_topics=NONE
+slam=NOT_STARTED
+end_time=2026-07-29T13:45:05,414905303+08:00
+recorder_exit_status=0

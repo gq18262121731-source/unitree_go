@@ -22,7 +22,7 @@ def ok_response(message: str, data: Any | None = None, code: int = 0, request_id
     return payload
 
 
-def error_response(code: str, message: str, request_id: str | None = None) -> dict:
+def error_response(code: str, message: str, request_id: str | None = None, data: Any | None = None) -> dict:
     payload = {
         "success": False,
         "code": code,
@@ -31,5 +31,6 @@ def error_response(code: str, message: str, request_id: str | None = None) -> di
     }
     if request_id:
         payload["requestId"] = request_id
+    if data is not None:
+        payload["data"] = data
     return payload
-

@@ -1,6 +1,21 @@
 # Go2 无线视频采集
 
-该服务通过 Go2 AP 热点和 WebRTC 读取 Go2 EDU 内置摄像头，不使用狗背网线。
+> 独立 WebRTC 视频客户端已经退役。STA 视频现在由
+> `go2-gateway/scripts/Start-Go2WirelessRuntime.ps1` 启动，并与运动控制共享
+> 唯一 PeerConnection。下面的独立 AP/开发说明仅保留为历史记录，不用于比赛。
+
+当前 STA 启动命令：
+
+```powershell
+cd "E:\笨笨狗\go2_dev\go2-gateway"
+.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.252
+```
+
+该 Runtime 继续提供兼容接口：`/status`、`/snapshot` 和 `/stream.mjpg`。
+
+## 历史独立客户端说明
+
+原服务通过 Go2 AP 热点和 WebRTC 读取 Go2 EDU 内置摄像头，不使用狗背网线。
 
 ## 使用
 
@@ -57,7 +72,7 @@ resolution / source / clientCount / lastErrorCode / error
 
 - 路由器：`E5576-822_D7E5`
 - 电脑：`192.168.8.251`
-- Go2：`192.168.8.248`
+- Go2：`192.168.123.161`
 - 本地视频：`http://127.0.0.1:8093/`
 
 以后可直接双击 `start_wireless_video.cmd` 启动，双击 `stop_wireless_video.cmd` 停止。

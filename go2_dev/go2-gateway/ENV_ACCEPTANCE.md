@@ -77,6 +77,7 @@ pip install -e .
 
 cd ../go2-gateway
 python scripts/check_environment.py
+GO2_MODE=real python scripts/check_environment.py --strict-real
 python -c "import unitree_sdk2py; print('unitree sdk imported')"
 pip freeze > PIP_FREEZE_UBUNTU.txt
 ```
@@ -111,7 +112,7 @@ export GO2_NETWORK_INTERFACE=eth0
 
 ```bash
 cd /mnt/e/笨笨狗/go2_dev/go2-gateway
-python3 scripts/check_environment.py
+GO2_MODE=real python3 scripts/check_environment.py --strict-real
 python3 scripts/verify_state.py
 ```
 

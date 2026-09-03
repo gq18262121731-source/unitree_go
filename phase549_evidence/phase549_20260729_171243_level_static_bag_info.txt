@@ -1,0 +1,12 @@
+
+Files:             phase549_20260729_171243_level_static_utlidar_0.db3
+Bag size:          70.0 MiB
+Storage id:        sqlite3
+Duration:          32.490182034s
+Start:             Jul 29 2026 17:12:44.102944585 (1785316364.102944585)
+End:               Jul 29 2026 17:13:16.593126619 (1785316396.593126619)
+Messages:          13502
+Topic information: Topic: /utlidar/robot_odom | Type: nav_msgs/msg/Odometry | Count: 4874 | Serialization Format: cdr
+                   Topic: /utlidar/imu | Type: sensor_msgs/msg/Imu | Count: 8128 | Serialization Format: cdr
+                   Topic: /utlidar/cloud | Type: sensor_msgs/msg/PointCloud2 | Count: 500 | Serialization Format: cdr
+

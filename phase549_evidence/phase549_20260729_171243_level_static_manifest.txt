@@ -1,0 +1,13 @@
+phase=5.4.9
+label=level_static
+duration_seconds=30
+start_time=2026-07-29T17:12:43,570262384+08:00
+utlidar_bag=/home/go2/go2_validation/phase549/phase549_20260729_171243_level_static_utlidar
+lowstate_csv=/home/go2/go2_validation/phase549/phase549_20260729_171243_level_static_lowstate.csv
+unilidar_imu=UNAVAILABLE_NO_DIRECT_L1_USB
+lowstate_role=DIAGNOSTIC_ONLY_NOT_L1_IMU
+control_publishers=NONE
+slam=NOT_STARTED
+end_time=2026-07-29T17:13:16,849378372+08:00
+lowstate_exit_status=0
+lowstate_rows=13695

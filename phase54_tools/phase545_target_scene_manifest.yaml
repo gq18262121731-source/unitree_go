@@ -1,0 +1,50 @@
+phase: "5.4.5"
+purpose: "single target-scene capture and Point-LIO offline validation gate"
+
+scene:
+  name: "实验室/比赛演示区域"
+  description: "约3m×3m，小尺度室内区域；有效活动范围约2m×2m；含空地、桌子、显示器、玻璃隔断、墙面和地砖"
+  route_cleared: false
+  people_warned: false
+  start_equals_finish: true
+
+robot:
+  model: "Go2 X"
+  hardware: "V2.0"
+  firmware: "V1.1.15"
+  control_mode: "manual low-speed remote control only"
+  target_speed_mps: "0.1-0.2"
+
+sensor:
+  model: "Unitree L1"
+  error_state: "FILL_FROM_PREFLIGHT"
+  dirty_percentage: "FILL_FROM_PREFLIGHT"
+
+environment:
+  network: "Ethernet"
+  time_gate: "PASS"
+  ros_distro: "Humble"
+  rmw: "rmw_cyclonedds_cpp"
+
+capture:
+  planned_duration_minutes: 5
+  static_initialization_seconds: 60
+  route: "起点静止60秒 -> 沿边界/墙/桌子/玻璃区域约2分钟 -> 绕桌约1分钟 -> 返回起点约1分钟"
+  core_point_lio_topics:
+    - "/utlidar/cloud"
+    - "/utlidar/imu"
+  validation_topics:
+    - "/utlidar/cloud_base"
+    - "/utlidar/robot_odom"
+    - "/utlidar/lidar_state"
+    - "/odom"
+    - "/tf"
+    - "/tf_static"
+  excluded_topics:
+    - "/utlidar/cloud_deskewed"
+
+safety:
+  slam_started: false
+  nav2_started: false
+  autonomous_control: false
+  guessed_tf_published: false

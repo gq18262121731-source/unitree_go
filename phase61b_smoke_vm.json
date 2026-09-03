@@ -1,0 +1,198 @@
+{
+  "checkpoint_count": 0,
+  "checks": {
+    "duration_reached": false,
+    "imu_samples": false,
+    "lidar_samples": false,
+    "localization_disabled": true,
+    "motion_disabled": true,
+    "navigation_disabled": true,
+    "odometry_samples": false,
+    "rss_growth_under_50_mb": true,
+    "timestamp_rollback_zero": true,
+    "unexpected_error_absent": false
+  },
+  "completed": false,
+  "elapsed_seconds": 0.0003157889877911657,
+  "error": "RuntimeError: ROS2 source requires an Ubuntu ROS2 Humble environment with rclpy",
+  "event_counts": {},
+  "intervals": {
+    "imu": {
+      "duplicate_count": 0,
+      "maximum_ms": null,
+      "mean_ms": null,
+      "minimum_ms": null,
+      "p50_ms_recent_window": null,
+      "p95_ms_recent_window": null,
+      "positive_intervals": 0,
+      "recent_window_size": 0,
+      "rollback_count": 0,
+      "samples": 0,
+      "standard_deviation_ms": null
+    },
+    "lidar": {
+      "duplicate_count": 0,
+      "maximum_ms": null,
+      "mean_ms": null,
+      "minimum_ms": null,
+      "p50_ms_recent_window": null,
+      "p95_ms_recent_window": null,
+      "positive_intervals": 0,
+      "recent_window_size": 0,
+      "rollback_count": 0,
+      "samples": 0,
+      "standard_deviation_ms": null
+    },
+    "odometry": {
+      "duplicate_count": 0,
+      "maximum_ms": null,
+      "mean_ms": null,
+      "minimum_ms": null,
+      "p50_ms_recent_window": null,
+      "p95_ms_recent_window": null,
+      "positive_intervals": 0,
+      "recent_window_size": 0,
+      "rollback_count": 0,
+      "samples": 0,
+      "standard_deviation_ms": null
+    }
+  },
+  "passed": false,
+  "phase": "6.1-B",
+  "provider": {
+    "capabilities": {
+      "imu": false,
+      "lidar": false,
+      "localization": false,
+      "motion": false,
+      "navigation": false,
+      "odometry": false
+    },
+    "generated_at": "2026-07-29T13:31:49.162728+00:00",
+    "health": {
+      "sensor_online_is_navigation_ready": false,
+      "status": "OFFLINE"
+    },
+    "localization": {
+      "available": false,
+      "reason": "INTERNAL_LOCALIZATION_NOT_VALIDATED",
+      "source": null
+    },
+    "motion": {
+      "commands_supported": [],
+      "enabled": false,
+      "reason": "PHASE_6_1_READONLY_BOUNDARY"
+    },
+    "navigation": {
+      "available": false,
+      "reason": "PHASE_5_5_HOLD"
+    },
+    "provider": "unitree_readonly",
+    "real_motion_enabled": false,
+    "robot": {
+      "firmware": "V1.1.15",
+      "hardware": "V2.0",
+      "model": "Go2 X EDU",
+      "online": false,
+      "telemetry": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      }
+    },
+    "schema_version": "1.0",
+    "sensors": {
+      "imu": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "semantic_note": "/utlidar/imu raw-specific-force semantics failed Phase 5.4.8/5.4.9 audit",
+        "semantic_valid": null,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      },
+      "lidar": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "semantic_valid": null,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      },
+      "lidar_state": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      },
+      "odometry": {
+        "available": false,
+        "frame": null,
+        "frequency_hz": null,
+        "fresh": false,
+        "last_received_at": null,
+        "last_source_timestamp": null,
+        "sample_age_ms": null,
+        "sample_count": 0,
+        "semantic_valid": null,
+        "timestamp_rollback_count": 0,
+        "topic": null,
+        "value": {}
+      }
+    },
+    "transport": {
+      "errors": [],
+      "healthy": false,
+      "source": "ros2"
+    }
+  },
+  "recent_checkpoints": [],
+  "resource": {
+    "high_water_mb": 14.6171875,
+    "process_cpu_seconds": 0.064731436,
+    "rss_growth_mb": null,
+    "rss_mb": 14.6171875,
+    "rss_slope_mb_per_minute": null
+  },
+  "safety": {
+    "motion_control": "NOT_USED",
+    "publishers_created": 0,
+    "slam_started": false,
+    "tf_published": false
+  },
+  "stale_checkpoint_counts": {
+    "imu": 0,
+    "lidar": 0,
+    "odometry": 0
+  },
+  "started_at": "2026-07-29T13:31:49.162415+00:00",
+  "target_duration_seconds": 20.0,
+  "updated_at": "2026-07-29T13:31:49.162899+00:00"
+}

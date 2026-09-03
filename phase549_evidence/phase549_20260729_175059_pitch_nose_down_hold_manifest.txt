@@ -1,0 +1,13 @@
+phase=5.4.9
+label=pitch_nose_down_hold
+duration_seconds=20
+start_time=2026-07-29T17:50:59,426811962+08:00
+utlidar_bag=/home/go2/go2_validation/phase549/phase549_20260729_175059_pitch_nose_down_hold_utlidar
+lowstate_csv=/home/go2/go2_validation/phase549/phase549_20260729_175059_pitch_nose_down_hold_lowstate.csv
+unilidar_imu=UNAVAILABLE_NO_DIRECT_L1_USB
+lowstate_role=DIAGNOSTIC_ONLY_NOT_L1_IMU
+control_publishers=NONE
+slam=NOT_STARTED
+end_time=2026-07-29T17:51:22,716398234+08:00
+lowstate_exit_status=0
+lowstate_rows=9584

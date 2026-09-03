@@ -1,0 +1,60 @@
+PHASE=5.4.2
+MODE=READ_ONLY_RPC
+INTERFACE=enp0s8
+FORBIDDEN_CALLS=Config.Set,Config.Del,ServiceSwitch,SetReportFreq,SportClient,move,TF,SLAM,Nav2
+ROBOT_STATE_CLIENT_API_VERSION=1.0.0.1
+ROBOT_STATE_SERVER_API_VERSION=1.0.0.2
+ROBOT_STATE_SERVICE_LIST_CODE=0
+ROBOT_STATE_SERVICE_COUNT=31
+SERVICE name=4gcm status=0 protect=1
+SERVICE name=advanced_sport status=1 protect=0
+SERVICE name=ai_sport status=1 protect=0
+SERVICE name=audio_hub status=0 protect=0
+SERVICE name=audio_player_service status=0 protect=0
+SERVICE name=bashrunner status=0 protect=0
+SERVICE name=basic_service status=0 protect=1
+SERVICE name=battery_guard status=0 protect=0
+SERVICE name=chat_go status=0 protect=0
+SERVICE name=gesture_recognition status=0 protect=0
+SERVICE name=go2_videohub_rtsp_server status=0 protect=0
+SERVICE name=master_service status=0 protect=1
+SERVICE name=mcf status=0 protect=0
+SERVICE name=motion_switcher status=0 protect=0
+SERVICE name=net_switcher status=0 protect=0
+SERVICE name=obstacles_avoid status=0 protect=0
+SERVICE name=ota_box status=1 protect=0
+SERVICE name=pet_go status=0 protect=0
+SERVICE name=programming_actuator status=0 protect=0
+SERVICE name=robot_state status=0 protect=1
+SERVICE name=sbus_handle status=0 protect=0
+SERVICE name=sport_mode status=1 protect=0
+SERVICE name=unitree_lidar status=0 protect=0
+SERVICE name=unitree_lidar_slam status=0 protect=0
+SERVICE name=utrack status=0 protect=0
+SERVICE name=video_hub status=0 protect=0
+SERVICE name=voxel_height_mapping status=0 protect=0
+SERVICE name=vui_service status=0 protect=0
+SERVICE name=webrtc_bridge status=0 protect=1
+SERVICE name=webrtc_multicast_responder status=0 protect=0
+SERVICE name=webrtc_signal_server status=0 protect=1
+CONFIG_CLIENT_API_VERSION=1.0.0.1
+CONFIG_SERVER_API_VERSION=1.0.0.1
+CONFIG_META name=calibration code=8202
+CONFIG_META name=extrinsic code=8202
+CONFIG_META name=lidar code=8202
+CONFIG_META name=lidar_config code=8202
+CONFIG_META name=mapping code=8202
+CONFIG_META name=pose code=8202
+CONFIG_META name=radar code=8202
+CONFIG_META name=robot code=8202
+CONFIG_META name=robot_config code=8202
+CONFIG_META name=sensor code=8202
+CONFIG_META name=sensor_config code=8202
+CONFIG_META name=slam code=8202
+CONFIG_META name=unitree_lidar code=8202
+CONFIG_META name=unitree_lidar_slam code=8202
+CONFIG_META name=uslam code=8202
+CONFIG_META name=utlidar code=8202
+CONFIG_META name=utlidar_config code=8202
+WRITE_API_CALL_COUNT=0
+CONTROL_API_CALL_COUNT=0

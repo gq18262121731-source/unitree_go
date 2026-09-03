@@ -1,0 +1,40 @@
+scripted_motion:
+  forward_speed_mps: 0.30
+  backward_speed_mps: 0.18
+  lateral_speed_mps: 0.30
+  # Approved staged field tuning above the official 0.50 rad/s example.
+  # Near the target, return to the already validated 0.50 rad/s gait speed.
+  yaw_speed_radps: 0.60
+  # The 0.20 m/s field trial paused/twisted after deceleration. Keep the
+  # proven 0.23 m/s viable gait speed near the target.
+  reduced_linear_speed_mps: 0.23
+  # Go2's official lateral example uses 0.30 m/s. The 0.18 m/s field
+  # trial shifted the body but did not start a lateral gait.
+  reduced_lateral_speed_mps: 0.30
+  # Go2's official rotate example uses 0.50 rad/s. The 0.28 rad/s field
+  # trial twisted the body but did not start a turning gait.
+  reduced_yaw_speed_radps: 0.50
+
+  max_vx_mps: 0.30
+  max_vy_mps: 0.30
+  max_wz_radps: 0.60
+
+  distance_tolerance_m: 0.025
+  angle_tolerance_deg: 2.0
+  deceleration_distance_m: 0.20
+  deceleration_angle_deg: 20.0
+  translation_stall_window_s: 1.0
+  translation_stall_min_progress_m: 0.01
+  rotation_stall_window_s: 1.0
+  rotation_stall_min_progress_deg: 1.0
+  state_timeout_s: 0.50
+  control_rate_hz: 5.0
+  timeout_scale: 2.0
+  timeout_margin_s: 2.0
+  max_distance_m: 10.0
+  max_angle_deg: 720.0
+
+  # False is the safe default. If explicitly enabled, results are labelled
+  # estimated_time_fallback and actual/error remain null.
+  allow_time_fallback: false
+  pose_settle_s: 0.25

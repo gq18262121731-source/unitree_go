@@ -1,0 +1,449 @@
+{
+  "duration_seconds": 10.04488136800137,
+  "estimated_hz": {
+    "/odom": 148.73246833548828,
+    "/sensor/imu": 247.78789403415686,
+    "/sensor/lidar": 15.231638323513861
+  },
+  "frames": {
+    "/odom": {
+      "odom": 1494
+    },
+    "/odom child_frame_id": {
+      "base_link": 1494
+    },
+    "/sensor/imu": {
+      "utlidar_imu": 2489
+    },
+    "/sensor/lidar": {
+      "utlidar_lidar": 153
+    },
+    "/utlidar/cloud_base": {
+      "base_link": 153
+    },
+    "/utlidar/cloud_deskewed": {
+      "odom": 153
+    },
+    "/utlidar/robot_pose": {
+      "odom": 187
+    }
+  },
+  "header_stamp_rollbacks": {},
+  "nodes": [
+    "/_ros2cli_daemon_0_39df0c4082614a03845a82388d51e661",
+    "/phase54_readonly_probe",
+    "/unitree_sensor_bridge",
+    "/unitree_tf_bridge"
+  ],
+  "odom_to_base_tf_timestamp_check": {
+    "matched_unique_stamps": 1494,
+    "odom_unique_stamps": 1494,
+    "tf_match_ratio": 1.0,
+    "tf_stamp_rollbacks": 0,
+    "tf_unique_stamps": 1494
+  },
+  "sample_counts": {
+    "/odom": 1494,
+    "/sensor/imu": 2489,
+    "/sensor/lidar": 153,
+    "/tf messages": 1494,
+    "/tf_static messages": 1,
+    "/utlidar/cloud_base": 153,
+    "/utlidar/cloud_deskewed": 153,
+    "/utlidar/robot_pose": 187
+  },
+  "tf_edges": [
+    {
+      "child": "base_link",
+      "parent": "odom",
+      "samples": 1494
+    }
+  ],
+  "tf_static_edges": [
+    {
+      "child": "utlidar_imu",
+      "parent": "utlidar_lidar",
+      "samples": 1
+    }
+  ],
+  "topics": {
+    "/api/arm/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/assistant_recorder/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/assistant_recorder/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/audiohub/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/audiohub/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/bashrunner/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/bashrunner/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/config/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/config/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/fourg_agent/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/fourg_agent/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/gas_sensor/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/gas_sensor/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/gesture/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/gpt/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/gpt/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/motion_switcher/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/motion_switcher/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/obstacles_avoid/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/obstacles_avoid/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/pet/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/pet/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/programming_actuator/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/programming_actuator/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/rm_con/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/robot_state/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/robot_state/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/slam_operate/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/slam_operate/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/sport/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/sport/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/sport_lease/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/sport_lease/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/uwbswitch/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/uwbswitch/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/videohub/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/videohub/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/voice/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/voice/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/api/vui/request": [
+      "unitree_api/msg/Request"
+    ],
+    "/api/vui/response": [
+      "unitree_api/msg/Response"
+    ],
+    "/arm/action/state": [
+      "std_msgs/msg/String"
+    ],
+    "/arm_Command": [
+      "unitree_arm/msg/ArmString"
+    ],
+    "/arm_Feedback": [
+      "unitree_arm/msg/ArmString"
+    ],
+    "/audio_msg": [
+      "std_msgs/msg/String"
+    ],
+    "/audiohub/player/state": [
+      "std_msgs/msg/String"
+    ],
+    "/audioreceiver": [
+      "unitree_go/msg/AudioData"
+    ],
+    "/audiosender": [
+      "unitree_go/msg/AudioData"
+    ],
+    "/config_change_status": [
+      "unitree_go/msg/ConfigChangeStatus"
+    ],
+    "/frontvideostream": [
+      "unitree_go/msg/Go2FrontVideoData"
+    ],
+    "/gas_sensor": [
+      "std_msgs/msg/String"
+    ],
+    "/gesture/result": [
+      "std_msgs/msg/String"
+    ],
+    "/gnss": [
+      "std_msgs/msg/String"
+    ],
+    "/gpt_cmd": [
+      "std_msgs/msg/String"
+    ],
+    "/gpt_state": [
+      "std_msgs/msg/String"
+    ],
+    "/gptflowfeedback": [
+      "std_msgs/msg/String"
+    ],
+    "/lf/battery_alarm": [
+      "std_msgs/msg/String"
+    ],
+    "/lf/lowstate": [
+      "unitree_go/msg/LowState"
+    ],
+    "/lf/sportmodestate": [
+      "unitree_go/msg/SportModeState"
+    ],
+    "/lio_sam_ros2/mapping/odometry": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/lowcmd": [
+      "unitree_go/msg/LowCmd"
+    ],
+    "/lowstate": [
+      "unitree_go/msg/LowState"
+    ],
+    "/multiplestate": [
+      "std_msgs/msg/String"
+    ],
+    "/odom": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/parameter_events": [
+      "rcl_interfaces/msg/ParameterEvent"
+    ],
+    "/pctoimage_local": [
+      "unitree_interfaces/msg/PcToImage"
+    ],
+    "/pet/flowfeedback": [
+      "std_msgs/msg/String"
+    ],
+    "/programming_actuator/command": [
+      "std_msgs/msg/String"
+    ],
+    "/programming_actuator/feedback": [
+      "std_msgs/msg/String"
+    ],
+    "/public_network_status": [
+      "std_msgs/msg/String"
+    ],
+    "/qt_add_edge": [
+      "unitree_interfaces/msg/QtEdge"
+    ],
+    "/qt_add_node": [
+      "unitree_interfaces/msg/QtNode"
+    ],
+    "/qt_command": [
+      "unitree_interfaces/msg/QtCommand"
+    ],
+    "/qt_notice": [
+      "std_msgs/msg/String"
+    ],
+    "/query_result_edge": [
+      "unitree_interfaces/msg/QtEdge"
+    ],
+    "/query_result_node": [
+      "unitree_interfaces/msg/QtNode"
+    ],
+    "/rosout": [
+      "rcl_interfaces/msg/Log"
+    ],
+    "/rtc/state": [
+      "std_msgs/msg/String"
+    ],
+    "/rtc_status": [
+      "std_msgs/msg/String"
+    ],
+    "/selftest": [
+      "std_msgs/msg/String"
+    ],
+    "/sensor/imu": [
+      "sensor_msgs/msg/Imu"
+    ],
+    "/sensor/lidar": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/servicestate": [
+      "std_msgs/msg/String"
+    ],
+    "/servicestateactivate": [
+      "std_msgs/msg/String"
+    ],
+    "/slam_info": [
+      "std_msgs/msg/String"
+    ],
+    "/slam_key_info": [
+      "std_msgs/msg/String"
+    ],
+    "/sportmodestate": [
+      "unitree_go/msg/SportModeState"
+    ],
+    "/tf": [
+      "tf2_msgs/msg/TFMessage"
+    ],
+    "/tf_static": [
+      "tf2_msgs/msg/TFMessage"
+    ],
+    "/uslam/client_command": [
+      "std_msgs/msg/String"
+    ],
+    "/uslam/cloud_map": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/frontend/cloud_world_ds": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/frontend/odom": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/uslam/localization/cloud_world": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/localization/odom": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/uslam/map_file_pub": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/map_file_sub": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/navigation/global_path": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/uslam/server_log": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/client_command": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/cloud": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/cloud_base": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/cloud_deskewed": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/grid_map": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/height_map": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/height_map_array": [
+      "unitree_go/msg/HeightMap"
+    ],
+    "/utlidar/imu": [
+      "sensor_msgs/msg/Imu"
+    ],
+    "/utlidar/lidar_state": [
+      "unitree_go/msg/LidarState"
+    ],
+    "/utlidar/mapping_cmd": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/range_info": [
+      "geometry_msgs/msg/PointStamped"
+    ],
+    "/utlidar/range_map": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/robot_odom": [
+      "nav_msgs/msg/Odometry"
+    ],
+    "/utlidar/robot_pose": [
+      "geometry_msgs/msg/PoseStamped"
+    ],
+    "/utlidar/server_log": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/switch": [
+      "std_msgs/msg/String"
+    ],
+    "/utlidar/voxel_map": [
+      "sensor_msgs/msg/PointCloud2"
+    ],
+    "/utlidar/voxel_map_compressed": [
+      "unitree_go/msg/VoxelMapCompressed"
+    ],
+    "/uwbstate": [
+      "unitree_go/msg/UwbState"
+    ],
+    "/uwbswitch": [
+      "unitree_go/msg/UwbSwitch"
+    ],
+    "/videohub/inner": [
+      "std_msgs/msg/String"
+    ],
+    "/webrtcreq": [
+      "std_msgs/msg/String"
+    ],
+    "/webrtcres": [
+      "std_msgs/msg/String"
+    ],
+    "/wirelesscontroller": [
+      "unitree_go/msg/WirelessController"
+    ],
+    "/wirelesscontroller_unprocessed": [
+      "unitree_go/msg/WirelessController"
+    ],
+    "/xfk_webrtcreq": [
+      "std_msgs/msg/String"
+    ],
+    "/xfk_webrtcres": [
+      "std_msgs/msg/String"
+    ]
+  }
+}

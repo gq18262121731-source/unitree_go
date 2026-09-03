@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://go2.local/schema/unitree-readonly-status-v1.json",
+  "title": "UnitreeReadonlyProvider status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provider",
+    "real_motion_enabled",
+    "generated_at",
+    "robot",
+    "transport",
+    "sensors",
+    "capabilities",
+    "localization",
+    "navigation",
+    "motion",
+    "health"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "provider": {
+      "const": "unitree_readonly"
+    },
+    "real_motion_enabled": {
+      "const": false
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "robot": {
+      "type": "object",
+      "required": ["online", "model", "hardware", "firmware", "telemetry"],
+      "properties": {
+        "online": {"type": "boolean"},
+        "model": {"type": "string"},
+        "hardware": {"type": "string"},
+        "firmware": {"type": "string"},
+        "telemetry": {"$ref": "#/$defs/observation"}
+      }
+    },
+    "transport": {
+      "type": "object",
+      "required": ["source", "healthy", "errors"],
+      "properties": {
+        "source": {
+          "type": ["string", "null"],
+          "enum": ["replay", "ros2", "dds", null]
+        },
+        "healthy": {"type": "boolean"},
+        "errors": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "sensors": {
+      "type": "object",
+      "required": ["lidar", "imu", "odometry", "lidar_state"],
+      "properties": {
+        "lidar": {"$ref": "#/$defs/sensorObservation"},
+        "imu": {
+          "allOf": [
+            {"$ref": "#/$defs/sensorObservation"},
+            {
+              "type": "object",
+              "required": ["semantic_note"],
+              "properties": {
+                "semantic_note": {"type": "string"}
+              }
+            }
+          ]
+        },
+        "odometry": {"$ref": "#/$defs/sensorObservation"},
+        "lidar_state": {"$ref": "#/$defs/observation"}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "required": [
+        "lidar",
+        "imu",
+        "odometry",
+        "localization",
+        "navigation",
+        "motion"
+      ],
+      "properties": {
+        "lidar": {"type": "boolean"},
+        "imu": {"type": "boolean"},
+        "odometry": {"type": "boolean"},
+        "localization": {"const": false},
+        "navigation": {"const": false},
+        "motion": {"const": false}
+      }
+    },
+    "localization": {
+      "type": "object",
+      "required": ["available", "source", "reason"],
+      "properties": {
+        "available": {"const": false},
+        "source": {"const": null},
+        "reason": {"const": "INTERNAL_LOCALIZATION_NOT_VALIDATED"}
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "required": ["available", "reason"],
+      "properties": {
+        "available": {"const": false},
+        "reason": {"const": "PHASE_5_5_HOLD"}
+      }
+    },
+    "motion": {
+      "type": "object",
+      "required": ["enabled", "commands_supported", "reason"],
+      "properties": {
+        "enabled": {"const": false},
+        "commands_supported": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "reason": {"const": "PHASE_6_1_READONLY_BOUNDARY"}
+      }
+    },
+    "health": {
+      "type": "object",
+      "required": ["status", "sensor_online_is_navigation_ready"],
+      "properties": {
+        "status": {
+          "enum": [
+            "OFFLINE",
+            "DEGRADED_TRANSPORT",
+            "READONLY_WITH_SEMANTIC_HOLD",
+            "READONLY_READY",
+            "READONLY_PARTIAL"
+          ]
+        },
+        "sensor_online_is_navigation_ready": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "observation": {
+      "type": "object",
+      "required": [
+        "available",
+        "fresh",
+        "topic",
+        "frame",
+        "sample_count",
+        "frequency_hz",
+        "last_source_timestamp",
+        "last_received_at",
+        "sample_age_ms",
+        "timestamp_rollback_count",
+        "value"
+      ],
+      "properties": {
+        "available": {"type": "boolean"},
+        "fresh": {"type": "boolean"},
+        "topic": {"type": ["string", "null"]},
+        "frame": {"type": ["string", "null"]},
+        "sample_count": {"type": "integer", "minimum": 0},
+        "frequency_hz": {"type": ["number", "null"], "minimum": 0},
+        "last_source_timestamp": {"type": ["string", "null"]},
+        "last_received_at": {"type": ["string", "null"]},
+        "sample_age_ms": {"type": ["number", "null"], "minimum": 0},
+        "timestamp_rollback_count": {"type": "integer", "minimum": 0},
+        "value": {"type": "object"}
+      }
+    },
+    "sensorObservation": {
+      "allOf": [
+        {"$ref": "#/$defs/observation"},
+        {
+          "type": "object",
+          "required": ["semantic_valid"],
+          "properties": {
+            "semantic_valid": {"type": ["boolean", "null"]}
+          }
+        }
+      ]
+    }
+  }
+}
+

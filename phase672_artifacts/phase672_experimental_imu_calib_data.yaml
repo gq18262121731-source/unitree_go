@@ -1,0 +1,14 @@
+# EXPERIMENTAL OFFLINE REPRODUCTION ONLY
+# Not official calibration; do not use to authorize online motion.
+# Source: https://github.com/jizhang-cmu/autonomy_stack_go2@43d5f54b389b251713f0097893c30fa76c870d54
+acc_bias_x: 2.3476958363675906
+acc_bias_y: 0.00021690886036593285
+acc_bias_z: -19.346329699065898
+ang_bias_x: 0.0025493850965765405
+ang_bias_y: -0.0002469990289644707
+ang_bias_z: 7.976198749826939e-05
+ang_z2x_proj: 0.16036386328026833
+ang_z2y_proj: -0.20315381279209913
+static_samples: 2486
+yaw_samples: 4869
+yaw_integrated_z_radians: 22.39027248420188

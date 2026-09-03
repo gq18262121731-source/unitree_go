@@ -49,6 +49,51 @@ echo "== status =="
 curl -fsS "http://$HOST:$PORT/api/robot/status"
 echo
 
+echo "== read-only dispatch guard =="
+python - "$HOST" "$PORT" <<'PY'
+import json
+import sys
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+
+host, port = sys.argv[1], sys.argv[2]
+base = f"http://{host}:{port}"
+
+def request_json(path, method="GET", payload=None):
+    data = None if payload is None else json.dumps(payload).encode("utf-8")
+    request = Request(base + path, data=data, headers={"Content-Type": "application/json"}, method=method)
+    try:
+        with urlopen(request, timeout=5) as response:
+            return response.status, json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        return exc.code, json.loads(exc.read().decode("utf-8"))
+
+status, body = request_json("/health")
+data = body.get("data") or {}
+if status != 200 or data.get("ready") is not False or data.get("controlEnabled") is not False:
+    raise SystemExit(f"health should report read-only not-ready state, got status={status} body={body}")
+print("GET /health -> ready=false controlEnabled=false")
+
+checks = [
+    ("GET", "/api/readiness", None),
+    ("POST", "/api/robot/move", {"vx": 0.05, "vy": 0, "wz": 0, "duration": 0.05}),
+    ("POST", "/api/tasks/confirm-fall", {"task": "confirm_fall", "elder_id": "readonly", "location": "bedroom", "confidence": 0.95}),
+    ("POST", "/api/events/fall", {"event": "fall_detected", "elder_id": "readonly", "location": "bedroom", "confidence": 0.95}),
+    ("POST", "/api/tasks/target-move", {"location": "bedroom"}),
+]
+for method, path, payload in checks:
+    status, body = request_json(path, method, payload)
+    if status != 403 or body.get("code") != "CONTROL_DISABLED":
+        raise SystemExit(f"{method} {path} expected CONTROL_DISABLED/403, got status={status} body={body}")
+    print(f"{method} {path} -> {body['code']}")
+
+status, body = request_json("/api/tasks")
+tasks = body.get("data")
+if status != 200 or tasks != []:
+    raise SystemExit(f"read-only guard should not create tasks, got status={status} body={body}")
+print("task list remains empty")
+PY
+
 echo "== snapshot =="
 curl -fsS "http://$HOST:$PORT/api/robot/camera/snapshot" --output "$SNAPSHOT_PATH"
 python - "$SNAPSHOT_PATH" <<'PY'

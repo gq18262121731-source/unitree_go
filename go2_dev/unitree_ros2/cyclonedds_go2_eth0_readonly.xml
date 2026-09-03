@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CycloneDDS>
+  <Domain Id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="eth0" priority="default" multicast="default" />
+      </Interfaces>
+    </General>
+    <Discovery>
+      <Peers>
+        <Peer Address="192.168.123.161" />
+      </Peers>
+    </Discovery>
+  </Domain>
+</CycloneDDS>

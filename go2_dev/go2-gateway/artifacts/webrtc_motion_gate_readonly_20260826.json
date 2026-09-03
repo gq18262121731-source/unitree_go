@@ -1,0 +1,23 @@
+{
+  "transport": "WebRTCDataChannel",
+  "connectionMode": "LocalSTA",
+  "robotIp": "192.168.8.252",
+  "stage": "readonly",
+  "videoEnabled": false,
+  "audioEnabled": false,
+  "connected": true,
+  "sportStateReceived": true,
+  "motionCommandsSent": 0,
+  "completed": true,
+  "reason": "sport_state_received",
+  "stateTopic": "rt/lf/sportmodestate",
+  "startPose": {
+    "x": 0.113794,
+    "y": 0.347273,
+    "yaw": -0.545693
+  },
+  "stateSampleCounts": {
+    "rt/lf/sportmodestate": 4
+  },
+  "latestStateFresh": true
+}

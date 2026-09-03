@@ -1,0 +1,57 @@
+{
+  "cloud": {
+    "frame_id": "utlidar_lidar",
+    "fields": {
+      "x": {
+        "offset": 0,
+        "datatype": 7,
+        "count": 1
+      },
+      "y": {
+        "offset": 4,
+        "datatype": 7,
+        "count": 1
+      },
+      "z": {
+        "offset": 8,
+        "datatype": 7,
+        "count": 1
+      },
+      "intensity": {
+        "offset": 16,
+        "datatype": 7,
+        "count": 1
+      },
+      "ring": {
+        "offset": 20,
+        "datatype": 4,
+        "count": 1
+      },
+      "time": {
+        "offset": 24,
+        "datatype": 7,
+        "count": 1
+      }
+    },
+    "point_step": 32,
+    "width": 4085,
+    "height": 1,
+    "is_dense": true,
+    "first_point_time_seconds": 0.0,
+    "last_point_time_seconds": 0.06231994554400444
+  },
+  "imu": {
+    "frame_id": "utlidar_imu",
+    "linear_acceleration": [
+      3.3960018157958984,
+      0.06219025328755379,
+      9.776632308959961
+    ],
+    "linear_acceleration_norm": 10.349842282136128,
+    "angular_velocity": [
+      -0.0015030319336801767,
+      -0.0010137842036783695,
+      0.008487599901854992
+    ]
+  }
+}

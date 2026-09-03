@@ -214,6 +214,12 @@ class UnitreeWebRTCConnection:
         logging.info("Creating offer...")
         offer = await self.pc.createOffer()
         await self.pc.setLocalDescription(offer)
+        # aiortc 1.15 schedules an internal __connect task from
+        # setLocalDescription().  Let that task observe the still-empty remote
+        # ICE map and finish before setRemoteDescription starts populating it.
+        # Without this yield the early task can race the remote SDP commit and
+        # dereference a None remoteDescription ("NoneType.media").
+        await asyncio.sleep(0)
 
         if self.connectionMethod == WebRTCConnectionMethod.Remote:
             peer_answer_json = await self.get_answer_from_remote_peer(self.pc, turn_server_info)

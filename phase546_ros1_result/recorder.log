@@ -1,0 +1,3 @@
+[0m[INFO] [1785238707.514393710]: Subscribing to /pointlio/odom[0m
+[0m[INFO] [1785238707.518504827]: Subscribing to /pointlio/path[0m
+[0m[INFO] [1785238707.523729712]: Recording to '/mnt/e/?????????/phase546_ros1_result/pointlio_output.bag'.[0m

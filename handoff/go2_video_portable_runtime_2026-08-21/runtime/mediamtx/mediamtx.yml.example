@@ -1,0 +1,38 @@
+logLevel: info
+logDestinations: [stdout, file]
+logFile: mediamtx.log
+
+rtsp: true
+rtspAddress: :8554
+rtspTransports: [tcp]
+
+api: true
+apiAddress: 127.0.0.1:9997
+
+# Replace all placeholders locally. Do not commit real credentials.
+authMethod: internal
+authInternalUsers:
+  - user: <PUBLISH_USER>
+    pass: <PUBLISH_PASSWORD>
+    ips: ["<BRIDGE_IP>/32"]
+    permissions:
+      - action: publish
+        path: go2_front
+
+  - user: <READ_USER>
+    pass: <READ_PASSWORD>
+    ips: ["127.0.0.1/32"]
+    permissions:
+      - action: read
+        path: go2_front
+
+  - user: any
+    pass:
+    ips: ["127.0.0.1/32", "::1/128"]
+    permissions:
+      - action: api
+      - action: metrics
+      - action: pprof
+
+paths:
+  go2_front:

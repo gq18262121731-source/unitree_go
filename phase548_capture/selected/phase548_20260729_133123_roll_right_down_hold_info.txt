@@ -1,0 +1,12 @@
+
+Files:             phase548_20260729_133123_roll_right_down_hold_0.db3
+Bag size:          42.4 MiB
+Storage id:        sqlite3
+Duration:          19.604860767s
+Start:             Jul 29 2026 13:31:23.560212821 (1785303083.560212821)
+End:               Jul 29 2026 13:31:43.165073588 (1785303103.165073588)
+Messages:          8143
+Topic information: Topic: /utlidar/robot_odom | Type: nav_msgs/msg/Odometry | Count: 2961 | Serialization Format: cdr
+                   Topic: /utlidar/imu | Type: sensor_msgs/msg/Imu | Count: 4879 | Serialization Format: cdr
+                   Topic: /utlidar/cloud | Type: sensor_msgs/msg/PointCloud2 | Count: 303 | Serialization Format: cdr
+
