@@ -1,0 +1,3391 @@
+{
+  "phase": "7.2-C",
+  "real_motion": "EXPLICITLY_GATED",
+  "command_mode": "CONTINUOUS_VELOCITY_REFRESH",
+  "command_source": "UWB_FOLLOW",
+  "fixed_command": null,
+  "command_duration_seconds": null,
+  "refresh_period_seconds": 0.2,
+  "watchdog_timeout_seconds": 0.5,
+  "control_frequency_hz": 5.0,
+  "limits": {
+    "max_vx": 0.3,
+    "max_vy": 0.0,
+    "max_abs_wz": 0.3
+  },
+  "walking_speed_policy": {
+    "minimum_walking_vx": 0.2,
+    "forward_start_error": 0.25,
+    "forward_stop_error": 0.1
+  },
+  "max_sent_cycles": 10,
+  "risk_events": {
+    "accepted": 0,
+    "rejected": 0
+  },
+  "inputs": {
+    "started": false,
+    "dds_publishers": 0,
+    "uwb_topic": "rt/uwbstate",
+    "lidar_topic": "rt/utlidar/cloud_base",
+    "uwb_samples": 82,
+    "lidar_samples": 251,
+    "uwb_errors": 0,
+    "lidar_errors": 0
+  },
+  "cycles": 84,
+  "sent_cycles": 0,
+  "records": [
+    {
+      "cycle": 1,
+      "monotonic": 246199.866963865,
+      "uwb_age_seconds": null,
+      "uwb_error": "uwb_not_ready",
+      "follow_target": null,
+      "candidate": null,
+      "companion": {
+        "state": "TARGET_LOST",
+        "motion_mode": "STOP",
+        "reason": "uwb_target_lost",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": null,
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 2,
+      "monotonic": 246200.06742023,
+      "uwb_age_seconds": 0.03635556300287135,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8280261938947038,
+        "y": -1.0583647243908765,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4045017670929149,
+        "age_seconds": 0.05708737301756628
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 3,
+      "monotonic": 246200.266601688,
+      "uwb_age_seconds": 0.1479382140096277,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8310435150501627,
+        "y": -1.0586430761938053,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.46354369752367847,
+        "age_seconds": 0.05645200700382702
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 4,
+      "monotonic": 246200.467014981,
+      "uwb_age_seconds": 0.07609236100688577,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8268254438306761,
+        "y": -1.0580768775299347,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.058438028005184606
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 5,
+      "monotonic": 246200.666626844,
+      "uwb_age_seconds": 0.17356241299421526,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8185061759354584,
+        "y": -1.049586223639413,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4041452936118681,
+        "age_seconds": 0.05896540399407968
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 6,
+      "monotonic": 246200.867508197,
+      "uwb_age_seconds": 0.024434897990431637,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8118722211964604,
+        "y": -1.054101936828215,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4142342981504244,
+        "age_seconds": 0.05850014599855058
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 7,
+      "monotonic": 246201.067023962,
+      "uwb_age_seconds": 0.1370520869968459,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8144052896973131,
+        "y": -1.0550686459275436,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.060216553014470264
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 8,
+      "monotonic": 246201.266911275,
+      "uwb_age_seconds": 0.06645388997276314,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8097888979034136,
+        "y": -1.0539907513530915,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4055169618842671,
+        "age_seconds": 0.06072714098263532
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 9,
+      "monotonic": 246201.468040392,
+      "uwb_age_seconds": 0.08819363501970656,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8098688838640427,
+        "y": -1.0540099355661883,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4098954462510454,
+        "age_seconds": 0.06274984599440359
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 10,
+      "monotonic": 246201.667745588,
+      "uwb_age_seconds": 0.1072298729850445,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8012884792581696,
+        "y": -1.0502797258820955,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.49126436470586227,
+        "age_seconds": 0.06346959999063984
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 11,
+      "monotonic": 246201.867273815,
+      "uwb_age_seconds": 0.04567801801022142,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7995336855798563,
+        "y": -1.0513678842115062,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3971647573531985,
+        "age_seconds": 0.06256221499643289
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 12,
+      "monotonic": 246202.067650997,
+      "uwb_age_seconds": 0.15804858598858118,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8027559924823513,
+        "y": -1.0523016234690945,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40643156400303265,
+        "age_seconds": 0.06421347899595276
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 13,
+      "monotonic": 246202.267816736,
+      "uwb_age_seconds": 0.006480010022642091,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8187077487131771,
+        "y": -1.0092704464354307,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.43548218509541176,
+        "age_seconds": 0.06512468101573177
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 14,
+      "monotonic": 246202.466371634,
+      "uwb_age_seconds": 0.029710025992244482,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8113126951998049,
+        "y": -1.053789086634212,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.4095221381995507,
+        "age_seconds": 0.06295014399802312
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 15,
+      "monotonic": 246202.671258559,
+      "uwb_age_seconds": 0.2345969510206487,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8113126951998049,
+        "y": -1.053789086634212,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4643429704818431,
+        "age_seconds": 0.006516700028441846
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 16,
+      "monotonic": 246202.869882963,
+      "uwb_age_seconds": 0.07632058797753416,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8185790403575814,
+        "y": -1.0560988747647566,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40309669499515965,
+        "age_seconds": 0.007404357980703935
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 17,
+      "monotonic": 246203.067564852,
+      "uwb_age_seconds": 0.0967340659990441,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8077072392554241,
+        "y": -1.0520347303800213,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.39670368218722596,
+        "age_seconds": 0.006489940016763285
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 18,
+      "monotonic": 246203.266991473,
+      "uwb_age_seconds": 0.029260256997076795,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7715070547138629,
+        "y": -1.043397057920362,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.47333803149209486,
+        "age_seconds": 0.011145927011966705
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 19,
+      "monotonic": 246203.466811236,
+      "uwb_age_seconds": 0.0527416959812399,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8074862576589261,
+        "y": -1.0484066846825555,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.013316684984602034
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 20,
+      "monotonic": 246203.666945524,
+      "uwb_age_seconds": 0.07489132299087942,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7772184765960759,
+        "y": -1.0461774712392535,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4026008666516973,
+        "age_seconds": 0.015947965992381796
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 21,
+      "monotonic": 246203.866694228,
+      "uwb_age_seconds": 0.008143890008796006,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7912606717712598,
+        "y": -1.0495468535035914,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4107306013198509,
+        "age_seconds": 0.018393464997643605
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 22,
+      "monotonic": 246204.067348493,
+      "uwb_age_seconds": 0.2087981550139375,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7912606717712598,
+        "y": -1.0495468535035914,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.019930865993956104
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 23,
+      "monotonic": 246204.266318361,
+      "uwb_age_seconds": 0.40776802302571014,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7912606717712598,
+        "y": -1.0495468535035914,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.405588072649679,
+        "age_seconds": 0.02333562501007691
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 24,
+      "monotonic": 246204.467034869,
+      "uwb_age_seconds": 0.08250097901327536,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8453731931177284,
+        "y": -1.017320067512753,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3991911334541221,
+        "age_seconds": 0.02777733901166357
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 25,
+      "monotonic": 246204.667612818,
+      "uwb_age_seconds": 0.019878185004927218,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8071441368926573,
+        "y": -1.047593776692227,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.49480898035878423,
+        "age_seconds": 0.03027281499817036
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 26,
+      "monotonic": 246204.867499819,
+      "uwb_age_seconds": 0.13580344000365585,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8165706693713144,
+        "y": -1.0554327559515033,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4006364793580534,
+        "age_seconds": 0.031331884005339816
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 27,
+      "monotonic": 246205.068014239,
+      "uwb_age_seconds": 0.1547792589990422,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8286078889036523,
+        "y": -1.058504240850873,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.41373860778256044,
+        "age_seconds": 0.03776616699178703
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 28,
+      "monotonic": 246205.266692602,
+      "uwb_age_seconds": 0.17539685699739493,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8012656403074532,
+        "y": -1.051946492726752,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4668873662539818,
+        "age_seconds": 0.03965601298841648
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 29,
+      "monotonic": 246205.466933481,
+      "uwb_age_seconds": 0.009836168988840654,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8051608030566237,
+        "y": -1.052876803922576,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3930754198829544,
+        "age_seconds": 0.04242155500105582
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 30,
+      "monotonic": 246205.668204825,
+      "uwb_age_seconds": 0.03384503998677246,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8112809131892198,
+        "y": -1.0525134108747414,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4057021668242292,
+        "age_seconds": 0.047108169994316995
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 31,
+      "monotonic": 246205.86680819,
+      "uwb_age_seconds": 0.1449511430109851,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8199941854186865,
+        "y": -1.0562993663497275,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.44589793719143334,
+        "age_seconds": 0.04865625299862586
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 32,
+      "monotonic": 246206.067281596,
+      "uwb_age_seconds": 0.3454245490138419,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8199941854186865,
+        "y": -1.0562993663497275,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.052067711018025875
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 33,
+      "monotonic": 246206.26600617,
+      "uwb_age_seconds": 0.013946233986644074,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8096824252715105,
+        "y": -1.0505390967034662,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.41070612372348175,
+        "age_seconds": 0.049733195977751166
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 34,
+      "monotonic": 246206.472689082,
+      "uwb_age_seconds": 0.22062914600246586,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8096824252715105,
+        "y": -1.0505390967034662,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4035770293451938,
+        "age_seconds": 0.06336446400382556
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 35,
+      "monotonic": 246206.669401135,
+      "uwb_age_seconds": 0.06547226800466888,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8139908267549836,
+        "y": -1.0549975409358816,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.4852123279906811,
+        "age_seconds": 0.062345179001567885
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 36,
+      "monotonic": 246206.86671701,
+      "uwb_age_seconds": 0.00017771602142602205,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8193097834221224,
+        "y": -1.056249725261329,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40453358040691084,
+        "age_seconds": 0.06348537199664861
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 37,
+      "monotonic": 246207.071496166,
+      "uwb_age_seconds": 0.019185888988431543,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.812966774895711,
+        "y": -1.0547529484803997,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.005837481003254652
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 38,
+      "monotonic": 246207.274860552,
+      "uwb_age_seconds": 0.2225502749788575,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.812966774895711,
+        "y": -1.0547529484803997,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.39846396991430016,
+        "age_seconds": 0.011402006988646463
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 39,
+      "monotonic": 246207.468732859,
+      "uwb_age_seconds": 0.06661498302128166,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8022739270981076,
+        "y": -1.0521883250246045,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.39220232866805277,
+        "age_seconds": 0.0082194660208188
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 40,
+      "monotonic": 246207.667541611,
+      "uwb_age_seconds": 0.26542373502161354,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8022739270981076,
+        "y": -1.0521883250246045,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.502737215484024,
+        "age_seconds": 0.00965866501792334
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 41,
+      "monotonic": 246207.866472918,
+      "uwb_age_seconds": 0.020975883991923183,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8294672758536454,
+        "y": -1.0231101199203532,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4055165273752437,
+        "age_seconds": 0.011772970989113674
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 42,
+      "monotonic": 246208.066366024,
+      "uwb_age_seconds": 0.2208689899998717,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8294672758536454,
+        "y": -1.0231101199203532,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40171530035040126,
+        "age_seconds": 0.015091818990185857
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 43,
+      "monotonic": 246208.266688167,
+      "uwb_age_seconds": 0.07369570800801739,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8049614853021629,
+        "y": -1.039559343751331,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4568038859780516,
+        "age_seconds": 0.01829581000492908
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 44,
+      "monotonic": 246208.466690762,
+      "uwb_age_seconds": 0.1006644869921729,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8238124651882166,
+        "y": -1.0033207772830504,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3997476977008805,
+        "age_seconds": 0.0209601050009951
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 45,
+      "monotonic": 246208.667556242,
+      "uwb_age_seconds": 0.04069680700195022,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8046210422059201,
+        "y": -1.052750541930794,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.41072348379342566,
+        "age_seconds": 0.025307996984338388
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 46,
+      "monotonic": 246208.866681309,
+      "uwb_age_seconds": 0.23982187401270494,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8046210422059201,
+        "y": -1.052750541930794,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4578503336795475,
+        "age_seconds": 0.02682353401905857
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 47,
+      "monotonic": 246209.066851338,
+      "uwb_age_seconds": 0.4399919029965531,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8046210422059201,
+        "y": -1.052750541930794,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.02906669699586928
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 48,
+      "monotonic": 246209.266843101,
+      "uwb_age_seconds": 0.09759542901883833,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8032587587032762,
+        "y": -1.0322131801791063,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4134232949446934,
+        "age_seconds": 0.032879492006031796
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 49,
+      "monotonic": 246209.467577433,
+      "uwb_age_seconds": 0.027209416002733633,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8205143463628506,
+        "y": -1.053988026848487,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4071664741325557,
+        "age_seconds": 0.03625394101254642
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 50,
+      "monotonic": 246209.666648732,
+      "uwb_age_seconds": 0.13956599900848232,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8178076555199678,
+        "y": -1.0546727526169954,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.03768319298978895
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 51,
+      "monotonic": 246209.866523462,
+      "uwb_age_seconds": 0.3394407290033996,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8178076555199678,
+        "y": -1.0546727526169954,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3984305121829277,
+        "age_seconds": 0.04098573999362998
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 52,
+      "monotonic": 246210.067471765,
+      "uwb_age_seconds": 0.5403890320158098,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8178076555199678,
+        "y": -1.0546727526169954,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.39933804074752194,
+        "age_seconds": 0.04503112600650638
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 53,
+      "monotonic": 246210.266895311,
+      "uwb_age_seconds": 0.02599092500167899,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8181742093856657,
+        "y": -1.0559968100435166,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.494290003941616,
+        "age_seconds": 0.04752851100056432
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 54,
+      "monotonic": 246210.467005905,
+      "uwb_age_seconds": 0.043676056986441836,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8182873123636591,
+        "y": -1.0477053924846838,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40933775260500804,
+        "age_seconds": 0.04953355499310419
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 55,
+      "monotonic": 246210.667287019,
+      "uwb_age_seconds": 0.24395717098377645,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8182873123636591,
+        "y": -1.0477053924846838,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4081312522317106,
+        "age_seconds": 0.05388494598446414
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 56,
+      "monotonic": 246210.866742098,
+      "uwb_age_seconds": 0.08577668201178312,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8140539498746149,
+        "y": -1.0549960523326538,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4345738525428612,
+        "age_seconds": 0.055857113999081776
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 57,
+      "monotonic": 246211.066732741,
+      "uwb_age_seconds": 0.28576732499641366,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8140539498746149,
+        "y": -1.0549960523326538,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.4045271954427833,
+        "age_seconds": 0.058978790999390185
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 58,
+      "monotonic": 246211.266927779,
+      "uwb_age_seconds": 0.4859623630181886,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8140539498746149,
+        "y": -1.0549960523326538,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3954599839751162,
+        "age_seconds": 0.06177134800236672
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 59,
+      "monotonic": 246211.472838493,
+      "uwb_age_seconds": 0.6918730770121329,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8140539498746149,
+        "y": -1.0549960523326538,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4324212365872561,
+        "age_seconds": 0.05835980401025154
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 60,
+      "monotonic": 246211.667750606,
+      "uwb_age_seconds": 0.07856689699110575,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8374833505459138,
+        "y": -1.0296697276609852,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.04034316597972065
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 61,
+      "monotonic": 246211.866666819,
+      "uwb_age_seconds": 0.0827950919920113,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8370061098255994,
+        "y": -1.0486345391823528,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.409223979894576,
+        "age_seconds": 0.029625160997966304
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 62,
+      "monotonic": 246212.067694281,
+      "uwb_age_seconds": 0.18617646500933915,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8208377065232204,
+        "y": -0.9855809574807206,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.405152435688641,
+        "age_seconds": 0.018322057992918417
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 63,
+      "monotonic": 246212.269525795,
+      "uwb_age_seconds": 0.10235430501052178,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8364684407356751,
+        "y": -0.9984922536651031,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4723743453260881,
+        "age_seconds": 0.009160329005680978
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 64,
+      "monotonic": 246212.467625472,
+      "uwb_age_seconds": 0.3004539819958154,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8364684407356751,
+        "y": -0.9984922536651031,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.45969531846308864,
+        "age_seconds": 0.06657577899750322
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 65,
+      "monotonic": 246212.66691322,
+      "uwb_age_seconds": 0.12683769699651748,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8444552011783557,
+        "y": -1.055473523848586,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.05532345699612051
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 66,
+      "monotonic": 246212.867373411,
+      "uwb_age_seconds": 0.32729788799770176,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8444552011783557,
+        "y": -1.055473523848586,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3999688114253648,
+        "age_seconds": 0.04537980898749083
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 67,
+      "monotonic": 246213.067184207,
+      "uwb_age_seconds": 0.1543742519861553,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8009985535835895,
+        "y": -1.0449378775524578,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4054057814907563,
+        "age_seconds": 0.033420585008570924
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 68,
+      "monotonic": 246213.276971846,
+      "uwb_age_seconds": 0.08339651999995112,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8455049956227172,
+        "y": -1.0497621642809403,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.03171267599100247
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 69,
+      "monotonic": 246213.467963966,
+      "uwb_age_seconds": 0.18147238198434934,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7950619294233787,
+        "y": -1.0195564909240205,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3916817431244626,
+        "age_seconds": 0.012628076976398006
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 70,
+      "monotonic": 246213.672552987,
+      "uwb_age_seconds": 0.10334413900272921,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8160896783585101,
+        "y": -1.055110427422849,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3991917451274919,
+        "age_seconds": 0.0057056230143643916
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 71,
+      "monotonic": 246213.867930115,
+      "uwb_age_seconds": 0.29872126699774526,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8160896783585101,
+        "y": -1.055110427422849,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40470617870194675,
+        "age_seconds": 0.06049669100320898
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 72,
+      "monotonic": 246214.066816453,
+      "uwb_age_seconds": 0.49760760500794277,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8160896783585101,
+        "y": -1.055110427422849,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4533815776788792,
+        "age_seconds": 0.0476429870177526
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 73,
+      "monotonic": 246214.267509695,
+      "uwb_age_seconds": 0.6983008469978813,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8160896783585101,
+        "y": -1.055110427422849,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.4081545340343716,
+        "age_seconds": 0.038037741993321106
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 74,
+      "monotonic": 246214.468947758,
+      "uwb_age_seconds": 0.8997389099968132,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8160896783585101,
+        "y": -1.055110427422849,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40382279948012995,
+        "age_seconds": 0.027820724004413933
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 75,
+      "monotonic": 246214.666864572,
+      "uwb_age_seconds": 0.07183484200504608,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8509914397104952,
+        "y": -1.0555301245797604,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.45346662738700944,
+        "age_seconds": 0.015345256018918008
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 76,
+      "monotonic": 246214.875505102,
+      "uwb_age_seconds": 0.0914102950191591,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7908329311412445,
+        "y": -1.0342488832931123,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.010784091020468622
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 77,
+      "monotonic": 246215.067975706,
+      "uwb_age_seconds": 0.0025178270007018,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8186043757849357,
+        "y": -1.0387332199310157,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": 0.4774334047776305,
+        "age_seconds": 0.06281020800815895
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 78,
+      "monotonic": 246215.267291334,
+      "uwb_age_seconds": 0.2018334549793508,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8186043757849357,
+        "y": -1.0387332199310157,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.40229695272321836,
+        "age_seconds": 0.052268423984060064
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 79,
+      "monotonic": 246215.468626638,
+      "uwb_age_seconds": 0.40316875898861326,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8186043757849357,
+        "y": -1.0387332199310157,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.3946598444331762,
+        "age_seconds": 0.04223410700797103
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 80,
+      "monotonic": 246215.669343633,
+      "uwb_age_seconds": 0.1126031510066241,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.822401354534958,
+        "y": -1.0499766632988647,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4604660701244691,
+        "age_seconds": 0.031050949008204043
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 81,
+      "monotonic": 246215.868051502,
+      "uwb_age_seconds": 0.12269233301049098,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8181472664977969,
+        "y": -1.0520879302490287,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.018861538002965972
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 82,
+      "monotonic": 246216.068544176,
+      "uwb_age_seconds": 0.32318500700057484,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8181472664977969,
+        "y": -1.0520879302490287,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4007397848791312,
+        "age_seconds": 0.008182360994396731
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 83,
+      "monotonic": 246216.270672176,
+      "uwb_age_seconds": 0.15033165799104609,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8119869349791045,
+        "y": -1.0414732558783721,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "obstacle_in_stop_zone",
+        "nearest_distance": 0.4250945232272113,
+        "age_seconds": 0.005940488015767187
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 84,
+      "monotonic": 246216.46820537,
+      "uwb_age_seconds": 0.0003644690150395036,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.8335129754922623,
+        "y": -1.0524843698034287,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": null,
+      "companion": {
+        "state": "OBSTACLE_STOP",
+        "motion_mode": "STOP",
+        "reason": "lidar_stop",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "STOP",
+        "reason": "clearance_confirmation_pending",
+        "nearest_distance": null,
+        "age_seconds": 0.008511677995556965
+      },
+      "arbiter": {
+        "authority": "EMERGENCY",
+        "reason": "risk_feed_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    }
+  ]
+}

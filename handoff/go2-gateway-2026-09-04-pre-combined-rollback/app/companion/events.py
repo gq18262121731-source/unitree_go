@@ -1,0 +1,43 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Mapping
+
+
+class CompanionEventType(str, Enum):
+    START = "START"
+    STOP = "STOP"
+    PERSON_STATIONARY = "PERSON_STATIONARY"
+    PERSON_MOVING = "PERSON_MOVING"
+    VIEW_REQUIRED = "VIEW_REQUIRED"
+    VIEW_ALIGNED = "VIEW_ALIGNED"
+    TARGET_LOST = "TARGET_LOST"
+    TARGET_REACQUIRED = "TARGET_REACQUIRED"
+    FAILSAFE_COMMITTED = "FAILSAFE_COMMITTED"
+    OBSTACLE_DETECTED = "OBSTACLE_DETECTED"
+    OBSTACLE_CLEARED = "OBSTACLE_CLEARED"
+    FALL_SUSPECTED = "FALL_SUSPECTED"
+    FALL_CONFIRMED = "FALL_CONFIRMED"
+    FALL_DISMISSED = "FALL_DISMISSED"
+    EMERGENCY_ACKNOWLEDGED = "EMERGENCY_ACKNOWLEDGED"
+    BEGIN_VOICE_CHECK = "BEGIN_VOICE_CHECK"
+    I_AM_OK = "I_AM_OK"
+    REQUEST_HELP = "REQUEST_HELP"
+    CALL_FAMILY = "CALL_FAMILY"
+    NO_RESPONSE = "NO_RESPONSE"
+    RISK_CLEARED = "RISK_CLEARED"
+    RECOVERY_DETECTED = "RECOVERY_DETECTED"
+    RECOVERY_STABLE = "RECOVERY_STABLE"
+    RESUME = "RESUME"
+    MANUAL_ACQUIRE = "MANUAL_ACQUIRE"
+    MANUAL_RELEASE = "MANUAL_RELEASE"
+    RESET_DEMO = "RESET_DEMO"
+
+
+@dataclass(frozen=True)
+class CompanionEvent:
+    event_type: CompanionEventType
+    monotonic_time: float
+    reason: str
+    metadata: Mapping[str, object] = field(default_factory=dict)

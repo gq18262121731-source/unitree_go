@@ -78,8 +78,8 @@ def test_real_yaml_uses_elder_follow_envelope_and_gateway_motion_limits() -> Non
     assert config.follow.min_distance == pytest.approx(1.00)
     assert config.follow.max_distance == pytest.approx(2.50)
     assert config.follow.walk_min == pytest.approx(0.24)
-    assert config.follow.vx_max == pytest.approx(0.504)
-    assert config.follow.wz_max == pytest.approx(1.10)
+    assert config.follow.vx_max == pytest.approx(0.42)
+    assert config.follow.wz_max == pytest.approx(0.55)
     assert config.follow.kx == pytest.approx(0.40)
     assert math.degrees(config.follow.bearing_deadband_radians) == pytest.approx(5.0)
     assert config.safety.watchdog_seconds == pytest.approx(1.25)
@@ -98,8 +98,8 @@ def test_real_yaml_uses_elder_follow_envelope_and_gateway_motion_limits() -> Non
         follow_simulation=False,
         follow_execution_enabled=True,
         phase7_motion_execution_enabled=True,
-        max_vx=0.504,
-        max_wz=1.10,
+        max_vx=0.42,
+        max_wz=0.55,
     )
     loop = build_companion_loop(object(), settings, config)  # type: ignore[arg-type]
     assert loop.controller.safety_guard.config.min_distance == pytest.approx(1.00)
@@ -133,8 +133,8 @@ def test_real_yaml_uses_elder_follow_envelope_and_gateway_motion_limits() -> Non
     assert held.vx == 0.0
     assert resumed.vx == pytest.approx(0.24)
     # The generic controller remains proportional; the wireless V2.1 layer
-    # adds the externalized distance curve that reaches 0.504 m/s at 2.0 m.
-    assert 0.30 < catch_up.vx <= 0.504
+    # adds the externalized distance curve that reaches 0.42 m/s at 2.0 m.
+    assert 0.30 < catch_up.vx <= 0.42
 
 
 def test_loader_rejects_unknown_keys_and_automatic_resume(tmp_path: Path) -> None:

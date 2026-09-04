@@ -1,13 +1,15 @@
 param(
-    [string]$RobotIp = "192.168.8.252",
+    [string]$RobotIp = "192.168.8.245",
     [Alias("VideoBind")]
     [ValidateSet("127.0.0.1", "0.0.0.0")]
-    [string]$ListenHost = "127.0.0.1",
+    [string]$ListenHost = "0.0.0.0",
     [ValidateRange(1, 65535)]
     [int]$VideoPort = 8093,
     [ValidateSet("none", "phone_demo")]
     [string]$AutoDemo = "none",
     [string]$TtsVoice = "Microsoft Huihui Desktop",
+    [ValidateSet("Cherry", "Serena", "Ethan", "Chelsie")]
+    [string]$QwenTtsVoice = "Cherry",
     [string]$HealthNewUrl = "http://127.0.0.1:8000",
     [string]$ElderId = "elder01_02",
     # Leave localized defaults to the UTF-8 Python entry point. Windows
@@ -18,6 +20,7 @@ param(
     [string]$VoiceSessionId = "go2-wireless",
     [switch]$RequireStartupConfirmations,
     [switch]$ManualConfirmStart,
+    [switch]$EnableVideoActiveRecovery,
     [switch]$NoOpenBrowser
 )
 
@@ -71,7 +74,14 @@ $Names = @(
     "GO2_AES_KEY", "PYTHONPATH", "PYTHONUTF8", "GO2_MODE", "UNITREE_ROBOT_IP",
     "GO2_CONTROL_ENABLED", "GO2_READ_ONLY_MODE", "GO2_MAX_VX", "GO2_MAX_VY",
     "GO2_MAX_WZ", "GO2_CONTROL_WATCHDOG_SECONDS", "GO2_STATE_STALE_SECONDS",
-    "GO2_TTS_VOICE", "GO2_LIDAR_ENABLED"
+    "GO2_TTS_VOICE", "GO2_QWEN_TTS_VOICE", "GO2_LIDAR_ENABLED",
+    "GO2_WEBRTC_ENABLE_VIDEO_ACTIVE_RECOVERY",
+    "GO2_WEBRTC_RECONNECT_ON_STALE",
+    "GO2_WEBRTC_RECONNECT_INITIAL_SECONDS",
+    "GO2_WEBRTC_RECONNECT_STEP_SECONDS",
+    "GO2_WEBRTC_RECONNECT_MAX_SECONDS",
+    "GO2_WEBRTC_RECONNECT_STABLE_RESET_SECONDS",
+    "GO2_WEBRTC_DISCONNECT_GRACE_SECONDS"
 )
 $Previous = @{}
 foreach ($Name in $Names) {
@@ -86,21 +96,28 @@ try {
     $env:UNITREE_ROBOT_IP = $RobotIp
     $env:GO2_CONTROL_ENABLED = "true"
     $env:GO2_READ_ONLY_MODE = "false"
-    # The gateway hard cap covers MANUAL (0.49 m/s) and the Companion's
-    # 20%-raised 0.504 m/s final-command cap.
-    $env:GO2_MAX_VX = "0.504"
+    # Conservative combined profile shared by MANUAL and Companion.
+    $env:GO2_MAX_VX = "0.42"
     $env:GO2_MAX_VY = "0.30"
-    # The gateway hard cap covers MANUAL pure turns at 1.32 rad/s. Companion
-    # keeps its own lower 1.10 rad/s controller/final-command cap.
-    $env:GO2_MAX_WZ = "1.32"
+    $env:GO2_MAX_WZ = "0.55"
     # 4 Hz control has a 250 ms period. Allow normal WebRTC request latency
     # while retaining a bounded fail-safe when the control worker stalls.
     $env:GO2_CONTROL_WATCHDOG_SECONDS = "1.25"
     $env:GO2_STATE_STALE_SECONDS = "2.0"
     $env:GO2_TTS_VOICE = $TtsVoice
+    $env:GO2_QWEN_TTS_VOICE = $QwenTtsVoice
     # Competition runtime scope: UWB + video + voice. Do not initialize or
     # decode LiDAR/point-cloud data on the shared WebRTC connection.
     $env:GO2_LIDAR_ENABLED = "false"
+    # Formal operation keeps a stale video track degraded without toggling
+    # Video or replacing the PeerConnection. Opt in only for diagnostics.
+    $env:GO2_WEBRTC_ENABLE_VIDEO_ACTIVE_RECOVERY = if ($EnableVideoActiveRecovery) { "true" } else { "false" }
+    $env:GO2_WEBRTC_RECONNECT_ON_STALE = "false"
+    $env:GO2_WEBRTC_RECONNECT_INITIAL_SECONDS = "2"
+    $env:GO2_WEBRTC_RECONNECT_STEP_SECONDS = "2"
+    $env:GO2_WEBRTC_RECONNECT_MAX_SECONDS = "15"
+    $env:GO2_WEBRTC_RECONNECT_STABLE_RESET_SECONDS = "30"
+    $env:GO2_WEBRTC_DISCONNECT_GRACE_SECONDS = "3"
     $Arguments = @(
         $Tool, "--execute", "--host", $ListenHost, "--port", "$VideoPort",
         "--health-new-url", $HealthNewUrl, "--elder-id", $ElderId,

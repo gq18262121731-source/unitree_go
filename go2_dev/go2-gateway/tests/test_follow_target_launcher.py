@@ -20,6 +20,12 @@ def test_wrapper_uses_named_hashtable_splatting_for_base_launcher() -> None:
     assert "& $Launcher @Arguments" not in source
 
 
+def test_wrapper_uses_current_go2_address_by_default() -> None:
+    source = LAUNCHER.read_text(encoding="utf-8")
+
+    assert '[string]$RobotIp = "192.168.8.245"' in source
+
+
 def test_wrapper_keeps_follow_target_environment_configuration() -> None:
     source = LAUNCHER.read_text(encoding="utf-8")
 
@@ -74,6 +80,15 @@ def test_wireless_follow_readiness_does_not_require_disabled_low_state() -> None
     ).read_text(encoding="utf-8")
 
     assert "require_low_state_fresh: false" in config
+
+
+def test_wrapper_defaults_video_active_recovery_off_and_has_explicit_opt_in() -> None:
+    source = LAUNCHER.read_text(encoding="utf-8")
+
+    assert "[switch]$EnableVideoActiveRecovery" in source
+    assert "if ($EnableVideoActiveRecovery)" in source
+    assert "$LauncherArgs.EnableVideoActiveRecovery = $true" in source
+    assert "Video active recovery" in source
 
 
 def test_wrapper_starts_base_video_with_optional_layers_in_standby() -> None:

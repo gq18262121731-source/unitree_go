@@ -255,6 +255,23 @@ class LifecycleConnection(FakeConnection):
         self.pc.iceConnectionState = "failed"
         self.pc.emit("iceconnectionstatechange")
 
+    def disconnect_ice(self) -> None:
+        self.pc.iceConnectionState = "disconnected"
+        self.pc.emit("iceconnectionstatechange")
+
+    def restore_ice(self) -> None:
+        self.pc.connectionState = "connected"
+        self.pc.iceConnectionState = "completed"
+        self.pc.emit("connectionstatechange")
+        self.pc.emit("iceconnectionstatechange")
+
+
+class FailingLifecycleConnection(LifecycleConnection):
+    async def connect(self) -> None:
+        self.connect_count += 1
+        self.connect_started.set()
+        raise RuntimeError("simulated reconnect failure")
+
 
 def wait_until(predicate, timeout: float = 2.0) -> None:
     deadline = time.monotonic() + timeout
@@ -338,13 +355,17 @@ class RepeatingFrameTrack:
 
 
 class ResumableFrameTrack:
-    def __init__(self) -> None:
-        self.sent_first = False
+    def __init__(self, *, initial_duration_seconds: float = 1.10) -> None:
+        self.initial_duration_seconds = initial_duration_seconds
+        self.initial_started: float | None = None
         self.resume = threading.Event()
 
     async def recv(self):
-        if not self.sent_first:
-            self.sent_first = True
+        await asyncio.sleep(0.01)
+        now = time.monotonic()
+        if self.initial_started is None:
+            self.initial_started = now
+        if now - self.initial_started < self.initial_duration_seconds:
             return FakeFrame()
         while not self.resume.is_set():
             await asyncio.sleep(0.01)
@@ -372,12 +393,10 @@ def test_single_connection_carries_state_motion_and_video() -> None:
         assert connection.connect_count == 1
         assert connection.video.enabled is True
         assert connection.video.callback is not None
-        asyncio.run_coroutine_threadsafe(
-            connection.video.callback(OneFrameTrack()), runtime._loop
+        video_future = asyncio.run_coroutine_threadsafe(
+            connection.video.callback(RepeatingFrameTrack()), runtime._loop
         )
-        deadline = time.monotonic() + 2.0
-        while runtime.latest_frame() is None and time.monotonic() < deadline:
-            time.sleep(0.01)
+        wait_until(lambda: runtime.status()["videoReady"] is True)
 
         frame = runtime.latest_frame()
         assert frame is not None
@@ -390,13 +409,13 @@ def test_single_connection_carries_state_motion_and_video() -> None:
         assert status["connectionCount"] == 1
         assert status["sportStateReady"] is True
         assert status["videoReady"] is True
-        assert status["rawFrameCount"] == 1
-        assert status["encodedFrameCount"] == 1
+        assert status["rawFrameCount"] >= 1
+        assert status["encodedFrameCount"] >= 1
         assert status["lastRawFrameAt"] is not None
         assert status["lastEncodedFrameAt"] is not None
         assert status["rawFrameAgeSeconds"] is not None
         assert status["encodedFrameAgeSeconds"] is not None
-        assert status["encodeQueueDepth"] == 0
+        assert status["encodeQueueDepth"] <= 1
         assert status["encodeDurationMsLast"] is not None
         assert status["encodeDurationMsMax"] is not None
         assert status["encodeDurationMsEwma"] is not None
@@ -404,6 +423,7 @@ def test_single_connection_carries_state_motion_and_video() -> None:
         assert status["sportStateAgeSeconds"] is not None
         assert connection.connect_count == 1
     finally:
+        video_future.cancel()
         runtime.close()
 
     assert connection.disconnect_count == 1
@@ -620,7 +640,7 @@ def test_supervisor_marks_loss_reconnects_and_ignores_old_callbacks() -> None:
     try:
         pending.append(
             asyncio.run_coroutine_threadsafe(
-                first.video.callback(OneFrameTrack()), runtime._loop
+                first.video.callback(RepeatingFrameTrack()), runtime._loop
             )
         )
         wait_until(lambda: runtime.status()["videoReady"] is True)
@@ -882,6 +902,138 @@ def test_ice_failure_wakes_the_single_reconnect_supervisor() -> None:
         runtime.close(send_stop=False)
 
 
+def test_reconnect_backoff_is_exponential_and_capped() -> None:
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        reconnect_delay_seconds=2.0,
+        reconnect_backoff_step_seconds=2.0,
+        reconnect_max_delay_seconds=15.0,
+    )
+
+    assert [
+        runtime._reconnect_delay_for_failure_streak(streak)
+        for streak in range(5)
+    ] == [2.0, 4.0, 8.0, 15.0, 15.0]
+
+
+def test_reconnect_failure_streak_resets_only_after_stable_window() -> None:
+    first = LifecycleConnection()
+    failed = FailingLifecycleConnection()
+    recovered = LifecycleConnection()
+    connections = iter((first, failed, recovered))
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        reconnect_delay_seconds=0.01,
+        reconnect_backoff_step_seconds=0.01,
+        reconnect_max_delay_seconds=0.08,
+        reconnect_stable_reset_seconds=0.20,
+        connection_factory=lambda _ip, _key: (
+            next(connections),
+            TOPICS,
+            COMMANDS,
+        ),
+    )
+    runtime.start()
+    try:
+        first.close_peer()
+        wait_until(
+            lambda: runtime.status()["successfulConnectionCount"] == 2
+        )
+        before_stable = runtime.status()
+        assert before_stable["reconnectFailureStreak"] == 1
+        assert before_stable["lastReconnectDelaySeconds"] == pytest.approx(
+            0.02
+        )
+        wait_until(
+            lambda: runtime.status()["reconnectFailureStreak"] == 0,
+            timeout=1.0,
+        )
+    finally:
+        runtime.close(send_stop=False)
+
+
+def test_ice_disconnected_uses_grace_and_stop_ack_without_reconnect() -> None:
+    first = LifecycleConnection()
+    second = LifecycleConnection(connect_blocked=True)
+    connections = iter((first, second))
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        disconnect_grace_seconds=0.30,
+        reconnect_delay_seconds=0.01,
+        connection_factory=lambda _ip, _key: (
+            next(connections),
+            TOPICS,
+            COMMANDS,
+        ),
+    )
+    runtime.start()
+    try:
+        assert runtime.status()["motionReady"] is True
+        first.disconnect_ice()
+        wait_until(
+            lambda: runtime.status()["transportDisconnectGrace"]["active"]
+        )
+        grace = runtime.status()
+        assert grace["connected"] is True
+        assert grace["connectionState"] == "transport_grace"
+        assert grace["motionReady"] is False
+        assert grace["motionRpc"]["remoteStopState"] == (
+            "STOP_UNCONFIRMED_TRANSPORT_LOST"
+        )
+        assert not second.connect_started.is_set()
+
+        first.restore_ice()
+        wait_until(lambda: runtime.status()["motionReady"] is True)
+        recovered = runtime.status()
+        assert recovered["reconnectCount"] == 0
+        assert recovered["transportDisconnectGrace"]["active"] is False
+        assert recovered["motionRpc"]["remoteStopState"] == (
+            "STOP_CONFIRMED_AFTER_TRANSPORT_GRACE"
+        )
+        assert [row["api_id"] for row in first.datachannel.pub_sub.requests] == [
+            COMMANDS["StopMove"]
+        ]
+        assert not second.connect_started.is_set()
+    finally:
+        second.allow_connect.set()
+        runtime.close(send_stop=False)
+
+
+def test_ice_disconnected_grace_expiry_reconnects() -> None:
+    first = LifecycleConnection()
+    second = LifecycleConnection(connect_blocked=True)
+    connections = iter((first, second))
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        disconnect_grace_seconds=0.10,
+        reconnect_delay_seconds=0.01,
+        connection_factory=lambda _ip, _key: (
+            next(connections),
+            TOPICS,
+            COMMANDS,
+        ),
+    )
+    runtime.start()
+    try:
+        first.disconnect_ice()
+        assert second.connect_started.wait(timeout=1.0)
+        status = runtime.status()
+        assert status["motionReady"] is False
+        assert status["lastDisconnectReason"] == (
+            "ice_connection_disconnected_grace_expired"
+        )
+        assert status["diagnosticReason"] == "ice_connection_disconnected"
+    finally:
+        second.allow_connect.set()
+        runtime.close(send_stop=False)
+
+
 def _start_sport_keepalive(connection: LifecycleConnection):
     stop = threading.Event()
 
@@ -966,8 +1118,10 @@ def test_video_stale_alone_marks_degraded_without_reconnect(caplog) -> None:
         assert status["videoDegradedReason"] == "raw_frame_stale"
         assert status["dataHealthState"] == "healthy"
         assert not second.connect_started.is_set()
-        wait_until(lambda: "action=wait_for_soft_recovery" in caplog.text)
-        assert "action=wait_for_soft_recovery" in caplog.text
+        wait_until(lambda: "action=keep_transport" in caplog.text)
+        assert "action=keep_transport" in caplog.text
+        # The initial True enables the track. No OFF/ON recovery was issued.
+        assert first.video.switches == [True]
         track.resume.set()
         wait_until(lambda: runtime.status()["videoHealthState"] == "healthy")
         assert runtime.status()["reconnectCount"] == 0
@@ -983,6 +1137,7 @@ def test_video_watchdog_soft_toggle_requires_stable_recovery_frames() -> None:
     connection = LifecycleConnection()
     runtime = Go2WirelessRuntime(
         "192.168.8.252",
+        enable_video_active_recovery=True,
         connect_timeout_seconds=0.5,
         state_timeout_seconds=0.5,
         stale_timeout_seconds=0.10,
@@ -1031,6 +1186,7 @@ def test_video_watchdog_full_reconnects_after_failed_soft_recovery() -> None:
     connections = iter((first, second))
     runtime = Go2WirelessRuntime(
         "192.168.8.252",
+        enable_video_active_recovery=True,
         connect_timeout_seconds=0.5,
         state_timeout_seconds=0.5,
         stale_timeout_seconds=0.10,
@@ -1038,6 +1194,7 @@ def test_video_watchdog_full_reconnects_after_failed_soft_recovery() -> None:
         video_soft_recovery_seconds=0.20,
         video_soft_toggle_delay_seconds=0.05,
         video_soft_observe_seconds=0.10,
+        video_first_frame_wait_seconds=0.20,
         video_recovery_min_frames=5,
         video_recovery_min_duration_seconds=0.05,
         video_recovery_max_gap_seconds=0.05,
@@ -1050,7 +1207,7 @@ def test_video_watchdog_full_reconnects_after_failed_soft_recovery() -> None:
     )
     runtime.start()
     future = asyncio.run_coroutine_threadsafe(
-        first.video.callback(OneFrameTrack()), runtime._loop
+        first.video.callback(ResumableFrameTrack()), runtime._loop
     )
     try:
         wait_until(lambda: runtime.status()["videoReady"] is True)
@@ -1078,6 +1235,7 @@ def test_video_watchdog_recovers_connection_that_never_delivers_first_frame() ->
     connections = iter((first, second))
     runtime = Go2WirelessRuntime(
         "192.168.8.252",
+        enable_video_active_recovery=True,
         connect_timeout_seconds=0.5,
         state_timeout_seconds=0.5,
         stale_timeout_seconds=0.10,
@@ -1085,6 +1243,7 @@ def test_video_watchdog_recovers_connection_that_never_delivers_first_frame() ->
         video_soft_recovery_seconds=0.20,
         video_soft_toggle_delay_seconds=0.05,
         video_soft_observe_seconds=0.10,
+        video_first_frame_wait_seconds=0.20,
         connection_factory=lambda _ip, _key: (
             next(connections),
             TOPICS,
@@ -1113,6 +1272,7 @@ def test_single_returned_frame_does_not_create_false_video_recovery() -> None:
     connection = LifecycleConnection()
     runtime = Go2WirelessRuntime(
         "192.168.8.252",
+        enable_video_active_recovery=True,
         connect_timeout_seconds=0.5,
         state_timeout_seconds=0.5,
         stale_timeout_seconds=0.10,
@@ -1125,7 +1285,7 @@ def test_single_returned_frame_does_not_create_false_video_recovery() -> None:
     )
     runtime.start()
     first = asyncio.run_coroutine_threadsafe(
-        connection.video.callback(OneFrameTrack()), runtime._loop
+        connection.video.callback(ResumableFrameTrack()), runtime._loop
     )
     second = None
     try:
@@ -1146,6 +1306,202 @@ def test_single_returned_frame_does_not_create_false_video_recovery() -> None:
         if second is not None:
             second.cancel()
         runtime.close(send_stop=False)
+
+
+def test_old_outage_age_does_not_interrupt_new_recovery_frames() -> None:
+    connection = LifecycleConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video_active_recovery=True,
+        stale_timeout_seconds=0.10,
+        video_soft_recovery_seconds=0.20,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+    now = time.monotonic()
+    with runtime._lock:
+        runtime._connection = connection
+        runtime._connected = True
+        runtime._connection_generation = 2
+        runtime._video_watchdog_state = "RECOVERING"
+        runtime._video_recovery_started_monotonic = now - 188.0
+        runtime._video_recovery_candidate_started_monotonic = now - 0.03
+        runtime._video_recovery_last_frame_monotonic = now - 0.03
+        runtime._video_recovery_frame_count = 1
+        runtime._last_raw_frame_monotonic = now - 0.03
+        runtime._last_raw_frame_generation = 2
+        runtime._video_channel_enabled_monotonic = now - 1.0
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now,
+        raw_stale=False,
+        raw_age=0.03,
+        encoded_age=None,
+        sport_age=0.03,
+    )
+
+    assert connection.video.switches == []
+    assert runtime.status()["videoHealthState"] == "recovering"
+
+
+def test_first_frame_wait_does_not_toggle_video_before_fifteen_seconds() -> None:
+    connection = LifecycleConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video_active_recovery=True,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+    now = time.monotonic()
+    with runtime._lock:
+        runtime._connection = connection
+        runtime._connected = True
+        runtime._connection_generation = 1
+        runtime._video_watchdog_state = "AWAITING_FIRST_FRAME"
+        runtime._video_channel_enabled_monotonic = now - 14.9
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now,
+        raw_stale=False,
+        raw_age=None,
+        encoded_age=None,
+        sport_age=None,
+    )
+    assert connection.video.switches == []
+    assert runtime.status()["videoHealthState"] == "awaiting_first_raw_frame"
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now + 0.2,
+        raw_stale=False,
+        raw_age=None,
+        encoded_age=None,
+        sport_age=None,
+    )
+    assert connection.video.switches == [False]
+
+
+@pytest.mark.parametrize("fresh_raw_age", [0.016, 0.985])
+def test_post_soft_frame_prevents_fixed_timer_reconnect(
+    fresh_raw_age: float,
+) -> None:
+    connection = LifecycleConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video_active_recovery=True,
+        stale_timeout_seconds=3.0,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+    now = time.monotonic()
+    with runtime._lock:
+        runtime._connection = connection
+        runtime._connected = True
+        runtime._connection_generation = 3
+        runtime._video_watchdog_state = "SOFT_RECOVERY"
+        runtime._video_soft_attempted = True
+        runtime._video_soft_toggle_on_monotonic = now - 7.0
+        runtime._video_soft_recovery_start_raw_frame_count = 100
+        runtime._raw_frame_count = 101
+        runtime._last_raw_frame_monotonic = now - fresh_raw_age
+        runtime._last_raw_frame_generation = 3
+        runtime._record_video_recovery_frame_locked(now - fresh_raw_age)
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now,
+        raw_stale=False,
+        raw_age=fresh_raw_age,
+        encoded_age=fresh_raw_age,
+        sport_age=None,
+    )
+
+    status = runtime.status()
+    assert status["connected"] is True
+    assert status["lastDisconnectReason"] is None
+    assert status["videoHealthState"] == "recovering"
+    assert status["videoWatchdog"]["soft_recovery_success_count"] == 1
+
+
+def test_soft_recovery_ignores_buffered_frame_until_video_is_back_on() -> None:
+    connection = LifecycleConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video_active_recovery=True,
+        video_soft_toggle_delay_seconds=0.05,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+    now = time.monotonic()
+    with runtime._lock:
+        runtime._connection = connection
+        runtime._connected = True
+        runtime._connection_generation = 5
+        runtime._video_watchdog_state = "SOFT_RECOVERY"
+        runtime._video_soft_attempted = True
+        runtime._video_soft_toggle_off_monotonic = now - 0.10
+        runtime._video_soft_toggle_on_monotonic = None
+        runtime._video_soft_recovery_start_raw_frame_count = 100
+        runtime._raw_frame_count = 101
+        runtime._last_raw_frame_monotonic = now - 0.01
+        runtime._last_raw_frame_generation = 5
+        runtime._record_video_recovery_frame_locked(now - 0.01)
+
+    assert runtime.status()["videoHealthState"] == "soft_recovery"
+    assert runtime.status()["videoWatchdog"]["soft_recovery_success_count"] == 0
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now,
+        raw_stale=False,
+        raw_age=0.01,
+        encoded_age=0.01,
+        sport_age=None,
+    )
+    assert connection.video.switches == [True]
+    assert runtime._video_soft_recovery_start_raw_frame_count == 101
+
+
+def test_video_reconnect_waits_for_zero_frames_and_cooldown() -> None:
+    connection = LifecycleConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video_active_recovery=True,
+        stale_timeout_seconds=0.10,
+        video_soft_observe_seconds=0.10,
+        video_reconnect_cooldown_seconds=0.50,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+    now = time.monotonic()
+    with runtime._lock:
+        runtime._connection = connection
+        runtime._connected = True
+        runtime._connection_generation = 4
+        runtime._video_watchdog_state = "SOFT_RECOVERY"
+        runtime._video_soft_attempted = True
+        runtime._video_soft_toggle_on_monotonic = now - 0.20
+        runtime._video_soft_recovery_start_raw_frame_count = 50
+        runtime._raw_frame_count = 50
+        runtime._video_watchdog_cooldown_until_monotonic = now + 0.30
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now,
+        raw_stale=False,
+        raw_age=None,
+        encoded_age=None,
+        sport_age=None,
+    )
+    assert runtime.status()["connected"] is True
+
+    runtime._advance_video_watchdog(
+        connection,
+        now=now + 0.31,
+        raw_stale=False,
+        raw_age=None,
+        encoded_age=None,
+        sport_age=None,
+    )
+    assert runtime.status()["connected"] is False
+    assert runtime.status()["lastDisconnectReason"] == "video_watchdog_reconnect"
 
 
 def test_sport_state_stale_alone_marks_degraded_without_reconnect() -> None:
@@ -1201,11 +1557,11 @@ def test_raw_and_sport_stale_together_reconnect_transport(caplog) -> None:
     caplog.set_level(logging.WARNING)
     runtime.start()
     future = asyncio.run_coroutine_threadsafe(
-        first.video.callback(OneFrameTrack()), runtime._loop
+        first.video.callback(ResumableFrameTrack()), runtime._loop
     )
     try:
         wait_until(lambda: runtime.status()["videoReady"] is True)
-        assert second.connect_started.wait(timeout=1.5)
+        assert second.connect_started.wait(timeout=2.5)
         status = runtime.status()
         assert status["lastDisconnectReason"] == "transport_health_stale"
         assert status["diagnosticReason"] == "raw_and_sport_state_stale"
@@ -1237,7 +1593,7 @@ def test_raw_and_sport_stale_default_to_degraded_without_reconnect() -> None:
     )
     runtime.start()
     future = asyncio.run_coroutine_threadsafe(
-        first.video.callback(OneFrameTrack()), runtime._loop
+        first.video.callback(ResumableFrameTrack()), runtime._loop
     )
     try:
         wait_until(lambda: runtime.status()["videoReady"] is True)
@@ -1248,7 +1604,9 @@ def test_raw_and_sport_stale_default_to_degraded_without_reconnect() -> None:
         status = runtime.status()
         assert status["connected"] is True
         assert status["connectionState"] == "degraded"
-        assert status["watchdogPolicy"] == "hard_transport_plus_video_l1_l2"
+        assert status["watchdogPolicy"] == "hard_transport_video_degraded_only"
+        assert status["videoWatchdogPolicy"] == "degraded_only_keep_transport"
+        assert status["videoActiveRecoveryEnabled"] is False
         assert status["reconnectCount"] == 0
         assert not second.connect_started.is_set()
     finally:
@@ -1380,10 +1738,31 @@ def test_formal_launcher_disables_lidar_decoder() -> None:
         / "Start-Go2WirelessRuntime.ps1"
     ).read_text(encoding="utf-8")
 
-    assert '"GO2_TTS_VOICE", "GO2_LIDAR_ENABLED"' in launcher
+    assert '"GO2_LIDAR_ENABLED"' in launcher
     assert '$env:GO2_LIDAR_ENABLED = "false"' in launcher
-    assert '$env:GO2_MAX_VX = "0.504"' in launcher
-    assert '$env:GO2_MAX_WZ = "1.32"' in launcher
+
+
+def test_formal_launcher_uses_current_robot_and_lan_video_defaults() -> None:
+    launcher = (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "Start-Go2WirelessRuntime.ps1"
+    ).read_text(encoding="utf-8")
+
+    assert '[string]$RobotIp = "192.168.8.245"' in launcher
+    assert '[string]$ListenHost = "0.0.0.0"' in launcher
+    assert '$env:GO2_MAX_VX = "0.42"' in launcher
+    assert '$env:GO2_MAX_WZ = "0.55"' in launcher
+    assert "[switch]$EnableVideoActiveRecovery" in launcher
+    assert 'GO2_WEBRTC_ENABLE_VIDEO_ACTIVE_RECOVERY' in launcher
+    assert '$env:GO2_WEBRTC_RECONNECT_INITIAL_SECONDS = "2"' in launcher
+    assert '$env:GO2_WEBRTC_RECONNECT_STEP_SECONDS = "2"' in launcher
+    assert '$env:GO2_WEBRTC_RECONNECT_MAX_SECONDS = "15"' in launcher
+    assert (
+        '$env:GO2_WEBRTC_RECONNECT_STABLE_RESET_SECONDS = "30"'
+        in launcher
+    )
+    assert '$env:GO2_WEBRTC_DISCONNECT_GRACE_SECONDS = "3"' in launcher
     assert "[switch]$ManualConfirmStart" in launcher
     assert '$Arguments += "--manual-confirm-start"' in launcher
 

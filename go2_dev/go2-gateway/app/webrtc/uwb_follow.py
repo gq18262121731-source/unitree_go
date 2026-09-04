@@ -51,12 +51,12 @@ class WirelessUwbFollowConfig:
     duration_seconds: float = 180.0
     control_rate_hz: float = 5.0
     uwb_stale_timeout_seconds: float = 0.75
-    max_vx_mps: float = 0.504
-    max_wz_radps: float = 1.10
-    normal_max_wz_radps: float = 0.90
+    max_vx_mps: float = 0.42
+    max_wz_radps: float = 0.55
+    normal_max_wz_radps: float = 0.45
     alignment_enter_error_deg: float = 45.0
     alignment_exit_error_deg: float = 30.0
-    alignment_turn_speed_radps: float = 1.10
+    alignment_turn_speed_radps: float = 0.55
     full_speed_distance_m: float = 2.0
     distance_speed_curve_exponent: float = 1.4
     turn_slowdown_start_error_deg: float = 30.0
@@ -78,10 +78,10 @@ class WirelessUwbFollowConfig:
             raise ValueError("control_rate_hz must be within [1, 5]")
         if not 0.25 <= self.uwb_stale_timeout_seconds <= 1.0:
             raise ValueError("uwb_stale_timeout_seconds must be within [0.25, 1.0]")
-        if not 0.0 < self.max_vx_mps <= 0.504:
-            raise ValueError("max_vx_mps must be within (0, 0.504]")
-        if not 0.0 < self.max_wz_radps <= 1.10:
-            raise ValueError("max_wz_radps must be within (0, 1.10]")
+        if not 0.0 < self.max_vx_mps <= 0.42:
+            raise ValueError("max_vx_mps must be within (0, 0.42]")
+        if not 0.0 < self.max_wz_radps <= 0.55:
+            raise ValueError("max_wz_radps must be within (0, 0.55]")
         if not 0.0 < self.normal_max_wz_radps <= self.max_wz_radps:
             raise ValueError(
                 "normal_max_wz_radps must be positive and no greater "
@@ -1191,6 +1191,8 @@ class WirelessUwbFollowSession:
     ) -> str | None:
         if not status.get("connected") or status.get("connectionCount") != 1:
             return "webrtc_connection_not_single"
+        if not status.get("motionReady"):
+            return "motion_transport_not_ready"
         if not status.get("sportStateReady"):
             return "sport_state_stale"
         if self.config.require_video_fresh and not status.get("videoReady"):

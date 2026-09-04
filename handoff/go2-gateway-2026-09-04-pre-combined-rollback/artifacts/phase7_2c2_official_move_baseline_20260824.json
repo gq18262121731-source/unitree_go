@@ -1,0 +1,94 @@
+{
+  "phase": "7.2-C2_OFFICIAL_MOVE_BASELINE",
+  "business_logic_bypassed": [
+    "UWB",
+    "LiDAR",
+    "FollowController",
+    "MotionArbiter",
+    "external_risk_feed"
+  ],
+  "interface": "eth0",
+  "domain": 0,
+  "requested": {
+    "vx": 0.3,
+    "vy": 0.0,
+    "wz": 0.0,
+    "frequency_hz": 5.0,
+    "duration_seconds": 1.0
+  },
+  "move_calls": 5,
+  "stop_move_calls": 1,
+  "all_move_codes_zero": true,
+  "stop_code_zero": true,
+  "mean_move_interval_seconds": 0.20008855299965944,
+  "move_records": [
+    {
+      "index": 1,
+      "called_monotonic": 244720.5948639,
+      "scheduled_offset_seconds": 0.0,
+      "actual_offset_seconds": 1.615899964235723e-05,
+      "interval_seconds": null,
+      "vx": 0.3,
+      "vy": 0.0,
+      "wz": 0.0,
+      "sdk_return_code": 0,
+      "call_elapsed_seconds": 0.00026186497416347265
+    },
+    {
+      "index": 2,
+      "called_monotonic": 244720.795110343,
+      "scheduled_offset_seconds": 0.2,
+      "actual_offset_seconds": 0.20026260198210366,
+      "interval_seconds": 0.2002464429824613,
+      "vx": 0.3,
+      "vy": 0.0,
+      "wz": 0.0,
+      "sdk_return_code": 0,
+      "call_elapsed_seconds": 0.00026404199888929725
+    },
+    {
+      "index": 3,
+      "called_monotonic": 244720.995140153,
+      "scheduled_offset_seconds": 0.4,
+      "actual_offset_seconds": 0.40029241199954413,
+      "interval_seconds": 0.20002981001744047,
+      "vx": 0.3,
+      "vy": 0.0,
+      "wz": 0.0,
+      "sdk_return_code": 0,
+      "call_elapsed_seconds": 0.0004566189891193062
+    },
+    {
+      "index": 4,
+      "called_monotonic": 244721.195245903,
+      "scheduled_offset_seconds": 0.6000000000000001,
+      "actual_offset_seconds": 0.6003981620015111,
+      "interval_seconds": 0.20010575000196695,
+      "vx": 0.3,
+      "vy": 0.0,
+      "wz": 0.0,
+      "sdk_return_code": 0,
+      "call_elapsed_seconds": 0.0005345379759091884
+    },
+    {
+      "index": 5,
+      "called_monotonic": 244721.395218112,
+      "scheduled_offset_seconds": 0.8,
+      "actual_offset_seconds": 0.8003703709982801,
+      "interval_seconds": 0.19997220899676904,
+      "vx": 0.3,
+      "vy": 0.0,
+      "wz": 0.0,
+      "sdk_return_code": 0,
+      "call_elapsed_seconds": 0.00027525098994374275
+    }
+  ],
+  "stop_records": [
+    {
+      "called_monotonic": 244721.595159949,
+      "actual_offset_seconds": 1.000312207994284,
+      "sdk_return_code": 0,
+      "call_elapsed_seconds": 0.002462700998876244
+    }
+  ]
+}

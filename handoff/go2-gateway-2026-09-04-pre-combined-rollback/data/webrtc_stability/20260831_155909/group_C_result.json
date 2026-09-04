@@ -1,0 +1,30 @@
+{
+  "group": "C",
+  "profile": {
+    "name": "C",
+    "video": false,
+    "uwb": true,
+    "sport": true,
+    "low_state": false,
+    "multiple_state": true,
+    "audio_hub": false
+  },
+  "startedAt": "2026-08-31T15:59:20.017546+08:00",
+  "finishedAt": "2026-08-31T15:59:20.024363+08:00",
+  "requestedDurationSeconds": 600.0,
+  "observedDurationSeconds": 0.01600000000325963,
+  "sampleCount": 0,
+  "reconnectCount": 0,
+  "disconnectCount": 0,
+  "consentExpiredCount": 0,
+  "sportStateStaleEpisodes": 0,
+  "videoStaleEpisodes": 0,
+  "uwbStaleEpisodes": 0,
+  "longestContinuousOnlineSeconds": 0.0,
+  "lastDisconnectReason": null,
+  "lastDiagnosticReason": null,
+  "recentDisconnects": [],
+  "subscribedTopics": [],
+  "samplesPath": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\webrtc_stability\\20260831_155909\\group_C_samples.jsonl",
+  "error": "GatewayError: Wireless Runtime initialization failed: No module named 'unitree_webrtc_connect'"
+}

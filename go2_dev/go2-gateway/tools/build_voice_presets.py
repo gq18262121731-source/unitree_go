@@ -31,6 +31,10 @@ PRESET_PHRASES = {
         "暂未收到您的有效回应，已为您联系家属和社区工作人员，"
         "请保持原位等待帮助。"
     ),
+    "WALK_FOLLOW": (
+        "您当前心率为76次每分钟，血氧为98%，状态正常。"
+        "伴随模式已启动，请注意出行安全。"
+    ),
 }
 
 
@@ -96,6 +100,11 @@ def main() -> int:
     parser.add_argument("--speed", type=float, default=1.0)
     parser.add_argument("--audition", action="store_true")
     parser.add_argument(
+        "--only",
+        choices=tuple(PRESET_PHRASES),
+        help="Build only one named preset instead of the full preset set.",
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("data/voice/presets"),
@@ -106,6 +115,14 @@ def main() -> int:
     items = (
         [(voice, AUDITION_TEXT, f"audition_{voice}.wav") for voice in BUILTIN_VOICES]
         if args.audition
+        else [
+            (
+                args.voice,
+                PRESET_PHRASES[args.only],
+                f"{args.only}.wav",
+            )
+        ]
+        if args.only
         else [
             (args.voice, text, f"{intent}.wav")
             for intent, text in PRESET_PHRASES.items()
@@ -118,6 +135,27 @@ def main() -> int:
         "speed": args.speed,
         "files": [],
     }
+    manifest_path = args.output_dir / "manifest.json"
+    if args.only and manifest_path.is_file():
+        try:
+            existing = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, TypeError):
+            existing = None
+        if isinstance(existing, dict) and isinstance(existing.get("files"), list):
+            manifest = existing
+            manifest["provider"] = "health_new/api/v1/voice/tts"
+            manifest["model"] = "qwen3-tts-flash"
+            manifest["voice"] = args.voice
+            manifest["speed"] = args.speed
+            target_name = f"{args.only}.wav"
+            manifest["files"] = [
+                item
+                for item in manifest["files"]
+                if not (
+                    isinstance(item, dict)
+                    and Path(str(item.get("path") or "")).name == target_name
+                )
+            ]
     for voice, text, filename in items:
         audio, response = _synthesize(
             health_url=args.health_url,
@@ -139,7 +177,7 @@ def main() -> int:
         )
         print(f"VOICE_PRESET_WRITTEN voice={voice} path={target} bytes={len(audio)}")
 
-    (args.output_dir / "manifest.json").write_text(
+    manifest_path.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )

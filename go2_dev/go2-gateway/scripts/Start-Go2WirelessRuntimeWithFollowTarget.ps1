@@ -1,8 +1,10 @@
 param(
     [string]$CameraServiceIp = "192.168.8.253",
-    [string]$RobotIp = "192.168.8.252",
+    [string]$RobotIp = "192.168.8.245",
     [string]$HealthNewUrl = "http://127.0.0.1:8000",
     [string]$ElderId = "elder01_02",
+    [ValidateSet("Cherry", "Serena", "Ethan", "Chelsie")]
+    [string]$QwenTtsVoice = "Cherry",
     [ValidateRange(1, 65535)]
     [int]$FollowTargetPort = 8766,
     [ValidateRange(1.0, 100.0)]
@@ -14,6 +16,7 @@ param(
     [switch]$UwbVerbose,
     [switch]$VerboseProtocolLog,
     [switch]$EnableLowState,
+    [switch]$EnableVideoActiveRecovery,
     [switch]$ManualConfirmStart,
     [switch]$NoOpenBrowser
 )
@@ -90,6 +93,7 @@ try {
     Write-Host "SportState            : STANDBY"
     Write-Host "MultiState            : STANDBY"
     Write-Host "LowState subscription : $(if ($EnableLowState) { 'ON' } else { 'OFF' })"
+    Write-Host "Video active recovery  : $(if ($EnableVideoActiveRecovery) { 'ON (DIAGNOSTIC)' } else { 'OFF' })"
     Write-Host "UWB console detail : $(if ($ResolvedUwbVerbose) { 'ON' } else { 'OFF' })"
     Write-Host "Protocol detail    : $(if ($ResolvedProtocolVerbose) { 'ON' } else { 'OFF' })"
 
@@ -99,6 +103,7 @@ try {
         RobotIp = $RobotIp
         HealthNewUrl = $HealthNewUrl
         ElderId = $ElderId
+        QwenTtsVoice = $QwenTtsVoice
         ListenHost = $ListenHost
         VideoPort = $VideoPort
     }
@@ -107,6 +112,9 @@ try {
     }
     if ($ManualConfirmStart) {
         $LauncherArgs.ManualConfirmStart = $true
+    }
+    if ($EnableVideoActiveRecovery) {
+        $LauncherArgs.EnableVideoActiveRecovery = $true
     }
     & $Launcher @LauncherArgs
     $LauncherExitCode = $LASTEXITCODE

@@ -1,0 +1,2257 @@
+{
+  "phase": "7.2-C",
+  "real_motion": "EXPLICITLY_GATED",
+  "command_duration_seconds": 0.1,
+  "control_frequency_hz": 5.0,
+  "limits": {
+    "max_vx": 0.1,
+    "max_vy": 0.0,
+    "max_abs_wz": 0.3
+  },
+  "max_sent_cycles": 5,
+  "risk_events": {
+    "accepted": 35,
+    "rejected": 0
+  },
+  "inputs": {
+    "started": false,
+    "dds_publishers": 0,
+    "uwb_topic": "rt/uwbstate",
+    "lidar_topic": "rt/utlidar/cloud_base",
+    "uwb_samples": 57,
+    "lidar_samples": 190,
+    "uwb_errors": 0,
+    "lidar_errors": 0
+  },
+  "cycles": 64,
+  "sent_cycles": 0,
+  "records": [
+    {
+      "cycle": 1,
+      "monotonic": 186566.220872307,
+      "uwb_age_seconds": null,
+      "uwb_error": "uwb_not_ready",
+      "follow_target": null,
+      "candidate": null,
+      "lidar": null,
+      "arbiter": {
+        "authority": "LIDAR_STOP",
+        "reason": "lidar_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 2,
+      "monotonic": 186566.419624117,
+      "uwb_age_seconds": 0.05196722599794157,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2681729122000145,
+        "y": -0.07291965599270628,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.058335724794165024
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.021337035985197872
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 3,
+      "monotonic": 186566.629928378,
+      "uwb_age_seconds": 0.06109707601717673,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2722304162961926,
+        "y": -0.07028333390343461,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05622666712274769
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02119257001322694
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 4,
+      "monotonic": 186566.819664318,
+      "uwb_age_seconds": 0.16002594100427814,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2805008452852555,
+        "y": -0.06873504716806145,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05498803773444916
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05506317998515442
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 5,
+      "monotonic": 186567.018468401,
+      "uwb_age_seconds": 0.07817918100045063,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2683015887330016,
+        "y": -0.0768569683160732,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.06148557465285856
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03888989699771628
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 6,
+      "monotonic": 186567.219558578,
+      "uwb_age_seconds": 0.2792693580267951,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2683015887330016,
+        "y": -0.0768569683160732,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.06148557465285856
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03346634501940571
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 7,
+      "monotonic": 186567.424391434,
+      "uwb_age_seconds": 0.1917609139927663,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2831497581849964,
+        "y": -0.07110286350110229,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.056882290800881835
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.028890289016999304
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 8,
+      "monotonic": 186567.629313906,
+      "uwb_age_seconds": 0.0020129190234001726,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2933778734019663,
+        "y": -0.12178520784480246,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.09742816627584197
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.021239621011773124
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 9,
+      "monotonic": 186567.837895205,
+      "uwb_age_seconds": 0.21059421802056022,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2933778734019663,
+        "y": -0.12178520784480246,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.09742816627584197
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.01783601101487875
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 10,
+      "monotonic": 186568.021583101,
+      "uwb_age_seconds": 0.008959908009273931,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.278104977062704,
+        "y": -0.09737081187063035,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07789664949650428
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06017706502461806
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 11,
+      "monotonic": 186568.218859608,
+      "uwb_age_seconds": 0.01788510399637744,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2664284128086676,
+        "y": -0.09611340183080841,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07689072146464673
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04320758598623797
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 12,
+      "monotonic": 186568.422704187,
+      "uwb_age_seconds": 0.0335937229974661,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.265799135255754,
+        "y": -0.0707165070143656,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05657320561149248
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03249001599033363
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 13,
+      "monotonic": 186568.62886359,
+      "uwb_age_seconds": 0.1364339420106262,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.27247218171101,
+        "y": -0.10590642917132848,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.08472514333706278
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.019031633011763915
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 14,
+      "monotonic": 186568.824315969,
+      "uwb_age_seconds": 0.14456109897582792,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2660870527264465,
+        "y": -0.07311639054645702,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05849311243716562
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.016206875996431336
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 15,
+      "monotonic": 186569.02238172,
+      "uwb_age_seconds": 0.1679997809987981,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.266937723357075,
+        "y": -0.07329274571791178,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.058634196574329424
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.020065140997758135
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 16,
+      "monotonic": 186569.219057738,
+      "uwb_age_seconds": 0.013289903989061713,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.265619121557327,
+        "y": -0.05175556356625283,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.04140445085300226
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02104461900307797
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 17,
+      "monotonic": 186569.418952145,
+      "uwb_age_seconds": 0.2131843109964393,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.265619121557327,
+        "y": -0.05175556356625283,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.04140445085300226
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.025482547003775835
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 18,
+      "monotonic": 186569.618492176,
+      "uwb_age_seconds": 0.412724341993453,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.265619121557327,
+        "y": -0.05175556356625283,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.04140445085300226
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.029921437992015854
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 19,
+      "monotonic": 186569.818519582,
+      "uwb_age_seconds": 0.18097614601720124,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2719077515148416,
+        "y": -0.08950087268567791,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07160069814854234
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.034746513003483415
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 20,
+      "monotonic": 186570.016247328,
+      "uwb_age_seconds": 0.11587179498746991,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2774800152057253,
+        "y": -0.14077038129625902,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.11261630503700722
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.034347466978942975
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 21,
+      "monotonic": 186570.222908109,
+      "uwb_age_seconds": 0.06360678898636252,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.27586890686902,
+        "y": -0.0968249558868593,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07745996470948745
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04392834898317233
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 22,
+      "monotonic": 186570.417542269,
+      "uwb_age_seconds": 0.16691634198650718,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2656734614151386,
+        "y": -0.12503832285573652,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.10003065828458922
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.040534567000577226
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 23,
+      "monotonic": 186570.617650686,
+      "uwb_age_seconds": 0.012401162006426603,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2748983863622243,
+        "y": -0.07062373103847369,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.056498984830778955
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.041211349016521126
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 24,
+      "monotonic": 186570.817614627,
+      "uwb_age_seconds": 0.2123651030124165,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2748983863622243,
+        "y": -0.07062373103847369,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.056498984830778955
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.032206875999690965
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 25,
+      "monotonic": 186571.01679898,
+      "uwb_age_seconds": 0.1372586030047387,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2751669476535934,
+        "y": -0.09217796042671106,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07374236834136885
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03611450700554997
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 26,
+      "monotonic": 186571.219446581,
+      "uwb_age_seconds": 0.3399062039970886,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2751669476535934,
+        "y": -0.09217796042671106,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07374236834136885
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04306778500904329
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 27,
+      "monotonic": 186571.420892297,
+      "uwb_age_seconds": 0.0992762100067921,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2834052495113673,
+        "y": -0.1447287992131106,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.11578303937048849
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03823249999550171
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 28,
+      "monotonic": 186571.61819314,
+      "uwb_age_seconds": 0.296577052999055,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2834052495113673,
+        "y": -0.1447287992131106,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.11578303937048849
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03128796198870987
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 29,
+      "monotonic": 186571.819907028,
+      "uwb_age_seconds": 0.06177811900852248,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.284028729269545,
+        "y": -0.14436580949514238,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.11549264759611391
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.033108557981904596
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 30,
+      "monotonic": 186572.018440844,
+      "uwb_age_seconds": 0.1687175119877793,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.274323938325741,
+        "y": -0.0774545495535302,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.06196363964282417
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03360137899289839
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 31,
+      "monotonic": 186572.227066021,
+      "uwb_age_seconds": 0.002491482999175787,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2749657271824133,
+        "y": -0.06920760163769374,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.055366081310154996
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.031499925011303276
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 32,
+      "monotonic": 186572.418244155,
+      "uwb_age_seconds": 0.19366961700143293,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2749657271824133,
+        "y": -0.06920760163769374,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.055366081310154996
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.017049953021341935
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 33,
+      "monotonic": 186572.617292407,
+      "uwb_age_seconds": 0.39271786899189465,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2749657271824133,
+        "y": -0.06920760163769374,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.055366081310154996
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.019752557011088356
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 34,
+      "monotonic": 186572.818871788,
+      "uwb_age_seconds": 0.13618310799938627,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.282054349652753,
+        "y": -0.06854127315964359,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.054833018527714876
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02564714101026766
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 35,
+      "monotonic": 186573.017069286,
+      "uwb_age_seconds": 0.33438060598564334,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.282054349652753,
+        "y": -0.06854127315964359,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.054833018527714876
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02641976298764348
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 36,
+      "monotonic": 186573.221081486,
+      "uwb_age_seconds": 0.10772078498848714,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2773313234866763,
+        "y": -0.0747792052993066,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05982336423944528
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02915982701233588
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 37,
+      "monotonic": 186573.428975627,
+      "uwb_age_seconds": 0.0521738959942013,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2720549663302574,
+        "y": -0.0694643837853417,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05557150702827336
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.032217809988651425
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 38,
+      "monotonic": 186573.623058771,
+      "uwb_age_seconds": 0.24625703998026438,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2720549663302574,
+        "y": -0.0694643837853417,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05557150702827336
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.025709517998620868
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 39,
+      "monotonic": 186573.829888077,
+      "uwb_age_seconds": 0.10411704398575239,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2734657438313017,
+        "y": -0.08159631710340437,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.0652770536827235
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03548904199851677
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 40,
+      "monotonic": 186574.021630987,
+      "uwb_age_seconds": 0.013757489010458812,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.276067963371096,
+        "y": -0.07074010907801692,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05659208726241354
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02882121701259166
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 41,
+      "monotonic": 186574.257963127,
+      "uwb_age_seconds": 0.25008962900028564,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.276067963371096,
+        "y": -0.07074010907801692,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05659208726241354
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03135519998613745
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 42,
+      "monotonic": 186574.449090643,
+      "uwb_age_seconds": 0.441217145009432,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.276067963371096,
+        "y": -0.07074010907801692,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05659208726241354
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.011729148012818769
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 43,
+      "monotonic": 186574.618565871,
+      "uwb_age_seconds": 0.6106923730112612,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.276067963371096,
+        "y": -0.07074010907801692,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05659208726241354
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03066968801431358
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 44,
+      "monotonic": 186574.819365625,
+      "uwb_age_seconds": 0.811492127017118,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.276067963371096,
+        "y": -0.07074010907801692,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05659208726241354
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.031489242013776675
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 45,
+      "monotonic": 186575.017537506,
+      "uwb_age_seconds": 0.12018401999375783,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2797230963488655,
+        "y": -0.09782277601027639,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.07825822080822112
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02711415200610645
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 46,
+      "monotonic": 186575.221042535,
+      "uwb_age_seconds": 0.05082663899520412,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2773801944267817,
+        "y": -0.13113532373273895,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.10490825898619116
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03327984901261516
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 47,
+      "monotonic": 186575.418861749,
+      "uwb_age_seconds": 0.24864585298928432,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2773801944267817,
+        "y": -0.13113532373273895,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.10490825898619116
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03587515201070346
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 48,
+      "monotonic": 186575.616282384,
+      "uwb_age_seconds": 0.0827342770062387,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.290714748724672,
+        "y": -0.1138802253099343,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.09110418024794745
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03456026301137172
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 49,
+      "monotonic": 186575.81867575,
+      "uwb_age_seconds": 0.285127643001033,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.290714748724672,
+        "y": -0.1138802253099343,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.09110418024794745
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04006394700263627
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 50,
+      "monotonic": 186576.019090313,
+      "uwb_age_seconds": 0.04678510699886829,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2886097717875393,
+        "y": -0.11093216323508898,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.08874573058807118
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04296093399170786
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 51,
+      "monotonic": 186576.217915243,
+      "uwb_age_seconds": 0.06827550099114887,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2807883822544004,
+        "y": -0.11641507651454125,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.093132061211633
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.039306084014242515
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 52,
+      "monotonic": 186576.418399352,
+      "uwb_age_seconds": 0.18200181299471296,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2857481840307328,
+        "y": -0.11435066402903366,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.09148053122322693
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.042746038001496345
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 53,
+      "monotonic": 186576.617696801,
+      "uwb_age_seconds": 0.19381704699480906,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.27470566371941,
+        "y": -0.16876925766083684,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.13501540612866947
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04039138701045886
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 54,
+      "monotonic": 186576.818578635,
+      "uwb_age_seconds": 0.12998161299037747,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2717656451462456,
+        "y": -0.08447288921907453,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.06757831137525963
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.042129034001845866
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 55,
+      "monotonic": 186577.01672583,
+      "uwb_age_seconds": 0.1514300330018159,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2716687693900837,
+        "y": -0.07170610208584305,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.05736488166867444
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0431939690024592
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 56,
+      "monotonic": 186577.218213388,
+      "uwb_age_seconds": 0.08734979500877671,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.28037801841071,
+        "y": -0.14285197889049184,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.11428158311239348
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.048838068993063644
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 57,
+      "monotonic": 186577.419379928,
+      "uwb_age_seconds": 0.01690363700618036,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2806054925551953,
+        "y": -0.12630746066297244,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.10104596853037795
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05270448900409974
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 58,
+      "monotonic": 186577.617362225,
+      "uwb_age_seconds": 0.12676384899532422,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2703962253941525,
+        "y": -0.08095476555531428,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.06476381244425143
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04526704997988418
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 59,
+      "monotonic": 186577.821423475,
+      "uwb_age_seconds": 0.06511482299538329,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.275853400084336,
+        "y": -0.13237939797260706,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.10590351837808565
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05535851197782904
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 60,
+      "monotonic": 186578.026564751,
+      "uwb_age_seconds": 0.001482474006479606,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.279429521338414,
+        "y": -0.11275748830583804,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.09020599064467044
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06330730600166135
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 61,
+      "monotonic": 186578.217860295,
+      "uwb_age_seconds": 0.008479426003759727,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.284439942046542,
+        "y": -0.10151696755948292,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.08121357404758633
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05550879999645986
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 62,
+      "monotonic": 186578.418289428,
+      "uwb_age_seconds": 0.20890855899779126,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.284439942046542,
+        "y": -0.10151696755948292,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.08121357404758633
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05209215098875575
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 63,
+      "monotonic": 186578.617121095,
+      "uwb_age_seconds": 0.04569906601682305,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2756671094714873,
+        "y": -0.0762978836936623,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.061038306954929844
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05645068301237188
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 64,
+      "monotonic": 186578.821169162,
+      "uwb_age_seconds": 0.15548984098131768,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.2802201132618896,
+        "y": -0.17400511796537127,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.1,
+        "vy": 0.0,
+        "wz": -0.13920409437229703
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06274432898499072
+      },
+      "arbiter": {
+        "authority": "MANUAL",
+        "reason": "manual_takeover",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "duration_seconds": 0.0
+      }
+    }
+  ]
+}

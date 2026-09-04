@@ -1,0 +1,7 @@
+scripted_sequence:
+  name: webrtc_w4_forward_clockwise
+  steps:
+    - action: forward
+      distance_m: 0.8
+    - action: turn_clockwise
+      angle_deg: 90

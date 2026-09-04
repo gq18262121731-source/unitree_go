@@ -28,13 +28,13 @@ ManualEventCallback = Callable[[str, dict[str, object]], None]
 
 @dataclass(frozen=True)
 class ManualControlConfig:
-    forward_mps: float = 0.49
-    backward_mps: float = 0.42
-    lateral_mps: float = 0.28
-    yaw_radps: float = 1.32
-    curve_forward_mps: float = 0.42
-    curve_backward_mps: float = 0.35
-    curve_yaw_radps: float = 1.08
+    forward_mps: float = 0.35
+    backward_mps: float = 0.30
+    lateral_mps: float = 0.20
+    yaw_radps: float = 0.55
+    curve_forward_mps: float = 0.30
+    curve_backward_mps: float = 0.25
+    curve_yaw_radps: float = 0.45
     send_rate_hz: float = 5.0
     control_poll_seconds: float = 0.02
     deadman_seconds: float = 0.50
@@ -55,12 +55,12 @@ class ManualControlConfig:
             value = float(getattr(self, name))
             if not math.isfinite(value) or value <= 0.0:
                 raise ValueError(f"{name} must be finite and greater than zero")
-        if self.forward_mps > 0.49 or self.backward_mps > 0.42:
+        if self.forward_mps > 0.35 or self.backward_mps > 0.30:
             raise ValueError("manual linear speed exceeds the frozen W/S limit")
-        if self.lateral_mps > 0.28:
-            raise ValueError("manual lateral speed exceeds the hard 0.28 m/s limit")
-        if self.yaw_radps > 1.32:
-            raise ValueError("manual yaw speed exceeds the hard 1.32 rad/s limit")
+        if self.lateral_mps > 0.20:
+            raise ValueError("manual lateral speed exceeds the hard 0.20 m/s limit")
+        if self.yaw_radps > 0.55:
+            raise ValueError("manual yaw speed exceeds the hard 0.55 rad/s limit")
         if self.curve_forward_mps > self.forward_mps:
             raise ValueError("curve_forward_mps exceeds forward_mps")
         if self.curve_backward_mps > self.backward_mps:

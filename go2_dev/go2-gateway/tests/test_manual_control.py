@@ -116,13 +116,13 @@ def test_holding_w_three_seconds_is_rate_limited_without_deadman_stop() -> None:
     scan_and_tick(controller, clock, {"W"}, 3.0)
 
     assert 14 <= len(dispatcher.submissions) <= 16
-    assert set(dispatcher.submissions) == {(0.49, 0.0, 0.0)}
+    assert set(dispatcher.submissions) == {(0.35, 0.0, 0.0)}
     assert dispatcher.stops == []
 
 
 @pytest.mark.parametrize(
     ("key", "expected"),
-    [("A", (0.0, 0.0, 1.32)), ("D", (0.0, 0.0, -1.32))],
+    [("A", (0.0, 0.0, 0.55)), ("D", (0.0, 0.0, -0.55))],
 )
 def test_holding_turn_three_seconds_is_continuous(key, expected) -> None:
     service = Service()
@@ -140,10 +140,10 @@ def test_holding_turn_three_seconds_is_continuous(key, expected) -> None:
 @pytest.mark.parametrize(
     ("keys", "expected"),
     [
-        ({"W", "A"}, (0.42, 0.0, 1.08)),
-        ({"W", "D"}, (0.42, 0.0, -1.08)),
-        ({"S", "A"}, (-0.35, 0.0, 1.08)),
-        ({"S", "D"}, (-0.35, 0.0, -1.08)),
+        ({"W", "A"}, (0.30, 0.0, 0.45)),
+        ({"W", "D"}, (0.30, 0.0, -0.45)),
+        ({"S", "A"}, (-0.25, 0.0, 0.45)),
+        ({"S", "D"}, (-0.25, 0.0, -0.45)),
     ],
 )
 def test_combination_keys_generate_walk_and_turn(keys, expected) -> None:
@@ -278,10 +278,10 @@ def test_slow_ack_retains_only_latest_pending_velocity() -> None:
 def test_manual_config_enforces_frozen_limits_and_key_whitelist() -> None:
     with pytest.raises(ValueError, match="W/S limit"):
         ManualControlConfig(forward_mps=0.50)
-    with pytest.raises(ValueError, match="hard 0.28"):
-        ManualControlConfig(lateral_mps=0.29)
-    with pytest.raises(ValueError, match="hard 1.32"):
-        ManualControlConfig(yaw_radps=1.33)
+    with pytest.raises(ValueError, match="hard 0.20"):
+        ManualControlConfig(lateral_mps=0.21)
+    with pytest.raises(ValueError, match="hard 0.55"):
+        ManualControlConfig(yaw_radps=0.56)
     service = Service()
     clock = Clock()
     controller, _dispatcher = build_controller(service, clock)

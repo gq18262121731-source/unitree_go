@@ -1,0 +1,36 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-flash",
+  "voice": "audition",
+  "speed": 1.0,
+  "files": [
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\audition\\audition_Cherry.wav",
+      "voice": "Cherry",
+      "text": "好的，我陪您出去走走。",
+      "bytes": 96044,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\audition\\audition_Serena.wav",
+      "voice": "Serena",
+      "text": "好的，我陪您出去走走。",
+      "bytes": 92204,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\audition\\audition_Ethan.wav",
+      "voice": "Ethan",
+      "text": "好的，我陪您出去走走。",
+      "bytes": 88364,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\audition\\audition_Chelsie.wav",
+      "voice": "Chelsie",
+      "text": "好的，我陪您出去走走。",
+      "bytes": 107564,
+      "provider": "dashscope/qwen3-tts-flash"
+    }
+  ]
+}

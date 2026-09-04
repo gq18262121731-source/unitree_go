@@ -1,0 +1,61 @@
+{
+  "phase": "5.1",
+  "generated_at": "2026-07-24T07:58:09.723780+00:00",
+  "provider": "unitree_real",
+  "real_motion_enabled": false,
+  "network": {
+    "robot_ip": "192.168.123.161",
+    "network_interface": "eth0",
+    "source_ip": null,
+    "reachable": false,
+    "packets_sent": null,
+    "packets_received": null,
+    "packet_loss_percent": null,
+    "average_latency_ms": null,
+    "route": "192.168.123.161 via 10.10.255.254 dev eth1 src 10.10.229.58 uid 1000 \n    cache",
+    "error": "ping: connect: Network is unreachable"
+  },
+  "dds": {
+    "initialized": false,
+    "domain_id": 0,
+    "topics": [],
+    "error": "NETWORK_UNREACHABLE"
+  },
+  "state": {
+    "low_state": {
+      "topic": null,
+      "sample_count": 0,
+      "frequency_hz": null,
+      "first_received_at": null,
+      "last_received_at": null,
+      "value": null
+    },
+    "sport_mode_state": {
+      "topic": null,
+      "sample_count": 0,
+      "frequency_hz": null,
+      "first_received_at": null,
+      "last_received_at": null,
+      "value": null
+    }
+  },
+  "lidar": {
+    "topic": null,
+    "sample_count": 0,
+    "frequency_hz": null,
+    "points": null,
+    "frame": null,
+    "source_timestamp": null,
+    "received_at": null,
+    "latency_ms": null
+  },
+  "checks": {
+    "network_reachable": false,
+    "dds_initialized": false,
+    "low_state_received": false,
+    "sport_mode_state_received": false,
+    "lidar_point_cloud_received": false
+  },
+  "status": "BLOCKED_NETWORK",
+  "passed": false
+}

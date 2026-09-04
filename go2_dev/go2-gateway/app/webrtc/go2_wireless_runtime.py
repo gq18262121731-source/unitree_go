@@ -244,12 +244,21 @@ class Go2WirelessRuntime:
         stale_timeout_seconds: float | None = None,
         reconnect_delay_seconds: float = 2.0,
         reconnect_backoff_step_seconds: float | None = None,
-        reconnect_max_delay_seconds: float = 10.0,
+        reconnect_max_delay_seconds: float = 15.0,
+        reconnect_stable_reset_seconds: float = 30.0,
+        disconnect_grace_seconds: float = 3.0,
         reconnect_on_multi_signal_stale: bool = False,
         multi_signal_stale_grace_seconds: float = 10.0,
+        enable_video_active_recovery: bool = False,
+        # Go2 can need several seconds to deliver the first decodable H.264
+        # keyframe after the WebRTC data channel is ready.  Keep the initial
+        # grace period longer than the steady-state stale-frame threshold so
+        # the watchdog does not interrupt a healthy stream while it starts.
+        video_first_frame_wait_seconds: float = 15.0,
         video_soft_recovery_seconds: float = 6.0,
         video_soft_toggle_delay_seconds: float = 0.20,
         video_soft_observe_seconds: float = 3.0,
+        video_reconnect_cooldown_seconds: float = 0.0,
         video_recovery_min_frames: int = 10,
         video_recovery_min_duration_seconds: float = 1.0,
         video_recovery_max_gap_seconds: float = 0.50,
@@ -291,11 +300,24 @@ class Go2WirelessRuntime:
         self.reconnect_max_delay_seconds = max(
             self.reconnect_delay_seconds, float(reconnect_max_delay_seconds)
         )
+        self.reconnect_stable_reset_seconds = max(
+            0.1, float(reconnect_stable_reset_seconds)
+        )
+        self.disconnect_grace_seconds = max(
+            0.1, float(disconnect_grace_seconds)
+        )
         self.reconnect_on_multi_signal_stale = bool(
             reconnect_on_multi_signal_stale
         )
         self.multi_signal_stale_grace_seconds = max(
             0.1, float(multi_signal_stale_grace_seconds)
+        )
+        self.enable_video_active_recovery = bool(
+            enable_video_active_recovery
+        )
+        self.video_first_frame_wait_seconds = max(
+            self.frame_stale_seconds + 0.05,
+            float(video_first_frame_wait_seconds),
         )
         self.video_soft_recovery_seconds = max(
             self.frame_stale_seconds + 0.05,
@@ -306,6 +328,9 @@ class Go2WirelessRuntime:
         )
         self.video_soft_observe_seconds = max(
             0.1, float(video_soft_observe_seconds)
+        )
+        self.video_reconnect_cooldown_seconds = max(
+            0.0, float(video_reconnect_cooldown_seconds)
         )
         self.video_recovery_min_frames = max(2, int(video_recovery_min_frames))
         self.video_recovery_min_duration_seconds = max(
@@ -371,6 +396,9 @@ class Go2WirelessRuntime:
         self._reconnect_failure_streak = 0
         self._last_reconnect_delay_seconds: float | None = None
         self._next_reconnect_delay_seconds: float | None = None
+        self._transport_disconnected_since: float | None = None
+        self._transport_disconnect_reason: str | None = None
+        self._transport_grace_recovery_in_progress = False
         self._subscribed_topics: list[str] = []
         self._rtc_topic: dict[str, str] = {}
         self._sport_cmd: dict[str, int] = {}
@@ -470,6 +498,8 @@ class Go2WirelessRuntime:
         self._video_recovery_max_gap_observed_seconds = 0.0
         self._video_soft_toggle_off_monotonic: float | None = None
         self._video_soft_toggle_on_monotonic: float | None = None
+        self._video_soft_recovery_start_raw_frame_count = 0
+        self._video_watchdog_cooldown_until_monotonic: float | None = None
         self._video_channel_enabled_monotonic: float | None = None
         self._video_soft_attempted = False
         self._video_recovery_required_on_next_connection = False
@@ -593,6 +623,9 @@ class Go2WirelessRuntime:
             self._video_degraded_reason = None
             self._data_degraded_reason = None
             self._multi_signal_stale_since = None
+            self._transport_disconnected_since = None
+            self._transport_disconnect_reason = None
+            self._transport_grace_recovery_in_progress = False
             self._connection_state = "disconnected"
             self._video_watchdog_state = (
                 "AWAITING_FIRST_FRAME" if self.enable_video else "DISABLED"
@@ -1191,7 +1224,14 @@ class Go2WirelessRuntime:
                 "OFFLINE",
             }
             video_unhealthy = video_unhealthy or video_recovering
-            if self._connected and (state_unhealthy or video_unhealthy):
+            transport_grace_active = (
+                self._transport_disconnected_since is not None
+            )
+            if (
+                self._connected
+                and not transport_grace_active
+                and (state_unhealthy or video_unhealthy)
+            ):
                 connection_state = "degraded"
             video_degraded_reason = self._video_degraded_reason or (
                 "raw_frame_stale"
@@ -1226,13 +1266,20 @@ class Go2WirelessRuntime:
                     "offline"
                     if not self._connected
                     else "degraded"
-                    if state_unhealthy or video_unhealthy
+                    if state_unhealthy
+                    or video_unhealthy
+                    or transport_grace_active
                     else "healthy"
                 ),
                 "watchdogPolicy": (
                     "hard_transport_video_l1_l2_or_confirmed_raw_plus_sport_stale"
                     if self.reconnect_on_multi_signal_stale
+                    and self.enable_video_active_recovery
+                    else "hard_transport_or_confirmed_raw_plus_sport_stale"
+                    if self.reconnect_on_multi_signal_stale
                     else "hard_transport_plus_video_l1_l2"
+                    if self.enable_video_active_recovery
+                    else "hard_transport_video_degraded_only"
                 ),
                 "diagnosticMode": self.diagnostic_mode,
                 "low_state_enabled": self.enable_low_state,
@@ -1266,6 +1313,25 @@ class Go2WirelessRuntime:
                 "nextReconnectDelaySeconds": (
                     self._next_reconnect_delay_seconds
                 ),
+                "reconnectStableResetSeconds": (
+                    self.reconnect_stable_reset_seconds
+                ),
+                "transportDisconnectGrace": {
+                    "active": self._transport_disconnected_since is not None,
+                    "reason": self._transport_disconnect_reason,
+                    "elapsedSeconds": (
+                        None
+                        if self._transport_disconnected_since is None
+                        else max(
+                            0.0,
+                            now - self._transport_disconnected_since,
+                        )
+                    ),
+                    "timeoutSeconds": self.disconnect_grace_seconds,
+                    "stopRecoveryInProgress": (
+                        self._transport_grace_recovery_in_progress
+                    ),
+                },
                 "staleTimeoutSeconds": self.stale_timeout_seconds,
                 "subscriptionProfile": {
                     "video": self.enable_video,
@@ -1394,7 +1460,15 @@ class Go2WirelessRuntime:
                 "firstRawFrameReceived": first_raw_received,
                 "firstEncodedFrameProduced": first_encoded_produced,
                 "videoWatchdogArmed": first_raw_received,
-                "videoWatchdogPolicy": "stale_3s_soft_6s_observe_3s_then_reconnect",
+                "videoWatchdogPolicy": (
+                    "first_frame_15s_stale_3s_soft_8s_"
+                    "zero_new_frames_6s_cooldown_15s"
+                    if self.enable_video_active_recovery
+                    else "degraded_only_keep_transport"
+                ),
+                "videoActiveRecoveryEnabled": (
+                    self.enable_video_active_recovery
+                ),
                 "videoWatchdog": {
                     "state": self._video_watchdog_state,
                     "video_stale_count": self._video_stale_count,
@@ -1415,15 +1489,40 @@ class Go2WirelessRuntime:
                     "false_recovery_count": self._video_false_recovery_count,
                     "unrecovered_video_stale": int(video_recovering),
                     "recovery_frame_count": self._video_recovery_frame_count,
+                    "frames_since_soft_recovery": max(
+                        0,
+                        self._raw_frame_count
+                        - self._video_soft_recovery_start_raw_frame_count,
+                    )
+                    if self._video_soft_attempted
+                    else 0,
+                    "reconnect_cooldown_remaining_ms": (
+                        0.0
+                        if self._video_watchdog_cooldown_until_monotonic is None
+                        else max(
+                            0.0,
+                            self._video_watchdog_cooldown_until_monotonic - now,
+                        )
+                        * 1000.0
+                    ),
                     "recovery_max_gap_ms": (
                         self._video_recovery_max_gap_observed_seconds * 1000.0
                     ),
                     "thresholds": {
                         "degraded_seconds": self.frame_stale_seconds,
+                        "first_frame_wait_seconds": (
+                            self.video_first_frame_wait_seconds
+                        ),
                         "soft_recovery_seconds": (
                             self.video_soft_recovery_seconds
                         ),
+                        "soft_no_new_frame_seconds": (
+                            self.video_soft_observe_seconds
+                        ),
                         "soft_observe_seconds": self.video_soft_observe_seconds,
+                        "reconnect_cooldown_seconds": (
+                            self.video_reconnect_cooldown_seconds
+                        ),
                         "stable_frames": self.video_recovery_min_frames,
                         "stable_duration_seconds": (
                             self.video_recovery_min_duration_seconds
@@ -1508,13 +1607,8 @@ class Go2WirelessRuntime:
                         self._reconnect_count += 1
                     reconnect_count = self._reconnect_count
                 if reconnecting:
-                    reconnect_delay = min(
-                        self.reconnect_max_delay_seconds,
-                        self.reconnect_delay_seconds
-                        + (
-                            consecutive_failures
-                            * self.reconnect_backoff_step_seconds
-                        ),
+                    reconnect_delay = self._reconnect_delay_for_failure_streak(
+                        consecutive_failures
                     )
                     with self._lock:
                         self._reconnect_failure_streak = consecutive_failures
@@ -1552,9 +1646,8 @@ class Go2WirelessRuntime:
                     )
                     continue
 
-                consecutive_failures = 0
                 with self._lock:
-                    self._reconnect_failure_streak = 0
+                    self._reconnect_failure_streak = consecutive_failures
                     self._next_reconnect_delay_seconds = None
                 if initial_connection:
                     initial_connection = False
@@ -1575,9 +1668,17 @@ class Go2WirelessRuntime:
                         downtime,
                     )
 
-                await self._wait_for_connection_loss()
+                stable_window_reached = await self._wait_for_connection_loss()
                 if self._stop.is_set() or self._reconnect_blocked.is_set():
                     break
+                if stable_window_reached:
+                    consecutive_failures = 0
+                elif reconnecting:
+                    # A reconnect that drops again before the stability
+                    # window is a failed recovery, not a healthy reset.
+                    consecutive_failures += 1
+                    with self._lock:
+                        self._reconnect_failure_streak = consecutive_failures
                 await self._cleanup_connection()
         finally:
             await self._cleanup_connection()
@@ -1586,6 +1687,14 @@ class Go2WirelessRuntime:
                     "Wireless Runtime stopped before initial connection completed"
                 )
                 self._initial_connection_done.set()
+
+    def _reconnect_delay_for_failure_streak(self, failure_streak: int) -> float:
+        exponent = min(max(0, int(failure_streak)), 30)
+        return min(
+            self.reconnect_max_delay_seconds,
+            self.reconnect_delay_seconds
+            + ((2**exponent) - 1) * self.reconnect_backoff_step_seconds,
+        )
 
     async def _activate_companion_inputs_async(
         self, *, enable_multiple_state: bool
@@ -1784,7 +1893,13 @@ class Go2WirelessRuntime:
             self._video_recovery_max_gap_observed_seconds = 0.0
             self._video_soft_toggle_off_monotonic = None
             self._video_soft_toggle_on_monotonic = None
+            self._video_soft_recovery_start_raw_frame_count = (
+                self._raw_frame_count
+            )
             self._video_channel_enabled_monotonic = None
+            self._transport_disconnected_since = None
+            self._transport_disconnect_reason = None
+            self._transport_grace_recovery_in_progress = False
             self._reset_connection_samples_locked()
         self._first_state.clear()
         self._clear_raw_frames()
@@ -1825,6 +1940,12 @@ class Go2WirelessRuntime:
             )
             if self._video_watchdog_state == "RECOVERING":
                 self._video_degraded_reason = "recovering_after_reconnect"
+                self._video_watchdog_cooldown_until_monotonic = (
+                    self._connected_monotonic
+                    + self.video_reconnect_cooldown_seconds
+                )
+            else:
+                self._video_watchdog_cooldown_until_monotonic = None
 
         # Restore the media plane as soon as the validated DataChannel is up.
         # Motion remains locked independently until the reconnect StopMove ACK.
@@ -1898,6 +2019,8 @@ class Go2WirelessRuntime:
         generation: int,
         rtc_topic: dict[str, str],
         sport_cmd: dict[str, int],
+        success_state: str = "STOP_CONFIRMED_AFTER_RECONNECT",
+        success_log: str = "STOP_CONFIRMED_AFTER_RECONNECT",
     ) -> None:
         """Require a real StopMove ACK before exposing a reconnected transport."""
 
@@ -1968,9 +2091,9 @@ class Go2WirelessRuntime:
             self._last_motion_ack_command = "StopMove"
             self._last_motion_ack_latency_ms = latency_ms
             self._last_motion_ack_error = None
-            self._remote_stop_state = "STOP_CONFIRMED_AFTER_RECONNECT"
+            self._remote_stop_state = success_state
             self._stop_required_after_reconnect = False
-        LOGGER.info("STOP_CONFIRMED_AFTER_RECONNECT")
+        LOGGER.info(success_log)
 
     async def _cleanup_connection(self) -> None:
         with self._lock:
@@ -1999,6 +2122,117 @@ class Go2WirelessRuntime:
                 self._disconnect_count += 1
         self._clear_raw_frames()
 
+    def _enter_transport_disconnect_grace(
+        self, reason: str, connection: Any
+    ) -> None:
+        now = time.monotonic()
+        entered = False
+        with self._lock:
+            if self._connection is not connection or not self._connected:
+                return
+            if self._transport_disconnected_since is None:
+                self._transport_disconnected_since = now
+                self._transport_disconnect_reason = str(reason)
+                entered = True
+            self._connection_state = "transport_grace"
+            self._motion_ready = False
+            self._remote_stop_state = "STOP_UNCONFIRMED_TRANSPORT_LOST"
+            self._stop_required_after_reconnect = True
+        if entered:
+            LOGGER.warning(
+                "TRANSPORT_DISCONNECT_GRACE_STARTED reason=%s "
+                "grace_seconds=%.3f motion_ready=false",
+                reason,
+                self.disconnect_grace_seconds,
+            )
+            LOGGER.warning("STOP_UNCONFIRMED_TRANSPORT_LOST")
+
+    def _schedule_transport_grace_recovery(self, connection: Any) -> None:
+        with self._lock:
+            if (
+                self._connection is not connection
+                or not self._connected
+                or self._transport_disconnected_since is None
+                or self._transport_grace_recovery_in_progress
+            ):
+                return
+            self._transport_grace_recovery_in_progress = True
+            generation = self._connection_generation
+        asyncio.create_task(
+            self._run_connection_task(
+                generation,
+                self._recover_transport_disconnect_grace(
+                    connection, generation=generation
+                ),
+            )
+        )
+
+    async def _recover_transport_disconnect_grace(
+        self, connection: Any, *, generation: int
+    ) -> None:
+        try:
+            with self._lock:
+                rtc_topic = dict(self._rtc_topic)
+                sport_cmd = dict(self._sport_cmd)
+                grace_started = self._transport_disconnected_since
+                grace_reason = self._transport_disconnect_reason
+            await self._confirm_stop_after_reconnect(
+                connection,
+                generation=generation,
+                rtc_topic=rtc_topic,
+                sport_cmd=sport_cmd,
+                success_state="STOP_CONFIRMED_AFTER_TRANSPORT_GRACE",
+                success_log="STOP_CONFIRMED_AFTER_TRANSPORT_GRACE",
+            )
+            peer_state, ice_state = self._read_transport_states(connection)
+            datachannel = getattr(connection, "datachannel", None)
+            data_open = getattr(
+                datachannel, "data_channel_opened", True
+            ) is not False
+            healthy = bool(
+                peer_state == "connected"
+                and ice_state in {"connected", "completed"}
+                and data_open
+            )
+            with self._lock:
+                if (
+                    self._connection is not connection
+                    or self._connection_generation != generation
+                    or not self._connected
+                ):
+                    return
+                if not healthy:
+                    self._motion_ready = False
+                    self._remote_stop_state = (
+                        "STOP_UNCONFIRMED_TRANSPORT_LOST"
+                    )
+                    self._stop_required_after_reconnect = True
+                    return
+                self._transport_disconnected_since = None
+                self._transport_disconnect_reason = None
+                self._connection_state = "connected"
+                self._motion_ready = True
+            LOGGER.info(
+                "TRANSPORT_DISCONNECT_GRACE_RECOVERED reason=%s "
+                "grace_duration_seconds=%.3f motion_ready=true",
+                grace_reason,
+                0.0
+                if grace_started is None
+                else max(0.0, time.monotonic() - grace_started),
+            )
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            LOGGER.warning(
+                "TRANSPORT_DISCONNECT_GRACE_STOP_FAILED error=%s: %s",
+                type(exc).__name__,
+                exc,
+            )
+        finally:
+            with self._lock:
+                if self._connection is connection:
+                    self._transport_grace_recovery_in_progress = False
+
     def _attach_connection_listeners(self, connection: Any) -> None:
         pc = getattr(connection, "pc", None)
         if pc is not None and hasattr(pc, "on"):
@@ -2008,9 +2242,13 @@ class Go2WirelessRuntime:
                     if self._connection is connection:
                         self._peer_connection_state = peer_state
                 if peer_state in {"closed", "failed", "disconnected"}:
-                    self._handle_connection_lost(
-                        f"peer_connection_{peer_state}", connection
-                    )
+                    reason = f"peer_connection_{peer_state}"
+                    if peer_state == "disconnected":
+                        self._enter_transport_disconnect_grace(
+                            reason, connection
+                        )
+                    else:
+                        self._handle_connection_lost(reason, connection)
 
             def on_ice_state_change() -> None:
                 ice_state = str(getattr(pc, "iceConnectionState", "unknown"))
@@ -2018,9 +2256,13 @@ class Go2WirelessRuntime:
                     if self._connection is connection:
                         self._ice_connection_state = ice_state
                 if ice_state in {"closed", "failed", "disconnected"}:
-                    self._handle_connection_lost(
-                        f"ice_connection_{ice_state}", connection
-                    )
+                    reason = f"ice_connection_{ice_state}"
+                    if ice_state == "disconnected":
+                        self._enter_transport_disconnect_grace(
+                            reason, connection
+                        )
+                    else:
+                        self._handle_connection_lost(reason, connection)
 
             pc.on("connectionstatechange", on_peer_state_change)
             pc.on("iceconnectionstatechange", on_ice_state_change)
@@ -2117,6 +2359,9 @@ class Go2WirelessRuntime:
             self._last_disconnect_reason = str(reason)
             self._last_diagnostic_reason = resolved_diagnostic_reason
             self._last_disconnect_monotonic = now
+            self._transport_disconnected_since = None
+            self._transport_disconnect_reason = None
+            self._transport_grace_recovery_in_progress = False
             self._remote_stop_state = "STOP_UNCONFIRMED_TRANSPORT_LOST"
             self._stop_required_after_reconnect = True
             if self.enable_video:
@@ -2166,16 +2411,40 @@ class Go2WirelessRuntime:
         if self._connection_lost_event is not None:
             self._connection_lost_event.set()
 
-    async def _wait_for_connection_loss(self) -> None:
+    async def _wait_for_connection_loss(self) -> bool:
+        stable_window_reached = False
         while not self._stop.is_set():
             event = self._connection_lost_event
             if event is None:
-                return
+                return stable_window_reached
             try:
                 await asyncio.wait_for(event.wait(), timeout=0.25)
-                return
+                return stable_window_reached
             except asyncio.TimeoutError:
                 self._poll_connection_health()
+                if stable_window_reached:
+                    continue
+                with self._lock:
+                    connected_at = self._connected_monotonic
+                    still_connected = self._connected
+                    previous_streak = self._reconnect_failure_streak
+                if (
+                    still_connected
+                    and connected_at is not None
+                    and time.monotonic() - connected_at
+                    >= self.reconnect_stable_reset_seconds
+                ):
+                    stable_window_reached = True
+                    with self._lock:
+                        self._reconnect_failure_streak = 0
+                    if previous_streak > 0:
+                        LOGGER.info(
+                            "WEBRTC_BACKOFF_RESET stable_seconds=%.3f "
+                            "previous_failure_streak=%d",
+                            self.reconnect_stable_reset_seconds,
+                            previous_streak,
+                        )
+        return stable_window_reached
 
     def _poll_connection_health(self) -> None:
         with self._lock:
@@ -2188,6 +2457,7 @@ class Go2WirelessRuntime:
             encoded_frame_generation = self._last_frame_generation
             generation = self._connection_generation
             sport_enabled = self.enable_sport_state
+            video_channel_enabled_at = self._video_channel_enabled_monotonic
         if connection is None or not connected:
             return
         peer_state, ice_state = self._read_transport_states(connection)
@@ -2195,15 +2465,47 @@ class Go2WirelessRuntime:
             if self._connection is connection:
                 self._peer_connection_state = peer_state
                 self._ice_connection_state = ice_state
-        if peer_state in {"closed", "failed", "disconnected"}:
+        if peer_state in {"closed", "failed"}:
             self._handle_connection_lost(f"peer_connection_{peer_state}", connection)
             return
-        if ice_state in {"closed", "failed", "disconnected"}:
+        if ice_state in {"closed", "failed"}:
             self._handle_connection_lost(f"ice_connection_{ice_state}", connection)
             return
         datachannel = getattr(connection, "datachannel", None)
         if getattr(datachannel, "data_channel_opened", True) is False:
             self._handle_connection_lost("data_channel_closed", connection)
+            return
+        disconnected_reason = (
+            "peer_connection_disconnected"
+            if peer_state == "disconnected"
+            else "ice_connection_disconnected"
+            if ice_state == "disconnected"
+            else None
+        )
+        if disconnected_reason is not None:
+            self._enter_transport_disconnect_grace(
+                disconnected_reason, connection
+            )
+            with self._lock:
+                grace_started = self._transport_disconnected_since
+                grace_reason = self._transport_disconnect_reason
+            if (
+                grace_started is not None
+                and time.monotonic() - grace_started
+                >= self.disconnect_grace_seconds
+            ):
+                self._handle_connection_lost(
+                    f"{grace_reason or disconnected_reason}_grace_expired",
+                    connection,
+                    diagnostic_reason=(
+                        grace_reason or disconnected_reason
+                    ),
+                )
+            return
+        with self._lock:
+            grace_active = self._transport_disconnected_since is not None
+        if grace_active:
+            self._schedule_transport_grace_recovery(connection)
             return
         now = time.monotonic()
         sport_age = None if state_at is None else max(0.0, now - state_at)
@@ -2232,25 +2534,37 @@ class Go2WirelessRuntime:
             and encoded_age is not None
             and encoded_age > self.frame_stale_seconds
         )
+        first_frame_timeout = bool(
+            self.enable_video
+            and raw_age is None
+            and video_channel_enabled_at is not None
+            and now - video_channel_enabled_at
+            >= self.video_first_frame_wait_seconds
+        )
         video_reason = (
             "raw_frame_stale"
             if raw_stale
             else "encoded_frame_stale"
             if encoded_stale
+            else "first_raw_frame_timeout"
+            if first_frame_timeout
             else None
         )
         data_reason = "sport_state_stale" if sport_stale else None
-        self._advance_video_watchdog(
-            connection,
-            now=now,
-            raw_stale=raw_stale,
-            raw_age=raw_age,
-            encoded_age=encoded_age,
-            sport_age=sport_age,
-        )
+        if self.enable_video_active_recovery:
+            self._advance_video_watchdog(
+                connection,
+                now=now,
+                raw_stale=raw_stale,
+                raw_age=raw_age,
+                encoded_age=encoded_age,
+                sport_age=sport_age,
+            )
         self._update_degraded_signals(
             connection,
-            video_reason=None,
+            video_reason=(
+                None if self.enable_video_active_recovery else video_reason
+            ),
             data_reason=data_reason,
             raw_age=raw_age,
             encoded_age=encoded_age,
@@ -2299,6 +2613,9 @@ class Go2WirelessRuntime:
     ) -> None:
         """Run L1 video toggle recovery, then escalate to an L2 reconnect."""
 
+        if not self.enable_video_active_recovery:
+            return
+
         toggle: bool | None = None
         start_soft_log = False
         soft_trigger: str | None = None
@@ -2339,7 +2656,7 @@ class Go2WirelessRuntime:
             if (
                 state == "AWAITING_FIRST_FRAME"
                 and first_frame_age is not None
-                and first_frame_age >= self.frame_stale_seconds
+                and first_frame_age >= self.video_first_frame_wait_seconds
             ):
                 self._video_stale_count += 1
                 self._video_stale_started_monotonic = (
@@ -2379,10 +2696,13 @@ class Go2WirelessRuntime:
                 degraded_log = True
                 state = "DEGRADED"
 
-            recovery_age = (
+            recovery_candidate_age = (
                 0.0
-                if self._video_recovery_started_monotonic is None
-                else max(0.0, now - self._video_recovery_started_monotonic)
+                if self._video_recovery_candidate_started_monotonic is None
+                else max(
+                    0.0,
+                    now - self._video_recovery_candidate_started_monotonic,
+                )
             )
             degraded_age = (
                 raw_age if raw_age is not None else first_frame_age
@@ -2390,13 +2710,37 @@ class Go2WirelessRuntime:
             recovering_without_frame = bool(
                 state == "RECOVERING" and not has_current_raw
             )
+            frames_since_soft_recovery = max(
+                0,
+                self._raw_frame_count
+                - self._video_soft_recovery_start_raw_frame_count,
+            )
+            raw_is_fresh = bool(
+                raw_age is not None and raw_age < self.frame_stale_seconds
+            )
+            reconnect_cooldown_expired = bool(
+                self._video_watchdog_cooldown_until_monotonic is None
+                or now >= self._video_watchdog_cooldown_until_monotonic
+            )
             should_start_soft = bool(
                 not self._video_soft_attempted
                 and (
                     (
                         state == "DEGRADED"
                         and degraded_age is not None
-                        and degraded_age >= self.video_soft_recovery_seconds
+                        and (
+                            (
+                                not has_current_raw
+                                and first_frame_age is not None
+                                and first_frame_age
+                                >= self.video_first_frame_wait_seconds
+                            )
+                            or (
+                                has_current_raw
+                                and degraded_age
+                                >= self.video_soft_recovery_seconds
+                            )
+                        )
                     )
                     or (
                         state == "RECOVERING"
@@ -2405,11 +2749,11 @@ class Go2WirelessRuntime:
                                 recovering_without_frame
                                 and first_frame_age is not None
                                 and first_frame_age
-                                >= self.video_soft_recovery_seconds
+                                >= self.video_first_frame_wait_seconds
                             )
                             or (
                                 not recovering_without_frame
-                                and recovery_age
+                                and recovery_candidate_age
                                 >= self.video_soft_recovery_seconds
                             )
                         )
@@ -2422,7 +2766,7 @@ class Go2WirelessRuntime:
                     soft_trigger_age = float(first_frame_age or 0.0)
                 elif state == "RECOVERING":
                     soft_trigger = "unstable_recovery"
-                    soft_trigger_age = recovery_age
+                    soft_trigger_age = recovery_candidate_age
                 else:
                     soft_trigger = "raw_frame_stale"
                     soft_trigger_age = float(raw_age or 0.0)
@@ -2431,6 +2775,9 @@ class Go2WirelessRuntime:
                 self._video_watchdog_state = "SOFT_RECOVERY"
                 self._video_soft_toggle_off_monotonic = now
                 self._video_soft_toggle_on_monotonic = None
+                self._video_soft_recovery_start_raw_frame_count = (
+                    self._raw_frame_count
+                )
                 self._video_channel_enabled_monotonic = None
                 toggle = False
                 start_soft_log = True
@@ -2445,20 +2792,18 @@ class Go2WirelessRuntime:
                 ):
                     self._video_soft_toggle_on_monotonic = now
                     self._video_channel_enabled_monotonic = now
+                    self._video_soft_recovery_start_raw_frame_count = (
+                        self._raw_frame_count
+                    )
                     toggle = True
                 elif (
                     on_at is not None
                     and now - on_at >= self.video_soft_observe_seconds
+                    and frames_since_soft_recovery == 0
+                    and not raw_is_fresh
+                    and reconnect_cooldown_expired
                 ):
                     full_reconnect = True
-            elif (
-                state == "RECOVERING"
-                and self._video_soft_attempted
-                and self._video_soft_toggle_on_monotonic is not None
-                and now - self._video_soft_toggle_on_monotonic
-                >= self.video_soft_observe_seconds
-            ):
-                full_reconnect = True
 
             if full_reconnect:
                 self._video_full_reconnect_count += 1
@@ -2490,7 +2835,6 @@ class Go2WirelessRuntime:
                     type(exc).__name__,
                     exc,
                 )
-                full_reconnect = True
             else:
                 LOGGER.info(
                     "VIDEO_SOFT_RECOVERY_CHANNEL enabled=%s", toggle
@@ -2513,8 +2857,11 @@ class Go2WirelessRuntime:
                         self._video_recovery_required_on_next_connection = True
                         self._video_soft_attempted = False
             LOGGER.warning(
-                "VIDEO_SOFT_RECOVERY_FAILED action=full_reconnect raw_age=%s",
+                "VIDEO_SOFT_RECOVERY_FAILED action=full_reconnect raw_age=%s "
+                "frames_since_soft=%d cooldown_expired=%s",
                 self._diagnostic_number(raw_age),
+                frames_since_soft_recovery,
+                str(reconnect_cooldown_expired).lower(),
             )
             self._handle_connection_lost(
                 "video_watchdog_reconnect",
@@ -2536,6 +2883,26 @@ class Go2WirelessRuntime:
         with self._lock:
             if self._connection is not connection or not self._connected:
                 return
+            if (
+                not self.enable_video_active_recovery
+                and video_reason != self._video_degraded_reason
+            ):
+                transitions.append(
+                    ("video", self._video_degraded_reason, video_reason)
+                )
+                self._video_degraded_reason = video_reason
+                if video_reason is None:
+                    if self.enable_video:
+                        self._video_watchdog_state = "HEALTHY"
+                    self._video_stale_started_monotonic = None
+                    self._video_recovery_started_monotonic = None
+                elif not self.enable_video_active_recovery:
+                    self._video_stale_count += 1
+                    self._video_watchdog_state = "DEGRADED"
+                    self._video_stale_started_monotonic = time.monotonic()
+                    self._video_recovery_started_monotonic = (
+                        self._video_stale_started_monotonic
+                    )
             if data_reason != self._data_degraded_reason:
                 transitions.append(("data", self._data_degraded_reason, data_reason))
                 self._data_degraded_reason = data_reason
@@ -3492,12 +3859,44 @@ finally {
         """Advance stable-frame recovery while ``self._lock`` is held."""
 
         state = self._video_watchdog_state
-        if state == "AWAITING_FIRST_FRAME":
-            self._video_watchdog_state = "HEALTHY"
-            self._video_recovery_required_on_next_connection = False
+        if not self.enable_video_active_recovery:
+            if state == "AWAITING_FIRST_FRAME":
+                self._video_watchdog_state = "HEALTHY"
             return None
+        if state == "AWAITING_FIRST_FRAME":
+            if self._video_recovery_started_monotonic is None:
+                self._video_recovery_started_monotonic = (
+                    self._video_channel_enabled_monotonic
+                    or received_monotonic
+                )
         if state == "HEALTHY" or not self.enable_video:
             return None
+        if (
+            state == "SOFT_RECOVERY"
+            and self._video_soft_toggle_on_monotonic is None
+        ):
+            # Ignore frames already buffered while the channel is being
+            # switched off. Only frames received after Video ON can prove L1
+            # recovery succeeded.
+            return None
+
+        soft_recovery_delivered_frame = bool(
+            self._video_soft_attempted
+            and self._video_soft_toggle_on_monotonic is not None
+            and self._raw_frame_count
+            > self._video_soft_recovery_start_raw_frame_count
+        )
+        if soft_recovery_delivered_frame:
+            # One post-toggle frame proves the L1 recovery had an effect. Keep
+            # collecting stable frames, but never let the old fixed timer tear
+            # down a newly active media stream.
+            self._video_soft_recovery_success_count += 1
+            self._video_soft_attempted = False
+            self._video_soft_toggle_off_monotonic = None
+            self._video_soft_toggle_on_monotonic = None
+            self._video_soft_recovery_start_raw_frame_count = (
+                self._raw_frame_count
+            )
 
         previous = self._video_recovery_last_frame_monotonic
         gap = None if previous is None else received_monotonic - previous
@@ -3540,17 +3939,21 @@ finally {
             if recovery_started is None
             else max(0.0, received_monotonic - recovery_started)
         )
-        if self._video_soft_attempted:
-            self._video_soft_recovery_success_count += 1
         self._video_max_recovery_duration_seconds = max(
             self._video_max_recovery_duration_seconds,
             recovery_duration,
         )
         stable_frames = self._video_recovery_frame_count
         max_gap_observed = self._video_recovery_max_gap_observed_seconds
+        initial_startup_recovery = bool(
+            self._video_stale_count == 0
+            and not self._video_recovery_required_on_next_connection
+            and self._video_last_recovered_monotonic is None
+        )
         self._video_watchdog_state = "HEALTHY"
         self._video_degraded_reason = None
-        self._video_last_recovered_monotonic = received_monotonic
+        if not initial_startup_recovery:
+            self._video_last_recovered_monotonic = received_monotonic
         self._video_stale_started_monotonic = None
         self._video_recovery_started_monotonic = None
         self._video_recovery_candidate_started_monotonic = None
@@ -3559,6 +3962,7 @@ finally {
         self._video_recovery_max_gap_observed_seconds = 0.0
         self._video_soft_toggle_off_monotonic = None
         self._video_soft_toggle_on_monotonic = None
+        self._video_soft_recovery_start_raw_frame_count = self._raw_frame_count
         self._video_soft_attempted = False
         self._video_recovery_required_on_next_connection = False
         return {

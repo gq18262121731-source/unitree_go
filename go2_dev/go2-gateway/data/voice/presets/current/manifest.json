@@ -108,6 +108,13 @@
       "text": "暂未收到您的有效回应，已为您联系家属和社区工作人员，请保持原位等待帮助。",
       "bytes": 372524,
       "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\WALK_FOLLOW.wav",
+      "voice": "Cherry",
+      "text": "您当前心率为76次每分钟，血氧为98%，状态正常。伴随模式已启动，请注意出行安全。",
+      "bytes": 433964,
+      "provider": "dashscope/qwen3-tts-flash"
     }
   ]
 }

@@ -1,0 +1,37 @@
+{
+  "group": "A",
+  "profile": {
+    "name": "A",
+    "video": true,
+    "uwb": true,
+    "sport": true,
+    "low_state": true,
+    "multiple_state": true,
+    "audio_hub": false
+  },
+  "startedAt": "2026-08-31T16:16:36.220013+08:00",
+  "finishedAt": "2026-08-31T16:17:06.322355+08:00",
+  "requestedDurationSeconds": 30.0,
+  "observedDurationSeconds": 30.110000000000582,
+  "sampleCount": 59,
+  "reconnectCount": 0,
+  "disconnectCount": 0,
+  "consentExpiredCount": 0,
+  "sportStateStaleEpisodes": 0,
+  "videoStaleEpisodes": 0,
+  "uwbStaleEpisodes": 0,
+  "longestContinuousOnlineSeconds": 29.281000000002678,
+  "lastDisconnectReason": null,
+  "lastDiagnosticReason": null,
+  "recentDisconnects": [],
+  "subscribedTopics": [
+    "rt/lf/sportmodestate",
+    "rt/sportmodestate",
+    "rt/uwbstate",
+    "rt/multiplestate",
+    "rt/lf/lowstate",
+    "rt/lowstate"
+  ],
+  "samplesPath": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\webrtc_stability\\20260831_161636\\group_A_samples.jsonl",
+  "error": null
+}

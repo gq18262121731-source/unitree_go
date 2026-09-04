@@ -1,0 +1,69 @@
+{
+  "mode": "software_only_algorithm_comparison",
+  "hardware_access": false,
+  "production_controller_modified": false,
+  "selection_policy": "Pass every safety gate, keep stationary error below 0.10 m and minimum tracking distance at or above 1.50 m, then minimize noisy straight-walk error.",
+  "recommended_algorithm": "velocity_feedforward",
+  "comparisons": [
+    {
+      "algorithm": "baseline_p",
+      "tracking_errors_m": {
+        "stationary_front_3m": 0.024460958522961818,
+        "moving_straight": 0.7714084581133732,
+        "moving_straight_noisy": 0.7676765367989633,
+        "moving_left_turn": 0.5435988868127535
+      },
+      "tracking_error_sum_m": 2.1071448402480515,
+      "minimum_tracking_distance_m": 1.6043631802247107,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_passed": true,
+      "conservative_tracking_passed": true
+    },
+    {
+      "algorithm": "pi",
+      "tracking_errors_m": {
+        "stationary_front_3m": 0.013545283998921853,
+        "moving_straight": 0.2616053813469774,
+        "moving_straight_noisy": 0.25841827585793775,
+        "moving_left_turn": 0.15410332257873913
+      },
+      "tracking_error_sum_m": 0.6876722637825762,
+      "minimum_tracking_distance_m": 1.3496194178486454,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_passed": true,
+      "conservative_tracking_passed": false
+    },
+    {
+      "algorithm": "velocity_feedforward",
+      "tracking_errors_m": {
+        "stationary_front_3m": 0.024219388840312606,
+        "moving_straight": 0.04656784402800602,
+        "moving_straight_noisy": 0.06051117200399044,
+        "moving_left_turn": 0.25762982848743887
+      },
+      "tracking_error_sum_m": 0.3889282333597479,
+      "minimum_tracking_distance_m": 1.6041336432220152,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_passed": true,
+      "conservative_tracking_passed": true
+    },
+    {
+      "algorithm": "pi_feedforward",
+      "tracking_errors_m": {
+        "stationary_front_3m": 0.013721227147251547,
+        "moving_straight": 0.11088448302520007,
+        "moving_straight_noisy": 0.12280104202893495,
+        "moving_left_turn": 0.12113511327542117
+      },
+      "tracking_error_sum_m": 0.3685418654768078,
+      "minimum_tracking_distance_m": 1.3496335055414328,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_passed": true,
+      "conservative_tracking_passed": false
+    }
+  ]
+}

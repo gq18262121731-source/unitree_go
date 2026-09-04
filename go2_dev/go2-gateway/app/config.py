@@ -69,13 +69,22 @@ class Settings:
         "GO2_WEBRTC_RECONNECT_STEP_SECONDS", 2.0
     )
     webrtc_reconnect_max_seconds: float = _float_env(
-        "GO2_WEBRTC_RECONNECT_MAX_SECONDS", 10.0
+        "GO2_WEBRTC_RECONNECT_MAX_SECONDS", 15.0
+    )
+    webrtc_reconnect_stable_reset_seconds: float = _float_env(
+        "GO2_WEBRTC_RECONNECT_STABLE_RESET_SECONDS", 30.0
+    )
+    webrtc_disconnect_grace_seconds: float = _float_env(
+        "GO2_WEBRTC_DISCONNECT_GRACE_SECONDS", 3.0
     )
     webrtc_reconnect_on_stale: bool = _bool_env(
         "GO2_WEBRTC_RECONNECT_ON_STALE", False
     )
     webrtc_stale_grace_seconds: float = _float_env(
         "GO2_WEBRTC_STALE_GRACE_SECONDS", 10.0
+    )
+    webrtc_enable_video_active_recovery: bool = _bool_env(
+        "GO2_WEBRTC_ENABLE_VIDEO_ACTIVE_RECOVERY", False
     )
     webrtc_enable_sport_state: bool = _bool_env(
         "GO2_WEBRTC_ENABLE_SPORT_STATE", False

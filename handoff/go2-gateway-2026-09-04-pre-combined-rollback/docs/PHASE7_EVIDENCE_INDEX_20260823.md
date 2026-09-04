@@ -1,0 +1,67 @@
+# Phase 7 证据索引
+
+日期：2026-08-23
+
+## 报告
+
+- `docs/PHASE7_ACCEPTANCE_SUMMARY_20260823.md`：Phase 7 总结与 Gate 决策。
+- `docs/PHASE7_1C_LIDAR_STATIC_CALIBRATION_REPORT_20260823.md`：LiDAR 正式测试与 HOLD 原因。
+- `docs/PHASE7_1C2_LIDAR_GEOMETRIC_DATUM_REPORT_20260823.md`：参考板四点复测、拟合与阈值 HOLD。
+- `docs/PHASE7_1C3_LIDAR_THRESHOLD_VALIDATION_REPORT_20260823.md`：候选阈值连续验证与操作者收口。
+- `docs/PHASE7_2A_OFFLINE_MOVE_MAPPING_REPORT_20260823.md`：离线 UWB→Move 候选映射、安全仲裁与零执行证明。
+- `docs/UWB_FOLLOW_INPUT_ACCEPTANCE_PHASE_7_1.md`：UWB 输入与 dry-run 契约。
+- `docs/LIDAR_STATIC_CALIBRATION_PHASE_7_1_C.md`：LiDAR 测试规程与当前状态。
+- `docs/PHASE7_ROBOT_SIDE_SCOPE_AND_GATE.md`：机器人侧职责与真实运动总 Gate。
+
+## UWB 原始数据与回放
+
+| 文件 | 用途 | SHA-256 |
+|---|---|---|
+| `artifacts/phase7_1_uwb_powercycle_synced_20260822_141408.jsonl` | 标签掉电/恢复同步采集 | `7C3F2BCA26C93688EAF565493947A10D56038B8C7ECBCFA41EF5AB4FE31CCF24` |
+| `artifacts/phase7_1_uwb_yaw_calibration_20260822_141937.jsonl` | 前/左/右 yaw 标定 | `62989EC5484E5921CA1C7984F082D80CD61C57D3C3267AF8FE001618F5818952` |
+| `artifacts/phase7_1b_powercycle_replay_20260822.json` | 掉线超时 dry-run | `D32C52ED97FAE746374F4147BED389055D2B781E8315E44D4EB50A839938B021` |
+| `artifacts/phase7_1b_yaw_calibration_replay_20260822.json` | 方向与右后方几何 dry-run | `E5029DFFFA88201B31E5495E8AE412B2227B4F096CA5019C54228AB9D4E2862F` |
+
+## LiDAR 正式证据
+
+| 文件 | 用途 | SHA-256 |
+|---|---|---|
+| `artifacts/phase7_1c_formal_lidar_2p00m_20260823.json` | 正式 2.00 m | `FD234D215B0B4C9FDE404866F3B751A4DC3BA1A5C4B66A79EFE849337A023AF8` |
+| `artifacts/phase7_1c_formal_lidar_1p50m_20260823.json` | 正式 1.50 m | `EBF9CC9D3860FC917CF11540F5C5CA2EFF9BDF5D22654A1DD80F54A3D639F989` |
+| `artifacts/phase7_1c_formal_lidar_1p20m_20260823.json` | 正式 1.20 m | `02653FFB7314665BD7F141A14044E6D5C57E7A68A1A777B53E8ED24710E478E5` |
+| `artifacts/phase7_1c_formal_lidar_0p80m_20260823.json` | 正式 0.80 m 冷启动锁存 | `B6DE4DF966E48728DA503D3DD322A2AD2178D6AA993B5066FC9EA17F55B4723D` |
+| `artifacts/phase7_1c_formal_continuous_20260823.json` | 初始连续会话 | `30CA5B74496D8285331C8133E442F89B2A41E341CE96BB48C91E0A9F3B29FEF1` |
+| `artifacts/phase7_1c_formal_continuous_roi_n0p25_20260823.json` | `roi_min_z=-0.25` 连续会话 | `12692204E9CB3B3EA34C2FD12026C00E856F68119E7EDB2A8026F270EB961373` |
+| `artifacts/phase7_1c_hysteresis_roi_n0p25_20260823.json` | 滞回、直接 STOP、恢复重试 | `E07F3E8420196FFF95F156B5A8AFF1F689109623136BDFAA4018F390C888B328` |
+
+2026-08-22 的 `phase7_1c_lidar_*` 文件属于人工目测摆位的前置诊断，不作为正式物理距离验收依据。
+
+## LiDAR C2 几何基准证据
+
+| 文件 | 用途 | SHA-256 |
+|---|---|---|
+| `artifacts/phase7_1c2_reference_plane_1p20m_20260823.json` | 参考板 1.20 m | `192D175C6E70CD93150BDAB8196EB5BFA8148ADE207F6B5ACF57A9D4176BFB51` |
+| `artifacts/phase7_1c2_reference_plane_0p80m_20260823.json` | 参考板 0.80 m | `6DB1804DAE8D2E49E208FA012AF40385450B0BB3C8ED75454666F8BAEE14CAF9` |
+| `artifacts/phase7_1c2_reference_plane_0p65m_20260823.json` | 参考板 0.65 m | `63E57CA2A31F4EBF96EFE7A681F13A949F327F098AAA4B8D9B0573DBC8074B78` |
+| `artifacts/phase7_1c2_reference_plane_0p50m_20260823.json` | 参考板 0.50 m | `D453FE4B8DDFE95F08483328C0BD65FEABF855188524441EC66FE504121A9BC4` |
+| `artifacts/phase7_1c2_clear_recovery_20260823.json` | 板移除后空场恢复 | `5FA36AE2647C9ACBD309E3801EA9707758C6279E48E19DF882DCA13E7A4BFC2F` |
+
+机器可读拟合：`artifacts/phase7_1c2_geometric_fit_20260823.json`，SHA-256
+`1F8BAB62FFBA98275F994584EA2F222A23C1E2C92AA8A229C52BFD7E1387DA26`。
+
+## LiDAR C3 候选阈值证据
+
+`artifacts/phase7_1c3_candidate_thresholds_20260823.json`，SHA-256
+`DB584A46712B750F7A38C581189C7744FEEEBFB37DDA4000DF9745E140D4AFDC`。
+
+## Phase 7.2-A 离线控制证据
+
+`artifacts/phase7_2a_offline_control_mapping_20260823.json`，SHA-256
+`38FBBB64EBA0576D38303B21113A2BFD80BF2F05CCEFEDD4C1971488B9F28DFE`。
+
+## 机器可读汇总
+
+- `artifacts/phase7_acceptance_summary_20260823.json`
+- `artifacts/phase7_evidence_sha256_20260823.txt`
+
+所有相对路径均以 `go2-gateway` 仓库根目录为基准。

@@ -8,8 +8,8 @@ follow:
   stop_distance_m: 1.05
 
   walk_min_mps: 0.24
-  vx_max_mps: 0.504
-  wz_max_radps: 1.10
+  vx_max_mps: 0.42
+  wz_max_radps: 0.55
 
   bearing_deadband_deg: 5
   person_stop_hold_s: 1.5
@@ -19,7 +19,7 @@ follow:
   control_frequency_hz: 10
   hard_min_distance_m: 1.0
   hard_max_distance_m: 2.5
-  # Base proportional term; the wireless curve reaches 0.504 m/s at 2.0 m.
+  # Base proportional term; the wireless curve reaches 0.42 m/s at 2.0 m.
   kx: 0.40
   ky: 0.80
 

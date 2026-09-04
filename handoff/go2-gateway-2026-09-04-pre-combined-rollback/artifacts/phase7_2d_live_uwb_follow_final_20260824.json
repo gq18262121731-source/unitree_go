@@ -1,0 +1,7029 @@
+{
+  "phase": "7.2-C",
+  "real_motion": "EXPLICITLY_GATED",
+  "command_mode": "CONTINUOUS_VELOCITY_REFRESH",
+  "command_source": "UWB_FOLLOW",
+  "fixed_command": null,
+  "command_duration_seconds": null,
+  "refresh_period_seconds": 0.2,
+  "watchdog_timeout_seconds": 0.5,
+  "control_frequency_hz": 5.0,
+  "limits": {
+    "max_vx": 0.3,
+    "max_vy": 0.0,
+    "max_abs_wz": 0.3
+  },
+  "walking_speed_policy": {
+    "minimum_walking_vx": 0.2,
+    "follow_start_distance": 1.8,
+    "follow_stop_distance": 1.7,
+    "bearing_deadband_degrees": 12.0
+  },
+  "companion_framework": {
+    "name": "Go2 Companion Follow V1",
+    "supervisor_enabled": true,
+    "fall_resume_policy": "EXPLICIT_HUMAN_RESUME_ONLY"
+  },
+  "max_sent_cycles": 10,
+  "risk_events": {
+    "accepted": 67,
+    "rejected": 3
+  },
+  "inputs": {
+    "started": false,
+    "dds_publishers": 0,
+    "uwb_topic": "rt/uwbstate",
+    "lidar_topic": "rt/utlidar/cloud_base",
+    "uwb_samples": 152,
+    "lidar_samples": 477,
+    "uwb_errors": 0,
+    "lidar_errors": 0
+  },
+  "cycles": 159,
+  "sent_cycles": 0,
+  "records": [
+    {
+      "cycle": 1,
+      "monotonic": 247081.344844339,
+      "uwb_age_seconds": null,
+      "uwb_error": "uwb_not_ready",
+      "follow_target": null,
+      "candidate": null,
+      "companion": {
+        "state": "TARGET_LOST",
+        "motion_mode": "STOP",
+        "reason": "uwb_target_lost",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": null,
+      "arbiter": {
+        "authority": "LIDAR_STOP",
+        "reason": "lidar_not_ready",
+        "stop_required": true,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "STOPPED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 2,
+      "monotonic": 247081.544565503,
+      "uwb_age_seconds": 0.05104107499937527,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.6489932112041634,
+        "y": 0.8217981173986342,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.733222871900311,
+        "age_seconds": 0.032198089989833534
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 3,
+      "monotonic": 247081.74306754,
+      "uwb_age_seconds": 0.05715992400655523,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.14477839141697757,
+        "y": 0.6833214469441344,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.6594383008153015,
+        "age_seconds": 0.0306853560032323
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 4,
+      "monotonic": 247081.944357452,
+      "uwb_age_seconds": 0.17020851201959886,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.12093263889795702,
+        "y": 0.7245823810058774,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8268206359755805,
+        "age_seconds": 0.029755990020930767
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 5,
+      "monotonic": 247082.144484908,
+      "uwb_age_seconds": 0.0017481409886386245,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.014425873012738455,
+        "y": 0.6974528470873453,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.028951209998922423
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 6,
+      "monotonic": 247082.343917996,
+      "uwb_age_seconds": 0.20118122900021262,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.014425873012738455,
+        "y": 0.6974528470873453,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7980031617866152,
+        "age_seconds": 0.02836621302412823
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 7,
+      "monotonic": 247082.543402162,
+      "uwb_age_seconds": 0.4006653949909378,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.014425873012738455,
+        "y": 0.6974528470873453,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8033152601189302,
+        "age_seconds": 0.02179598101065494
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 8,
+      "monotonic": 247082.74374911,
+      "uwb_age_seconds": 0.0531964770052582,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.056307174301954976,
+        "y": 0.4908926514497264,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.020634373009670526
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 9,
+      "monotonic": 247082.943143244,
+      "uwb_age_seconds": 0.2525906109949574,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.056307174301954976,
+        "y": 0.4908926514497264,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7626427958791682,
+        "age_seconds": 0.0242087270016782
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 10,
+      "monotonic": 247083.143756956,
+      "uwb_age_seconds": 0.18582835799315944,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.035259324892029875,
+        "y": 0.3037505086484248,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7170313671725626,
+        "age_seconds": 0.022995637002168223
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 11,
+      "monotonic": 247083.345650406,
+      "uwb_age_seconds": 0.10692074699909426,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.035538490794720046,
+        "y": 0.2843950133239681,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.018027028010692447
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 12,
+      "monotonic": 247083.543759423,
+      "uwb_age_seconds": 0.036323446984170005,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.03113504819185864,
+        "y": 0.19237944966457532,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8007342189732716,
+        "age_seconds": 0.016126843984238803
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 13,
+      "monotonic": 247083.743733112,
+      "uwb_age_seconds": 0.23629713599802926,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.03113504819185864,
+        "y": 0.19237944966457532,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.789097801870713,
+        "age_seconds": 0.01502348599024117
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 14,
+      "monotonic": 247083.944881557,
+      "uwb_age_seconds": 0.07723753599566408,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.13564147639816437,
+        "y": -0.06630780920754459,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.014491713984170929
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 15,
+      "monotonic": 247084.143839765,
+      "uwb_age_seconds": 0.18808856498799287,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.21138904316759866,
+        "y": -0.05534872360450305,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7666318564967471,
+        "age_seconds": 0.011010793998138979
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 16,
+      "monotonic": 247084.346565664,
+      "uwb_age_seconds": 0.030771156976697966,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.2820385309272966,
+        "y": -0.21319860744906272,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7751695433434174,
+        "age_seconds": 0.010696640994865447
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 17,
+      "monotonic": 247084.544533385,
+      "uwb_age_seconds": 0.1356339039921295,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.25987586860414424,
+        "y": -0.37429183316342735,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.2994334665307419
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.01036014998680912
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 18,
+      "monotonic": 247084.744735743,
+      "uwb_age_seconds": 0.05608469300204888,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3080206718308669,
+        "y": -0.5411270105559732,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.009538237005472183
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 19,
+      "monotonic": 247084.9438525,
+      "uwb_age_seconds": 0.2552014499960933,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3080206718308669,
+        "y": -0.5411270105559732,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9537321509984678,
+        "age_seconds": 0.00725513300858438
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 20,
+      "monotonic": 247085.147211094,
+      "uwb_age_seconds": 0.18104606101405807,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3262468773377958,
+        "y": -0.5354921336169032,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.009612316003767774
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 21,
+      "monotonic": 247085.349753431,
+      "uwb_age_seconds": 0.2020151319738943,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3433494206680019,
+        "y": -0.5411384919512734,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.009446737996768206
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 22,
+      "monotonic": 247085.54705067,
+      "uwb_age_seconds": 0.3993123709806241,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3433494206680019,
+        "y": -0.5411384919512734,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0067278569913469255
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 23,
+      "monotonic": 247085.748812208,
+      "uwb_age_seconds": 0.04216826902120374,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5473951051362,
+        "y": -0.3784887304655127,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9907567839497569,
+        "age_seconds": 0.008315583021612838
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 24,
+      "monotonic": 247085.948519324,
+      "uwb_age_seconds": 0.14665429401793517,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5451321095923434,
+        "y": -0.3733124699500532,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.29864997596004256
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.006858831009594724
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 25,
+      "monotonic": 247086.143572082,
+      "uwb_age_seconds": 0.34170705199358054,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5451321095923434,
+        "y": -0.3733124699500532,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.29864997596004256
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06793971598381177
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 26,
+      "monotonic": 247086.350382348,
+      "uwb_age_seconds": 0.0006595010054297745,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.6376446471173352,
+        "y": -0.0682711150061166,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9943977900303609,
+        "age_seconds": 0.005865329003427178
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 27,
+      "monotonic": 247086.54515337,
+      "uwb_age_seconds": 0.004758444003527984,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.6348050698126171,
+        "y": 0.026545820878789206,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8321005045464531,
+        "age_seconds": 0.06629571900703013
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 28,
+      "monotonic": 247086.743401125,
+      "uwb_age_seconds": 0.20300619897898287,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.6348050698126171,
+        "y": 0.026545820878789206,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.62183222238346,
+        "age_seconds": 0.06393918799585663
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 29,
+      "monotonic": 247086.943367511,
+      "uwb_age_seconds": 0.0458863649982959,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5969316907221156,
+        "y": 0.1216421768618886,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06232766399625689
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 30,
+      "monotonic": 247087.143215752,
+      "uwb_age_seconds": 0.24573460599640384,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5969316907221156,
+        "y": 0.1216421768618886,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.682929426903613,
+        "age_seconds": 0.06008857800043188
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 31,
+      "monotonic": 247087.344633598,
+      "uwb_age_seconds": 0.4471524519904051,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5969316907221156,
+        "y": 0.1216421768618886,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.624951511433898,
+        "age_seconds": 0.06226011598482728
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 32,
+      "monotonic": 247087.54455273,
+      "uwb_age_seconds": 0.6470715839823242,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5969316907221156,
+        "y": 0.1216421768618886,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06231692899018526
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 33,
+      "monotonic": 247087.744118331,
+      "uwb_age_seconds": 0.8466371849935967,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5969316907221156,
+        "y": 0.1216421768618886,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.5731498009548497,
+        "age_seconds": 0.060619083989877254
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 34,
+      "monotonic": 247087.944706587,
+      "uwb_age_seconds": 0.15276373899541795,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.268335247244238,
+        "y": 0.09462723271498319,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2536670494488476,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.6029078850346603,
+        "age_seconds": 0.0599755709990859
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 35,
+      "monotonic": 247088.147643003,
+      "uwb_age_seconds": 0.35570015499251895,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.268335247244238,
+        "y": 0.09462723271498319,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2536670494488476,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9174904869186575,
+        "age_seconds": 0.06192220200318843
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 36,
+      "monotonic": 247088.345894685,
+      "uwb_age_seconds": 0.013539564999518916,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.6997134590614444,
+        "y": 0.25974492090959933,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05961287597892806
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 37,
+      "monotonic": 247088.543307921,
+      "uwb_age_seconds": 0.020648703997721896,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.36239915458305827,
+        "y": 0.4151877076978807,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.775979446336088,
+        "age_seconds": 0.05591210300917737
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 38,
+      "monotonic": 247088.744045197,
+      "uwb_age_seconds": 0.22138597999582998,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.36239915458305827,
+        "y": 0.4151877076978807,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7187699348252394,
+        "age_seconds": 0.05647666100412607
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 39,
+      "monotonic": 247088.94376759,
+      "uwb_age_seconds": 0.06062324601225555,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.08707184288533587,
+        "y": 0.3821387576136762,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0539629370032344
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 40,
+      "monotonic": 247089.143537683,
+      "uwb_age_seconds": 0.08178639499237761,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.03181059480851456,
+        "y": 0.41617105886153294,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.739068036871928,
+        "age_seconds": 0.05297661799704656
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 41,
+      "monotonic": 247089.346366353,
+      "uwb_age_seconds": 0.1034941470134072,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.08807733966399933,
+        "y": 0.3979225816175014,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.6455703051685122,
+        "age_seconds": 0.054542969999602064
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 42,
+      "monotonic": 247089.543466387,
+      "uwb_age_seconds": 0.03284870900097303,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.1442857203897665,
+        "y": 0.29332890174304993,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.050851731008151546
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 43,
+      "monotonic": 247089.744299577,
+      "uwb_age_seconds": 0.23368189900065772,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.1442857203897665,
+        "y": 0.29332890174304993,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.5121154282185627,
+        "age_seconds": 0.051489776000380516
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 44,
+      "monotonic": 247089.943533229,
+      "uwb_age_seconds": 0.07740633899811655,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.18571399262644395,
+        "y": 0.19089098815816585,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.552481547357283,
+        "age_seconds": 0.049512547004269436
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 45,
+      "monotonic": 247090.143498478,
+      "uwb_age_seconds": 0.01015514598111622,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.20688973253550946,
+        "y": 0.06575872128730931,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04714151698863134
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 46,
+      "monotonic": 247090.344744937,
+      "uwb_age_seconds": 0.2114016049890779,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.20688973253550946,
+        "y": 0.06575872128730931,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.5636959922316012,
+        "age_seconds": 0.04850691300816834
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 47,
+      "monotonic": 247090.543947321,
+      "uwb_age_seconds": 0.050217998010339215,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.23622281252907862,
+        "y": -0.12559425905388677,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.4671515814760083,
+        "age_seconds": 0.04475501200067811
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 48,
+      "monotonic": 247090.745171508,
+      "uwb_age_seconds": 0.05940351798199117,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.2012290271728978,
+        "y": -0.1794051929885696,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04695327999070287
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 49,
+      "monotonic": 247090.942737826,
+      "uwb_age_seconds": 0.07134709501406178,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.19734623254703942,
+        "y": -0.2247958689479711,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.5481700798735172,
+        "age_seconds": 0.04394564899848774
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 50,
+      "monotonic": 247091.143004799,
+      "uwb_age_seconds": 0.27161406801315024,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.19734623254703942,
+        "y": -0.2247958689479711,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.5351675807260534,
+        "age_seconds": 0.041006865008967
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 51,
+      "monotonic": 247091.344579039,
+      "uwb_age_seconds": 0.09850637300405651,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.040132761610776946,
+        "y": -0.28617421155383116,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04327817098237574
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 52,
+      "monotonic": 247091.544797153,
+      "uwb_age_seconds": 0.11807659201440401,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.013066742700674316,
+        "y": -0.34022772049094413,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": -0.2721821763927553
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.041658329020719975
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 53,
+      "monotonic": 247091.743754165,
+      "uwb_age_seconds": 0.04235251800855622,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.061129123769720684,
+        "y": -0.2683831688912647,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04121399801806547
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 54,
+      "monotonic": 247091.942971907,
+      "uwb_age_seconds": 0.057636428013211116,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.1188040728053148,
+        "y": -0.20768491326215766,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7007483791435292,
+        "age_seconds": 0.039387358992826194
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 55,
+      "monotonic": 247092.14360849,
+      "uwb_age_seconds": 0.17305266999755986,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.142085600383002,
+        "y": -0.16206951366283195,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03944877200410701
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 56,
+      "monotonic": 247092.346641673,
+      "uwb_age_seconds": 0.3760858530004043,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.142085600383002,
+        "y": -0.16206951366283195,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8367807305021857,
+        "age_seconds": 0.040861162007786334
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 57,
+      "monotonic": 247092.543796527,
+      "uwb_age_seconds": 0.028761873982148245,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.529067376992983,
+        "y": 0.16284595112463096,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8612219934105163,
+        "age_seconds": 0.03710080400924198
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 58,
+      "monotonic": 247092.744546621,
+      "uwb_age_seconds": 0.22951196797657758,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.529067376992983,
+        "y": 0.16284595112463096,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.035553977999370545
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 59,
+      "monotonic": 247092.943359437,
+      "uwb_age_seconds": 0.056072210980346426,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5550929366511514,
+        "y": 0.23737226340881268,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8424716886035009,
+        "age_seconds": 0.035607572994194925
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 60,
+      "monotonic": 247093.143806498,
+      "uwb_age_seconds": 0.07177570299245417,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5289976699139238,
+        "y": 0.2552835010375899,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.785160743417535,
+        "age_seconds": 0.03478204901330173
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 61,
+      "monotonic": 247093.345285864,
+      "uwb_age_seconds": 0.18474745898856781,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7249395861618897,
+        "y": 0.33086372073855885,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8754052022243528,
+        "age_seconds": 0.03451701399171725
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 62,
+      "monotonic": 247093.543889873,
+      "uwb_age_seconds": 0.11769342998741195,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.422863517030879,
+        "y": 0.7653786395251045,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2845727034061758,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03225912799825892
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 63,
+      "monotonic": 247093.744695026,
+      "uwb_age_seconds": 0.04974622800364159,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.5865446640269076,
+        "y": 0.7329496188044782,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7609496588760694,
+        "age_seconds": 0.031674689991632476
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 64,
+      "monotonic": 247093.943798377,
+      "uwb_age_seconds": 0.06964456901187077,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.6929700351781407,
+        "y": 0.49465695846225155,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7907281819767413,
+        "age_seconds": 0.030572146992199123
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 65,
+      "monotonic": 247094.142833847,
+      "uwb_age_seconds": 0.0867592440044973,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.5364105668064543,
+        "y": 0.40015382445686964,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02799231599783525
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 66,
+      "monotonic": 247094.345407273,
+      "uwb_age_seconds": 0.022504702996229753,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.075248757197039,
+        "y": 0.4781047653595699,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.21504975143940783,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7534478514267244,
+        "age_seconds": 0.030750302015803754
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 67,
+      "monotonic": 247094.544035795,
+      "uwb_age_seconds": 0.22113322498626076,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.075248757197039,
+        "y": 0.4781047653595699,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.21504975143940783,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8232881933997824,
+        "age_seconds": 0.02844692498911172
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 68,
+      "monotonic": 247094.744081248,
+      "uwb_age_seconds": 0.4211786779924296,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.075248757197039,
+        "y": 0.4781047653595699,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.21504975143940783,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02859050000552088
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 69,
+      "monotonic": 247094.944344195,
+      "uwb_age_seconds": 0.1659585120214615,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.29886520830279695,
+        "y": 0.7915544897304441,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02433896900038235
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 70,
+      "monotonic": 247095.144029118,
+      "uwb_age_seconds": 0.010528454004088417,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.11832729845773149,
+        "y": 0.7281531218606867,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.917048774887731,
+        "age_seconds": 0.029156128992326558
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 71,
+      "monotonic": 247095.345756785,
+      "uwb_age_seconds": 0.11728944900096394,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.09010697986775962,
+        "y": 0.6853009412482542,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 2.0016943063476473,
+        "age_seconds": 0.03132866902160458
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 72,
+      "monotonic": 247095.545167262,
+      "uwb_age_seconds": 0.31669992598472163,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.09010697986775962,
+        "y": 0.6853009412482542,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0311348759860266
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 73,
+      "monotonic": 247095.745411705,
+      "uwb_age_seconds": 0.06555393998860382,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.06413902492632317,
+        "y": 0.709210464063958,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9820175341587112,
+        "age_seconds": 0.031179818994132802
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 74,
+      "monotonic": 247095.944479459,
+      "uwb_age_seconds": 0.0006481029849965125,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.10361256837916355,
+        "y": 0.543234279608509,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9398876204655957,
+        "age_seconds": 0.031193842994980514
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 75,
+      "monotonic": 247096.143234693,
+      "uwb_age_seconds": 0.1994033369992394,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.10361256837916355,
+        "y": 0.543234279608509,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.030428165016928688
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 76,
+      "monotonic": 247096.345476641,
+      "uwb_age_seconds": 0.40164528499008156,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.10361256837916355,
+        "y": 0.543234279608509,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.794434453923901,
+        "age_seconds": 0.033246484003029764
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 77,
+      "monotonic": 247096.543717672,
+      "uwb_age_seconds": 0.06768056500004604,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.05649948184477771,
+        "y": 0.3133066303901306,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7914837656122087,
+        "age_seconds": 0.02916175199788995
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 78,
+      "monotonic": 247096.744141454,
+      "uwb_age_seconds": 0.1756940030027181,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.053858813900279356,
+        "y": 0.28316940022266046,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03148784098448232
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 79,
+      "monotonic": 247096.943416795,
+      "uwb_age_seconds": 0.02115157598746009,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.07447573792691586,
+        "y": 0.11695975475714637,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.770361570281753,
+        "age_seconds": 0.03233086099498905
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 80,
+      "monotonic": 247097.142632195,
+      "uwb_age_seconds": 0.22036697599105537,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.07447573792691586,
+        "y": 0.11695975475714637,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.744612863969655,
+        "age_seconds": 0.03149178499006666
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 81,
+      "monotonic": 247097.351236726,
+      "uwb_age_seconds": 0.06748588001937605,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.151523391633813,
+        "y": -0.15360376995258007,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03983750002225861
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 82,
+      "monotonic": 247097.544984592,
+      "uwb_age_seconds": 0.08281168300891295,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.20575435226994832,
+        "y": -0.2984290597368573,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.789325959500933,
+        "age_seconds": 0.03261489901342429
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 83,
+      "monotonic": 247097.744042012,
+      "uwb_age_seconds": 0.014692339987959713,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.27489897610297165,
+        "y": -0.34550773585303063,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": -0.2764061886824245
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8128220521158684,
+        "age_seconds": 0.03160660999128595
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 84,
+      "monotonic": 247097.944093616,
+      "uwb_age_seconds": 0.12342218300909735,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.296018872846439,
+        "y": -0.37211732888719007,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.29769386310975204
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0334690060117282
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 85,
+      "monotonic": 247098.14283557,
+      "uwb_age_seconds": 0.05118346799281426,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.303688619386983,
+        "y": -0.4664310052316655,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.033607749006478116
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 86,
+      "monotonic": 247098.344817028,
+      "uwb_age_seconds": 0.16151380201335996,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.32369420002474336,
+        "y": -0.4489898175230547,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03533014701679349
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 87,
+      "monotonic": 247098.544138898,
+      "uwb_age_seconds": 0.1803082670085132,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.38744454917360005,
+        "y": -0.44643565462547585,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.02957759000128135
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 88,
+      "monotonic": 247098.743875994,
+      "uwb_age_seconds": 0.11102013400522992,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5219283291038588,
+        "y": -0.3440155615425615,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.27521244923404925
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.035601787007180974
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 89,
+      "monotonic": 247098.943447756,
+      "uwb_age_seconds": 0.3105918960063718,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5219283291038588,
+        "y": -0.3440155615425615,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.27521244923404925
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9925767946673811,
+        "age_seconds": 0.03584162300103344
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 90,
+      "monotonic": 247099.149373388,
+      "uwb_age_seconds": 0.05620443099178374,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.36567870486964615,
+        "y": -0.07263810540293719,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04224879000685178
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 91,
+      "monotonic": 247099.347340579,
+      "uwb_age_seconds": 0.2541716219857335,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.36567870486964615,
+        "y": -0.07263810540293719,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03959412200492807
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 92,
+      "monotonic": 247099.54511709,
+      "uwb_age_seconds": 0.012162008992163464,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5047001417667705,
+        "y": 0.2482675609824917,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.977801953277123,
+        "age_seconds": 0.03637298897956498
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 93,
+      "monotonic": 247099.743435156,
+      "uwb_age_seconds": 0.027535186003660783,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.4333761980363944,
+        "y": 0.2081363088075152,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.6601174578784417,
+        "age_seconds": 0.035620784998172894
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 94,
+      "monotonic": 247099.943517018,
+      "uwb_age_seconds": 0.22761704798904248,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.4333761980363944,
+        "y": 0.2081363088075152,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03555706900078803
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 95,
+      "monotonic": 247100.144063465,
+      "uwb_age_seconds": 0.4281634950020816,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.4333761980363944,
+        "y": 0.2081363088075152,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.6622770627999943,
+        "age_seconds": 0.037928667006781325
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 96,
+      "monotonic": 247100.344916088,
+      "uwb_age_seconds": 0.18386686002486385,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.0638472518203246,
+        "y": 0.4457518778963824,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.21276945036406492,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.625632211705514,
+        "age_seconds": 0.03746787901036441
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 97,
+      "monotonic": 247100.542891521,
+      "uwb_age_seconds": 0.027772255009040236,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.9533381627289161,
+        "y": 0.45840392244409556,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9190111622106645,
+        "age_seconds": 0.03751689300406724
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 98,
+      "monotonic": 247100.743965753,
+      "uwb_age_seconds": 0.22884648700710386,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.9533381627289161,
+        "y": 0.45840392244409556,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0385256540030241
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 99,
+      "monotonic": 247100.943472769,
+      "uwb_age_seconds": 0.06064460598281585,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.3740822891876388,
+        "y": 0.7347821439312416,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2748164578375278,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.671795265237427,
+        "age_seconds": 0.03834808699321002
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 100,
+      "monotonic": 247101.143478079,
+      "uwb_age_seconds": 0.16824143900885247,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.4436516803139088,
+        "y": 0.8004270348035936,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.28873033606278176,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7078728451862708,
+        "age_seconds": 0.0382342119992245
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 101,
+      "monotonic": 247101.34389292,
+      "uwb_age_seconds": 0.020768737012986094,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.560173307729951,
+        "y": 1.126429108890342,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03980364801827818
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 102,
+      "monotonic": 247101.543634036,
+      "uwb_age_seconds": 0.04523974299081601,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.9063025149161041,
+        "y": 1.0995523763976485,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7830113870004525,
+        "age_seconds": 0.03961036799591966
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 103,
+      "monotonic": 247101.743143527,
+      "uwb_age_seconds": 0.24474923399975523,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.9063025149161041,
+        "y": 1.0995523763976485,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8216043170767133,
+        "age_seconds": 0.03937884600600228
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 104,
+      "monotonic": 247101.94331752,
+      "uwb_age_seconds": 0.09255731900339015,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.5804104962510097,
+        "y": 0.8269629996622043,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04017672498594038
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 105,
+      "monotonic": 247102.143800617,
+      "uwb_age_seconds": 0.02287082700058818,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.2699550698581117,
+        "y": 0.6365656826219732,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2539910139716223,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04093530398677103
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 106,
+      "monotonic": 247102.344752055,
+      "uwb_age_seconds": 0.04455017400323413,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.0185988562039103,
+        "y": 0.5638603803780093,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.20371977124078208,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 2.0137843442752694,
+        "age_seconds": 0.039482444000896066
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 107,
+      "monotonic": 247102.5443421,
+      "uwb_age_seconds": 0.24414021900156513,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.0185988562039103,
+        "y": 0.5638603803780093,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.20371977124078208,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04206456302199513
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 108,
+      "monotonic": 247102.744205616,
+      "uwb_age_seconds": 0.08753301401156932,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.9854204816517598,
+        "y": 0.9660106258834227,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04402263599331491
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 109,
+      "monotonic": 247102.943623975,
+      "uwb_age_seconds": 0.02507205301662907,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.4928314691857234,
+        "y": 0.7960585593914711,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.045372648019110784
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 110,
+      "monotonic": 247103.143640839,
+      "uwb_age_seconds": 0.03619906198582612,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.19952582122946128,
+        "y": 1.275665898947902,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.0474022880080156
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 111,
+      "monotonic": 247103.344185991,
+      "uwb_age_seconds": 0.05803372399532236,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.25854880264963676,
+        "y": 1.375988697356805,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04947259000618942
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 112,
+      "monotonic": 247103.543344967,
+      "uwb_age_seconds": 0.16659133101347834,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.34912268832205684,
+        "y": 1.2710976116939756,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05062134700710885
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 113,
+      "monotonic": 247103.743429102,
+      "uwb_age_seconds": 0.011796231003245339,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.32977529818543627,
+        "y": 1.2640730379337823,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05117264098953456
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 114,
+      "monotonic": 247103.94378549,
+      "uwb_age_seconds": 0.12589532500714995,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.31794096314737463,
+        "y": 1.2103785498017692,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05393175900098868
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 115,
+      "monotonic": 247104.143338304,
+      "uwb_age_seconds": 0.32544813901768066,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.31794096314737463,
+        "y": 1.2103785498017692,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.049944525002501905
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 116,
+      "monotonic": 247104.343328477,
+      "uwb_age_seconds": 0.06781515499460511,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.1361145874652121,
+        "y": 0.9473217100551332,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05543100798968226
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 117,
+      "monotonic": 247104.544757532,
+      "uwb_age_seconds": 0.18144168800790794,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.12853795983745786,
+        "y": 0.9465744216867185,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05721969000296667
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 118,
+      "monotonic": 247104.74545828,
+      "uwb_age_seconds": 0.11797216100967489,
+      "uwb_error": null,
+      "follow_target": {
+        "x": -0.06092599956088218,
+        "y": 0.8187604168667197,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06353965800371952
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 119,
+      "monotonic": 247104.94377327,
+      "uwb_age_seconds": 0.054104275011923164,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.012158044656184863,
+        "y": 0.668600899600948,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.933044568182932,
+        "age_seconds": 0.062170890014385805
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 120,
+      "monotonic": 247105.143353983,
+      "uwb_age_seconds": 0.25368498801253736,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.012158044656184863,
+        "y": 0.668600899600948,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.06401973401079886
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 121,
+      "monotonic": 247105.348882896,
+      "uwb_age_seconds": 0.012729253998259082,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.10455512705804981,
+        "y": 0.40518137031336454,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9596035960849574,
+        "age_seconds": 0.005820446996949613
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 122,
+      "monotonic": 247105.549885136,
+      "uwb_age_seconds": 0.03521866598748602,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.13040419608484366,
+        "y": 0.2909718816973461,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.007948612998006865
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 123,
+      "monotonic": 247105.747465516,
+      "uwb_age_seconds": 0.23279904600349255,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.13040419608484366,
+        "y": 0.2909718816973461,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.008364081004401669
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 124,
+      "monotonic": 247105.944473081,
+      "uwb_age_seconds": 0.08014198701130226,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.13633360166871533,
+        "y": 0.13385855700810922,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9522136305072948,
+        "age_seconds": 0.006500396993942559
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 125,
+      "monotonic": 247106.144417785,
+      "uwb_age_seconds": 0.01421541499439627,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.14767470666267957,
+        "y": 0.13174162043426207,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9348504342107844,
+        "age_seconds": 0.008170616987627
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 126,
+      "monotonic": 247106.34554523,
+      "uwb_age_seconds": 0.21534285999950953,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.14767470666267957,
+        "y": 0.13174162043426207,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.01082026498625055
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 127,
+      "monotonic": 247106.544770427,
+      "uwb_age_seconds": 0.06562551399110816,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.22627233136106772,
+        "y": 0.1266085929448303,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9457881723898003,
+        "age_seconds": 0.01064805599162355
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 128,
+      "monotonic": 247106.744840849,
+      "uwb_age_seconds": 0.1785723069915548,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.24242323621108497,
+        "y": 0.08251896875906817,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9986431373632023,
+        "age_seconds": 0.015172095998423174
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 129,
+      "monotonic": 247106.94345342,
+      "uwb_age_seconds": 0.37718487801612355,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.24242323621108497,
+        "y": 0.08251896875906817,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.014948324009310454
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 130,
+      "monotonic": 247107.142560848,
+      "uwb_age_seconds": 0.5762923060101457,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.24242323621108497,
+        "y": 0.08251896875906817,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.016337617998942733
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 131,
+      "monotonic": 247107.343068989,
+      "uwb_age_seconds": 0.07677571498788893,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3154562315712486,
+        "y": -0.36509229597530946,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.29207383678024756
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.017911586008267477
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 132,
+      "monotonic": 247107.544369002,
+      "uwb_age_seconds": 0.0011825779802165926,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.2616771213118523,
+        "y": -0.6764620903971927,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.019946699001593515
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 133,
+      "monotonic": 247107.744523623,
+      "uwb_age_seconds": 0.1139029570040293,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.26234685965386095,
+        "y": -0.6544913730746823,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.022147284995298833
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 134,
+      "monotonic": 247107.943268753,
+      "uwb_age_seconds": 0.3126480870123487,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.26234685965386095,
+        "y": -0.6544913730746823,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.020087583019630983
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 135,
+      "monotonic": 247108.143313247,
+      "uwb_age_seconds": 0.15204870200250298,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.2501305953239199,
+        "y": -0.7102866036069525,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.025547782017383724
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 136,
+      "monotonic": 247108.343242443,
+      "uwb_age_seconds": 0.3519778979825787,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.2501305953239199,
+        "y": -0.7102866036069525,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.026414539985125884
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 137,
+      "monotonic": 247108.5443046,
+      "uwb_age_seconds": 0.02074007599730976,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.37223061668269963,
+        "y": -0.675496522043751,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03019788398523815
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 138,
+      "monotonic": 247108.744707,
+      "uwb_age_seconds": 0.04292969300877303,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.4595730538824294,
+        "y": -0.6871795936859145,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.025063103006687015
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 139,
+      "monotonic": 247108.943443563,
+      "uwb_age_seconds": 0.24166625601355918,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.4595730538824294,
+        "y": -0.6871795936859145,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.031752020004205406
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 140,
+      "monotonic": 247109.143385976,
+      "uwb_age_seconds": 0.16803163499571383,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.5474924770911307,
+        "y": -0.8115285136604824,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03380698201362975
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 141,
+      "monotonic": 247109.343798379,
+      "uwb_age_seconds": 0.09691849499358796,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.6458784593067475,
+        "y": -0.7064961604682315,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.036203658004524186
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 142,
+      "monotonic": 247109.544010424,
+      "uwb_age_seconds": 0.013246402988443151,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7358858878020316,
+        "y": -0.380333709009928,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.3
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.037781063991133124
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 143,
+      "monotonic": 247109.744760894,
+      "uwb_age_seconds": 0.03377317701233551,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7223753509995823,
+        "y": -0.24653393626251635,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04131101100938395
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 144,
+      "monotonic": 247109.943598227,
+      "uwb_age_seconds": 0.14550434399279766,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7541209901327761,
+        "y": -0.21034614220365688,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.03704178400221281
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 145,
+      "monotonic": 247110.144037787,
+      "uwb_age_seconds": 0.07252715399954468,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.7906717510761365,
+        "y": -0.308498133634592,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": -0.2467985069076736
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04422316999989562
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 146,
+      "monotonic": 247110.34429652,
+      "uwb_age_seconds": 0.18282914700102992,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.0291345023297924,
+        "y": -0.3126532029927778,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2058269004659585,
+        "vy": 0.0,
+        "wz": -0.25012256239422226
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8439184485503588,
+        "age_seconds": 0.045433088002027944
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 147,
+      "monotonic": 247110.544668043,
+      "uwb_age_seconds": 0.02559687101165764,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.0001351904897766,
+        "y": 0.033536333287490394,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9168683870770296,
+        "age_seconds": 0.04810849201749079
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 148,
+      "monotonic": 247110.745067855,
+      "uwb_age_seconds": 0.12806518998695537,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.9069232923537398,
+        "y": 0.07541505496958933,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04946938998182304
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 149,
+      "monotonic": 247110.943576614,
+      "uwb_age_seconds": 0.06322402998921461,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.0081366367262032,
+        "y": 0.0999786322982481,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05054101700079627
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 150,
+      "monotonic": 247111.142959206,
+      "uwb_age_seconds": 0.26260662198183127,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.0081366367262032,
+        "y": 0.0999786322982481,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8381160832376968,
+        "age_seconds": 0.052772353985346854
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 151,
+      "monotonic": 247111.343864591,
+      "uwb_age_seconds": 0.4635120070015546,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.0081366367262032,
+        "y": 0.0999786322982481,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8414154924235087,
+        "age_seconds": 0.05056544402032159
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 152,
+      "monotonic": 247111.543893562,
+      "uwb_age_seconds": 0.6635409779846668,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 2.0081366367262032,
+        "y": 0.0999786322982481,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.3,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.05263767999713309
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 153,
+      "monotonic": 247111.744326038,
+      "uwb_age_seconds": 0.0673834900080692,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.0996818841152054,
+        "y": 0.5925202853650138,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2199363768230411,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.7986592149502363,
+        "age_seconds": 0.051971749984659255
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 154,
+      "monotonic": 247111.943527609,
+      "uwb_age_seconds": 0.26658506100648083,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 1.0996818841152054,
+        "y": 0.5925202853650138,
+        "state": "FOLLOW_TOO_FAR"
+      },
+      "candidate": {
+        "vx": 0.2199363768230411,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.8014295120715593,
+        "age_seconds": 0.05023339900071733
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 155,
+      "monotonic": 247112.144484476,
+      "uwb_age_seconds": 0.11145478900289163,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3561362081925403,
+        "y": 0.5806579093318331,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.049764488998334855
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 156,
+      "monotonic": 247112.343843359,
+      "uwb_age_seconds": 0.31081367199658416,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.3561362081925403,
+        "y": 0.5806579093318331,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": 1.9617480552268458,
+        "age_seconds": 0.049186877004103735
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 157,
+      "monotonic": 247112.54443067,
+      "uwb_age_seconds": 0.06551286700414494,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.14366378991435558,
+        "y": 0.44536251781449365,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.048725743021350354
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 158,
+      "monotonic": 247112.745070187,
+      "uwb_age_seconds": 0.0895166170084849,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.1159799821375016,
+        "y": 0.3818582895500944,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.047211319993948564
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    },
+    {
+      "cycle": 159,
+      "monotonic": 247112.944135311,
+      "uwb_age_seconds": 0.022004747996106744,
+      "uwb_error": null,
+      "follow_target": {
+        "x": 0.143879290002229,
+        "y": 0.3310669878011405,
+        "state": "FOLLOW_TRACKING"
+      },
+      "candidate": {
+        "vx": 0.2,
+        "vy": 0.0,
+        "wz": 0.0
+      },
+      "companion": {
+        "state": "FOLLOWING",
+        "motion_mode": "FOLLOW",
+        "reason": "fresh_uwb_target_reacquired",
+        "target_stationary": false,
+        "resume_required": false,
+        "active_incident_id": null
+      },
+      "lidar": {
+        "level": "CLEAR",
+        "reason": "forward_roi_clear",
+        "nearest_distance": null,
+        "age_seconds": 0.04520200999104418
+      },
+      "arbiter": {
+        "authority": "FOLLOW",
+        "reason": "follow_clear",
+        "stop_required": false,
+        "risk_state": "NORMAL"
+      },
+      "execution": {
+        "status": "RESUME_REQUIRED",
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "velocity_refresh": false,
+        "duration_seconds": 0.0
+      }
+    }
+  ]
+}

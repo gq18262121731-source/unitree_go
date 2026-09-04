@@ -111,6 +111,11 @@ VOICE_CONTROL_FEEDBACK_TEXT = {
     VoiceIntent.CALL_FAMILY: "已为您联系家人。",
     VoiceIntent.I_AM_OK: "好的，我会继续在这里陪着您。",
 }
+WALK_FOLLOW_TEXT = (
+    "您当前心率为76次每分钟，血氧为98%，状态正常。"
+    "伴随模式已启动，请注意出行安全。"
+)
+WALK_FOLLOW_PRESET = "WALK_FOLLOW.wav"
 CONFIRM_GATE = "JOINT_VIDEO_MOTION_GATE_APPROVED"
 CONFIRM_DEMO = "PHONE_DEMO_APPROVED"
 CONFIRM_WRITER = "EXCLUSIVE_MOTION_WRITER"
@@ -231,7 +236,7 @@ class RuntimeConsole:
         print(f"Motion Demo    : {auto_demo or 'manual'}")
         print(
             "Commands     : START | STOP | RESUME | VOICE_CONTROL | VOICE_OFF | "
-            "VOICE_INTENT_GATE | MANUAL | NO_RESPONSE | RESET_DEMO | "
+            "VOICE_INTENT_GATE | MANUAL | WALK_FOLLOW | NO_RESPONSE | RESET_DEMO | "
             "UWB_GATE | MIC_GATE | FOLLOW_3MIN | GATE | POSE_GATE | "
             "AUDIO_GATE | START_DEMO | STATUS | EXIT"
         )
@@ -317,6 +322,8 @@ class RuntimeConsole:
                 print(json.dumps(self.reset_demo(), ensure_ascii=False, indent=2))
             elif command == "MANUAL":
                 self._manual_console()
+            elif command == "WALK_FOLLOW":
+                self._walk_follow()
             elif command == "START":
                 if self._motion_thread and self._motion_thread.is_alive():
                     print("START_REJECTED:CONTROL_BUSY:MOTION_BUSY")
@@ -330,7 +337,9 @@ class RuntimeConsole:
                         )
                         continue
                 try:
-                    started = self.start_companion()
+                    started = self.start_companion(
+                        before_start=self._play_start_announcement
+                    )
                     print("START accepted -> FOLLOWING")
                     print(json.dumps(started, ensure_ascii=False, indent=2))
                 except WirelessCompanionControlError as exc:
@@ -616,7 +625,11 @@ class RuntimeConsole:
                 self.tts_service = None
                 self.agent_client = None
 
-    def start_companion(self) -> dict[str, object]:
+    def start_companion(
+        self,
+        *,
+        before_start: Callable[[], None] | None = None,
+    ) -> dict[str, object]:
         with self._state_lock:
             if self._motion_thread is not None and self._motion_thread.is_alive():
                 if self._motion_name == "companion":
@@ -629,6 +642,8 @@ class RuntimeConsole:
         try:
             self._activate_companion_layer()
             self._build_follow_session().preflight()
+            if before_start is not None:
+                before_start()
         except Exception as exc:
             self._deactivate_companion_layer()
             reason = str(exc).rsplit(":", maxsplit=1)[-1].strip()
@@ -1086,6 +1101,43 @@ class RuntimeConsole:
             if self.manual_controller.active:
                 self.release_manual()
 
+    def _walk_follow(self) -> None:
+        """Play the fixed outing prompt, then reuse the existing MANUAL flow."""
+
+        preset = VOICE_PRESET_DIR / WALK_FOLLOW_PRESET
+        try:
+            if not preset.is_file():
+                raise FileNotFoundError(preset)
+            duration_seconds = self._wav_duration_seconds(preset)
+            self.runtime.play_audio_file(preset, timeout_seconds=5.0)
+            # AudioHub returns when playback is accepted, not when speaker
+            # output ends. Wait the WAV's measured duration (never a guessed
+            # fixed delay) before handing control to the keyboard mode.
+            if duration_seconds > 0.0:
+                time.sleep(duration_seconds)
+        except Exception as exc:
+            LOGGER.warning("WALK_FOLLOW voice playback failed: %s", exc)
+        self._manual_console()
+
+    def _play_start_announcement(self) -> None:
+        """Play the fixed start notice fully before terminal START can move."""
+
+        preset = VOICE_PRESET_DIR / VOICE_CONTROL_PRESETS[
+            VoiceIntent.START_COMPANION
+        ]
+        try:
+            if not preset.is_file():
+                raise FileNotFoundError(preset)
+            duration_seconds = self._wav_duration_seconds(preset)
+            self.runtime.play_audio_file(preset, timeout_seconds=3.0)
+            if duration_seconds > 0.0:
+                time.sleep(duration_seconds)
+        except Exception as exc:
+            # A speaker failure must not disable an otherwise safe START. The
+            # existing Lifecycle/UWB/runtime gates still decide whether motion
+            # is allowed immediately after this best-effort announcement.
+            LOGGER.warning("START announcement playback failed: %s", exc)
+
     @staticmethod
     def _manual_event(event: str, payload: dict[str, object]) -> None:
         if event == "entered":
@@ -1177,6 +1229,7 @@ class RuntimeConsole:
     def preload_voice_control_presets(self) -> None:
         filenames = {
             *VOICE_CONTROL_PRESETS.values(),
+            WALK_FOLLOW_PRESET,
             "START_REJECTED.wav",
             "RESUME_REJECTED.wav",
             "CONTROL_REJECTED.wav",
@@ -1221,6 +1274,52 @@ class RuntimeConsole:
             attempts = result.attempts if result is not None else 0
             print(
                 "VOICE_CONTROL_PRELOAD_FAILED: "
+                f"{path.name} (attempts={attempts}, reason={reason})"
+            )
+
+    def preload_required_demo_presets(self) -> None:
+        """Preload the two fixed clips used before voice services are enabled."""
+
+        filenames = (
+            VOICE_CONTROL_PRESETS[VoiceIntent.START_COMPANION],
+            WALK_FOLLOW_PRESET,
+        )
+        paths = tuple(VOICE_PRESET_DIR / filename for filename in filenames)
+        available = tuple(path for path in paths if path.is_file())
+        for path in paths:
+            if not path.is_file():
+                print(
+                    "DEMO_AUDIO_PRELOAD_FAILED: "
+                    f"{path.name} (FileNotFoundError: {path})"
+                )
+        if not available:
+            return
+        try:
+            results = self.runtime.preload_audio_files(
+                available,
+                retry_attempts=2,
+            )
+        except Exception as exc:
+            detail = str(exc).strip() or type(exc).__name__
+            for path in available:
+                print(
+                    "DEMO_AUDIO_PRELOAD_FAILED: "
+                    f"{path.name} ({type(exc).__name__}: {detail})"
+                )
+            return
+        for path in available:
+            result = results.get(str(path.resolve()))
+            if result is not None and result.ready:
+                print(f"DEMO_AUDIO_PRELOAD_READY: {path.name}")
+                continue
+            reason = (
+                result.error
+                if result is not None and result.error
+                else "RuntimeError: preload returned no result"
+            )
+            attempts = result.attempts if result is not None else 0
+            print(
+                "DEMO_AUDIO_PRELOAD_FAILED: "
                 f"{path.name} (attempts={attempts}, reason={reason})"
             )
 
@@ -2399,8 +2498,15 @@ def main(argv: list[str] | None = None) -> int:
         reconnect_delay_seconds=settings.webrtc_reconnect_initial_seconds,
         reconnect_backoff_step_seconds=settings.webrtc_reconnect_step_seconds,
         reconnect_max_delay_seconds=settings.webrtc_reconnect_max_seconds,
+        reconnect_stable_reset_seconds=(
+            settings.webrtc_reconnect_stable_reset_seconds
+        ),
+        disconnect_grace_seconds=settings.webrtc_disconnect_grace_seconds,
         reconnect_on_multi_signal_stale=settings.webrtc_reconnect_on_stale,
         multi_signal_stale_grace_seconds=settings.webrtc_stale_grace_seconds,
+        enable_video_active_recovery=(
+            settings.webrtc_enable_video_active_recovery
+        ),
         enable_video=True,
         enable_sport_state=settings.webrtc_enable_sport_state,
         enable_uwb=settings.webrtc_enable_uwb,
@@ -2507,9 +2613,10 @@ def main(argv: list[str] | None = None) -> int:
         time.sleep(1.0)
         if not args.no_open_browser:
             webbrowser.open(f"http://127.0.0.1:{args.port}/")
+        console.preload_required_demo_presets()
         LOGGER.info(
             "RUNTIME_BASE_READY video=on companion=standby voice=standby "
-            "audiohub_preload=deferred"
+            "audiohub_preload=required_presets_ready_or_reported"
         )
         return console.run(auto_demo=args.auto_demo)
     except Exception as exc:

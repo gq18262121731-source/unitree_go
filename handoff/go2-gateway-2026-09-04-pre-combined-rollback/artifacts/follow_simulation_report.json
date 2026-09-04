@@ -1,0 +1,317 @@
+{
+  "mode": "software_only",
+  "hardware_access": false,
+  "model": {
+    "robot": "planar_unicycle",
+    "uwb_frequency_hz": 5.0,
+    "desired_person_position_in_robot_frame": {
+      "x": 1.5,
+      "y": 0.5
+    },
+    "controller_limits": {
+      "max_vx": 0.3,
+      "max_wz": 0.5
+    }
+  },
+  "scenario_count": 11,
+  "checks": {
+    "stationary_target_converges_within_0_12m": true,
+    "too_close_stops": true,
+    "uwb_dropout_stops": true,
+    "manual_takeover_stops": true
+  },
+  "findings": [
+    "The proportional controller has 0.771 m steady-state lag while the target walks continuously at 0.15 m/s."
+  ],
+  "results": [
+    {
+      "scenario": "stationary_front_3m",
+      "algorithm": "baseline_p",
+      "sample_count": 401,
+      "final_robot_pose": {
+        "x": 1.4121898100332462,
+        "y": -0.22986956018248358,
+        "yaw": -0.17315660576513026
+      },
+      "final_person_pose": {
+        "x": 3.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.024460958522961818,
+        "y": -1.1102230246251565e-16,
+        "norm": 0.024460958522961818
+      },
+      "minimum_true_distance": 1.6043631802247107,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_counts": {
+        "SAFE": 401
+      }
+    },
+    {
+      "scenario": "stationary_left_20deg",
+      "algorithm": "baseline_p",
+      "sample_count": 301,
+      "final_robot_pose": {
+        "x": 0.41507517527683063,
+        "y": 0.03682237062504505,
+        "yaw": 0.09855213933981206
+      },
+      "final_person_pose": {
+        "x": 1.8793852415718169,
+        "y": 0.6840402866513374,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.020886255133822917,
+        "y": 2.325961645510688e-11,
+        "norm": 0.020886255133822917
+      },
+      "minimum_true_distance": 1.6009668956846808,
+      "maximum_abs_vx": 0.07670737858700467,
+      "maximum_abs_wz": 0.14723222932106994,
+      "safety_counts": {
+        "SAFE": 301
+      }
+    },
+    {
+      "scenario": "stationary_right_20deg",
+      "algorithm": "baseline_p",
+      "sample_count": 301,
+      "final_robot_pose": {
+        "x": 0.35270385389187725,
+        "y": -0.2068393229940628,
+        "yaw": -0.620873934619982
+      },
+      "final_person_pose": {
+        "x": 1.8793852415718169,
+        "y": -0.6840402866513374,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.0193672431105949,
+        "y": -2.3371243829117816e-10,
+        "norm": 0.0193672431105949
+      },
+      "minimum_true_distance": 1.5995239351768942,
+      "maximum_abs_vx": 0.08967171823056193,
+      "maximum_abs_wz": 0.5,
+      "safety_counts": {
+        "SAFE": 301
+      }
+    },
+    {
+      "scenario": "moving_straight",
+      "algorithm": "baseline_p",
+      "sample_count": 401,
+      "final_robot_pose": {
+        "x": 3.706401557010111,
+        "y": -0.3910078567137959,
+        "yaw": -0.04958959504953999
+      },
+      "final_person_pose": {
+        "x": 6.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.7713969196563024,
+        "y": 0.004219193479798378,
+        "norm": 0.7714084581133732
+      },
+      "minimum_true_distance": 2.3266888407557977,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_counts": {
+        "SAFE": 401
+      }
+    },
+    {
+      "scenario": "moving_straight_noisy",
+      "algorithm": "baseline_p",
+      "sample_count": 401,
+      "final_robot_pose": {
+        "x": 3.705289813436684,
+        "y": -0.3908752145936421,
+        "yaw": -0.0599292951974534
+      },
+      "final_person_pose": {
+        "x": 6.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.7671798136604506,
+        "y": 0.02761156756807337,
+        "norm": 0.7676765367989633
+      },
+      "minimum_true_distance": 2.326632645616758,
+      "maximum_abs_vx": 0.29999201914554563,
+      "maximum_abs_wz": 0.38762133341512867,
+      "safety_counts": {
+        "SAFE": 401
+      }
+    },
+    {
+      "scenario": "moving_left_turn",
+      "algorithm": "baseline_p",
+      "sample_count": 401,
+      "final_robot_pose": {
+        "x": 2.9863084057689284,
+        "y": 0.06458700135419276,
+        "yaw": 0.6863549949780987
+      },
+      "final_person_pose": {
+        "x": 4.2,
+        "y": 1.7999999999999998,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.538633552789197,
+        "y": 0.07330515366433743,
+        "norm": 0.5435988868127535
+      },
+      "minimum_true_distance": 2.0468740117238626,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_counts": {
+        "SAFE": 401
+      }
+    },
+    {
+      "scenario": "equilibrium",
+      "algorithm": "baseline_p",
+      "sample_count": 61,
+      "final_robot_pose": {
+        "x": 0.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_person_pose": {
+        "x": 1.5,
+        "y": 0.5,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.0,
+        "y": 0.0,
+        "norm": 0.0
+      },
+      "minimum_true_distance": 1.5811388300841898,
+      "maximum_abs_vx": 0.0,
+      "maximum_abs_wz": 0.0,
+      "safety_counts": {
+        "SAFE": 61
+      }
+    },
+    {
+      "scenario": "too_close",
+      "algorithm": "baseline_p",
+      "sample_count": 61,
+      "final_robot_pose": {
+        "x": 0.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_person_pose": {
+        "x": 0.8,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": -0.7,
+        "y": -0.5,
+        "norm": 0.8602325267042626
+      },
+      "minimum_true_distance": 0.8,
+      "maximum_abs_vx": 0.0,
+      "maximum_abs_wz": 0.0,
+      "safety_counts": {
+        "STOP_DISTANCE_TOO_CLOSE": 61
+      }
+    },
+    {
+      "scenario": "uwb_dropout",
+      "algorithm": "baseline_p",
+      "sample_count": 101,
+      "final_robot_pose": {
+        "x": 0.7090214693566262,
+        "y": -0.11749235239868366,
+        "yaw": -0.22567116025566208
+      },
+      "final_person_pose": {
+        "x": 3.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.7065986627561212,
+        "y": 0.1271438608995118,
+        "norm": 0.7179465381023667
+      },
+      "minimum_true_distance": 2.2939893375386573,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_counts": {
+        "SAFE": 56,
+        "STOP_UWB_TIMEOUT": 45
+      }
+    },
+    {
+      "scenario": "manual_takeover",
+      "algorithm": "baseline_p",
+      "sample_count": 81,
+      "final_robot_pose": {
+        "x": 0.2710826765809842,
+        "y": -0.031116530725575922,
+        "yaw": -0.16379528079720826
+      },
+      "final_person_pose": {
+        "x": 3.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 1.1873181955818248,
+        "y": -0.024312169342496137,
+        "norm": 1.187567084057915
+      },
+      "minimum_true_distance": 2.7290947210642575,
+      "maximum_abs_vx": 0.3,
+      "maximum_abs_wz": 0.4,
+      "safety_counts": {
+        "SAFE": 20,
+        "STOP_CONTROL_NOT_FOLLOW": 61
+      }
+    },
+    {
+      "scenario": "abnormal_yaw_90deg",
+      "algorithm": "baseline_p",
+      "sample_count": 41,
+      "final_robot_pose": {
+        "x": -0.14628575447999165,
+        "y": -0.02373462517487514,
+        "yaw": 0.5000000000000002
+      },
+      "final_person_pose": {
+        "x": 0.0,
+        "y": 3.0,
+        "yaw": 0.0
+      },
+      "final_target_error": {
+        "x": 0.07803342845525996,
+        "y": 2.0834436522059008,
+        "norm": 2.0849044745200067
+      },
+      "minimum_true_distance": 3.0,
+      "maximum_abs_vx": 0.15,
+      "maximum_abs_wz": 0.5,
+      "safety_counts": {
+        "LIMITED_ABNORMAL_YAW": 40,
+        "SAFE": 1
+      }
+    }
+  ]
+}

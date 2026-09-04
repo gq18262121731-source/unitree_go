@@ -1,0 +1,97 @@
+{
+  "phase": "7.1-B",
+  "mode": "dry_run",
+  "verdict": "PASS_DRY_RUN",
+  "capture": "E:\\笨笨狗\\go2_dev\\go2-gateway\\artifacts\\phase7_1_uwb_powercycle_synced_20260822_141408.jsonl",
+  "calibration": {
+    "bearing_source": "orientation_est",
+    "bearing_unit": "radians",
+    "bearing_sign": 1,
+    "bearing_zero_offset_rad": 0.55,
+    "confirmed": true
+  },
+  "checks": {
+    "probe_result_present": true,
+    "dds_baseline_ok": true,
+    "uwb_writer_discovered": true,
+    "uwb_samples_received": true,
+    "samples_present": true,
+    "calibration_confirmed": true,
+    "all_samples_valid": true,
+    "dropout_produces_zero_motion": true,
+    "real_executor_remained_disabled": true,
+    "move_count_zero": true
+  },
+  "sample_count": 85,
+  "accepted_sample_count": 85,
+  "rejected_samples": [],
+  "maximum_receive_gap_seconds": 22.15700000000652,
+  "captured_dropout_count": 1,
+  "timeout_evidence": [
+    {
+      "source": "captured_receive_gap",
+      "gap_seconds": 22.15700000000652,
+      "timeout_at": 339593.546,
+      "zero_motion": true,
+      "decision_reason": "uwb_stale"
+    },
+    {
+      "source": "end_of_capture_timeout",
+      "gap_seconds": 2.0,
+      "timeout_at": 339620.718,
+      "zero_motion": true,
+      "decision_reason": "uwb_stale"
+    }
+  ],
+  "planner_state_counts": {
+    "FOLLOW_TOO_FAR": 85
+  },
+  "arbiter_authority_counts": {
+    "IDLE": 87
+  },
+  "executor_status_counts": {
+    "DISABLED": 87
+  },
+  "command_summary": {
+    "min_vx": 0.0,
+    "max_vx": 0.0,
+    "min_wz": 0.0,
+    "max_wz": 0.0,
+    "positive_vx_count": 0,
+    "zero_vx_count": 85,
+    "positive_wz_count": 0,
+    "negative_wz_count": 0
+  },
+  "control_direction_summary": {
+    "front": {
+      "count": 0
+    },
+    "left": {
+      "count": 85,
+      "mean_bearing_radians": 1.3993571449728555,
+      "mean_wz": 0.0,
+      "min_wz": 0.0,
+      "max_wz": 0.0
+    },
+    "right": {
+      "count": 0
+    }
+  },
+  "control_direction_gate": {
+    "applicable": false,
+    "checks": {
+      "front_wz_near_zero": false,
+      "left_wz_positive": false,
+      "right_wz_negative": false
+    },
+    "passed": false,
+    "front_wz_tolerance": 0.05
+  },
+  "phase7_1c_entry_ready": false,
+  "motion_calls": 0,
+  "notes": [
+    "LiDAR input is a synthetic CLEAR cloud for UWB replay only.",
+    "External risk feed is disabled only for this pre-integration dry-run.",
+    "This report does not satisfy Phase 7.1-C LiDAR physical calibration."
+  ]
+}

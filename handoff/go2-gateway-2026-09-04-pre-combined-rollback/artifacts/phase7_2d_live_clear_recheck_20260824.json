@@ -1,0 +1,135 @@
+{
+  "phase": "7.1-C",
+  "mode": "read_only_static_calibration",
+  "verdict": "PASS_POSITION",
+  "read_only": true,
+  "motion_calls": 0,
+  "network": {
+    "peer": "192.168.123.161",
+    "interface": "eth0",
+    "local_address": null,
+    "domain": 0
+  },
+  "topic": "rt/utlidar/cloud_base",
+  "position_label": "phase7_2d_live_clear_recheck",
+  "expected_distance": null,
+  "expected_level": "CLEAR",
+  "distance_tolerance": 0.15,
+  "lowstate_count": 534,
+  "cloud_count": 44,
+  "frequency_hz": 14.726597583828726,
+  "frames": {
+    "base_link": 44
+  },
+  "decode_errors": [],
+  "cloud_points": {
+    "min": 1367.0,
+    "median": 1579.5,
+    "max": 1846.0
+  },
+  "roi_points": {
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.0
+  },
+  "nearest_distance": {
+    "min": null,
+    "median": null,
+    "max": null
+  },
+  "roi_xyz_diagnostics": {
+    "count": 0,
+    "x": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "y": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "z": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "radial_distance": {
+      "min": null,
+      "median": null,
+      "max": null
+    }
+  },
+  "stop_zone_xyz_diagnostics": {
+    "count": 0,
+    "x": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "y": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "z": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "radial_distance": {
+      "min": null,
+      "median": null,
+      "max": null
+    }
+  },
+  "nearest_xyz_per_cloud": {
+    "count": 0,
+    "x": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "y": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "z": {
+      "min": null,
+      "median": null,
+      "max": null
+    },
+    "radial_distance": {
+      "min": null,
+      "median": null,
+      "max": null
+    }
+  },
+  "distance_error": null,
+  "level_counts": {
+    "STOP": 2,
+    "CLEAR": 42
+  },
+  "reason_counts": {
+    "clearance_confirmation_pending": 2,
+    "forward_roi_clear": 42
+  },
+  "stable_window_size": 20,
+  "stable_level": "CLEAR",
+  "guard_config": {
+    "stop_distance": 0.8,
+    "slow_distance": 1.4,
+    "roi_min_x": 0.1,
+    "roi_max_x": 2.0,
+    "roi_half_width": 0.45,
+    "roi_min_z": -0.25,
+    "roi_max_z": 0.65,
+    "minimum_obstacle_points": 3,
+    "clear_samples_required": 3,
+    "accepted_frames": [
+      "base_link",
+      "cloud_base"
+    ]
+  }
+}

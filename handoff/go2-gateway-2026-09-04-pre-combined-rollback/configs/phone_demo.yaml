@@ -1,0 +1,39 @@
+scripted_sequence:
+  name: phone_demo
+  steps:
+    - action: forward
+      distance_m: 0.8
+    - action: turn_clockwise
+      angle_deg: 90
+    - action: forward
+      distance_m: 1.6
+    - action: turn_clockwise
+      angle_deg: 105
+    - action: forward
+      distance_m: 1.3
+    - action: wait
+      seconds: 5
+    - action: backward
+      distance_m: 0.1
+    - action: move_right
+      distance_m: 1.5
+    - action: pose
+      roll_deg: -6
+      pitch_deg: 14
+      yaw_deg: 0
+      body_height_m: -0.08
+      duration_s: 1.5
+    - action: backward
+      distance_m: 0.1
+    - action: move_left
+      distance_m: 0.9
+    - action: pose
+      roll_deg: 6
+      pitch_deg: -14
+      yaw_deg: 0
+      body_height_m: 0.03
+      duration_s: 1.5
+    - action: move_right
+      distance_m: 0.7
+    - action: speak
+      text: "演示完成"

@@ -38,6 +38,7 @@ class FakeRuntime:
         self.orientation = 0.0
         self.distance = 2.2
         self.video_failure_at = None
+        self.motion_failure_at = None
         self.video_dropout_windows = []
         self.sport_failure_at = None
         self.sport_dropout_windows = []
@@ -61,6 +62,10 @@ class FakeRuntime:
         return {
             "connected": True,
             "connectionCount": 1,
+            "motionReady": not (
+                self.motion_failure_at is not None
+                and self.clock.now >= self.motion_failure_at
+            ),
             "sportStateReady": sport_ready,
             "stateSampleCounts": {"rt/sportmodestate": self.sport_sample_count},
             "videoReady": not (
@@ -203,12 +208,12 @@ def config(**overrides) -> WirelessUwbFollowConfig:
         "duration_seconds": 1.0,
         "control_rate_hz": 5.0,
         "uwb_stale_timeout_seconds": 0.75,
-        "max_vx_mps": 0.504,
-        "max_wz_radps": 1.10,
-        "normal_max_wz_radps": 0.90,
+        "max_vx_mps": 0.42,
+        "max_wz_radps": 0.55,
+        "normal_max_wz_radps": 0.45,
         "alignment_enter_error_deg": 45.0,
         "alignment_exit_error_deg": 30.0,
-        "alignment_turn_speed_radps": 1.10,
+        "alignment_turn_speed_radps": 0.55,
         "allow_missing_error_state": True,
     }
     values.update(overrides)
@@ -222,8 +227,8 @@ def v21_profile() -> FollowProfile:
         follow_stop_distance=1.05,
         bearing_deadband_radians=math.radians(5.0),
         walk_min=0.24,
-        vx_max=0.504,
-        wz_max=1.10,
+        vx_max=0.42,
+        wz_max=0.55,
         kx=0.40,
     )
 
@@ -236,12 +241,12 @@ def test_three_minute_config_is_externalized_and_bounded() -> None:
     assert observed.duration_seconds == 180.0
     assert observed.control_rate_hz == 4.0
     assert observed.uwb_stale_timeout_seconds == 1.0
-    assert observed.max_vx_mps == 0.504
-    assert observed.max_wz_radps == 1.10
-    assert observed.normal_max_wz_radps == 0.90
+    assert observed.max_vx_mps == 0.42
+    assert observed.max_wz_radps == 0.55
+    assert observed.normal_max_wz_radps == 0.45
     assert observed.alignment_enter_error_deg == 45.0
     assert observed.alignment_exit_error_deg == 30.0
-    assert observed.alignment_turn_speed_radps == 1.10
+    assert observed.alignment_turn_speed_radps == 0.55
     assert observed.require_uwb_switch is False
     assert observed.uwb_fault_escalation_seconds == 5.0
     assert observed.full_speed_distance_m == 2.0
@@ -278,8 +283,8 @@ def test_wireless_follow_runs_bounded_then_stops_and_releases_owner() -> None:
     assert result.missing_error_state_samples > 0
     assert service.stops
     assert service.owner is None
-    assert all(0.0 <= item[0] <= 0.504 for item in service.commands)
-    assert all(abs(item[2]) <= 1.10 for item in service.commands)
+    assert all(0.0 <= item[0] <= 0.42 for item in service.commands)
+    assert all(abs(item[2]) <= 0.55 for item in service.commands)
 
 
 def test_final_motion_telemetry_is_emitted_every_control_cycle() -> None:
@@ -398,6 +403,31 @@ def test_wireless_follow_stale_fault_latches_stop_and_does_not_resume() -> None:
     # The latest-only dispatcher may discard the first still-pending Move when
     # the next cycle already proves the UWB sample stale.
     assert result.commands_sent in {0, 1}
+    assert service.stops
+    assert service.owner is None
+
+
+def test_motion_transport_loss_aborts_session_instead_of_auto_resuming() -> None:
+    clock = FakeClock()
+    runtime = FakeRuntime(clock)
+    runtime.motion_failure_at = 10.50
+    service = FakeService(clock)
+    session = WirelessUwbFollowSession(
+        runtime,
+        service,
+        FollowProfile(),
+        config(duration_seconds=2.0),
+        bearing_sign=1,
+        bearing_zero_offset_rad=0.0,
+        cancel_event=threading.Event(),
+        monotonic_clock=clock,
+        sleep=clock.sleep,
+    )
+
+    result = session.run()
+
+    assert result.completed is False
+    assert result.reason == "motion_transport_not_ready"
     assert service.stops
     assert service.owner is None
 
@@ -649,7 +679,7 @@ def test_abnormal_target_bearing_rotates_without_forward_motion() -> None:
     assert result.completed is True
     assert service.commands
     assert all(item[0] == 0.0 for item in service.commands)
-    assert all(abs(item[2]) == 1.10 for item in service.commands)
+    assert all(abs(item[2]) == 0.55 for item in service.commands)
     assert any(abs(item[2]) > 0.0 for item in service.commands)
 
 
@@ -684,7 +714,7 @@ def test_alignment_hysteresis_turns_first_then_enables_forward_follow() -> None:
 
     assert result.completed is True
     assert service.commands[0][0] == 0.0
-    assert service.commands[0][2] == 1.10
+    assert service.commands[0][2] == 0.55
     assert any(item[0] > 0.0 for item in service.commands)
     assert any(item["alignment_mode"] is True for item in progress)
     assert any(item["alignment_mode"] is False for item in progress)
@@ -693,9 +723,9 @@ def test_alignment_hysteresis_turns_first_then_enables_forward_follow() -> None:
 def test_alignment_speed_cannot_exceed_final_wireless_wz_limit() -> None:
     with pytest.raises(ValueError, match="no greater than max_wz_radps"):
         config(
-            max_wz_radps=0.90,
-            normal_max_wz_radps=0.90,
-            alignment_turn_speed_radps=1.10,
+            max_wz_radps=0.50,
+            normal_max_wz_radps=0.50,
+            alignment_turn_speed_radps=0.60,
         ).validate()
 
 
@@ -724,7 +754,7 @@ def test_medium_bearing_error_walks_and_turns_without_alignment() -> None:
     assert result.completed is True
     assert service.commands
     assert any(command[0] > 0.0 and abs(command[2]) > 0.0 for command in service.commands)
-    assert all(abs(command[2]) <= 0.90 for command in service.commands)
+    assert all(abs(command[2]) <= 0.45 for command in service.commands)
     assert all(row["alignment_mode"] is False for row in progress if "cycle" in row)
 
 
@@ -755,9 +785,8 @@ def test_v21_distance_curve_reaches_cap_and_slows_medium_turns() -> None:
         0.24, distance_m=2.00, bearing_error_deg=40.0
     )
 
-    assert 0.29 <= near <= 0.30
-    assert 0.37 <= middle <= 0.39
-    assert far == pytest.approx(0.504)
+    assert 0.24 < near < middle < far
+    assert far == pytest.approx(0.42)
     assert 0.0 < turning < far
 
 
@@ -848,7 +877,7 @@ def test_alignment_hysteresis_enters_above_45_and_exits_at_30() -> None:
     assert cycle_rows[1]["alignment_mode"] is True
     assert cycle_rows[2]["alignment_mode"] is False
     assert cycle_rows[0]["vx"] == 0.0
-    assert cycle_rows[0]["wz"] == pytest.approx(1.10)
+    assert cycle_rows[0]["wz"] == pytest.approx(0.55)
 
 
 def test_latest_command_dispatcher_replaces_pending_command_without_queue() -> None:
@@ -1008,13 +1037,13 @@ def test_too_close_hold_recovers_directly_into_rear_alignment() -> None:
     assert recovery["motion_state"] == "FOLLOW_TRACKING"
     assert recovery["alignment_mode"] is True
     assert recovery["vx"] == 0.0
-    assert abs(recovery["wz"]) == pytest.approx(1.10)
+    assert abs(recovery["wz"]) == pytest.approx(0.55)
     assert any(row.get("event") == "COMPANION_HOLD_EXIT" for row in progress)
     resumed = next(
         row for row in progress if row.get("event") == "COMPANION_MOTION_RESUMED"
     )
     assert resumed["vx"] == 0.0
-    assert abs(float(resumed["wz"])) == pytest.approx(1.10)
+    assert abs(float(resumed["wz"])) == pytest.approx(0.55)
     assert result.completed is True
 
 

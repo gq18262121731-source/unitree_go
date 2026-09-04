@@ -4,16 +4,16 @@ wireless_uwb_follow:
   uwb_stale_timeout_seconds: 1.0
 
   # Companion V2 keeps walking turns gentler than in-place alignment.
-  max_vx_mps: 0.504
-  max_wz_radps: 1.10
-  normal_max_wz_radps: 0.90
+  max_vx_mps: 0.42
+  max_wz_radps: 0.55
+  normal_max_wz_radps: 0.45
 
   # Enter alignment only for a large error; hysteresis prevents mode chatter.
   alignment_enter_error_deg: 45
   alignment_exit_error_deg: 30
-  alignment_turn_speed_radps: 1.10
+  alignment_turn_speed_radps: 0.55
 
-  # Reach the 0.504 m/s cap at 2.0 m without increasing the 4 Hz RPC rate.
+  # Reach the 0.42 m/s cap at 2.0 m without increasing the 4 Hz RPC rate.
   full_speed_distance_m: 2.0
   distance_speed_curve_exponent: 1.4
   turn_slowdown_start_error_deg: 30

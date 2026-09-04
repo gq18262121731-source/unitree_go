@@ -1,0 +1,113 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-flash",
+  "voice": "Cherry",
+  "speed": 1.0,
+  "files": [
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\WAKE_READY.wav",
+      "voice": "Cherry",
+      "text": "我在，请说。",
+      "bytes": 73004,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\START_ACK.wav",
+      "voice": "Cherry",
+      "text": "好的，李四。",
+      "bytes": 61484,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\START_DYNAMIC_FALLBACK.wav",
+      "voice": "Cherry",
+      "text": "天气信息已经获取，我来陪您出去走走。",
+      "bytes": 169004,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\START_COMPANION.wav",
+      "voice": "Cherry",
+      "text": "伴随模式已启动。",
+      "bytes": 76844,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\STOP_COMPANION.wav",
+      "voice": "Cherry",
+      "text": "伴随已停止。",
+      "bytes": 57644,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\RESUME_COMPANION.wav",
+      "voice": "Cherry",
+      "text": "正在恢复伴随。",
+      "bytes": 88364,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\REQUEST_HELP.wav",
+      "voice": "Cherry",
+      "text": "已收到您的求助。",
+      "bytes": 69164,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\CALL_FAMILY.wav",
+      "voice": "Cherry",
+      "text": "已为您联系家人。",
+      "bytes": 76844,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\I_AM_OK.wav",
+      "voice": "Cherry",
+      "text": "好的，我会继续在这里陪着您。",
+      "bytes": 115244,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\START_REJECTED.wav",
+      "voice": "Cherry",
+      "text": "暂时无法启动伴随，请检查设备状态。",
+      "bytes": 165164,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\RESUME_REJECTED.wav",
+      "voice": "Cherry",
+      "text": "当前状态不允许恢复伴随。",
+      "bytes": 111404,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\CONTROL_REJECTED.wav",
+      "voice": "Cherry",
+      "text": "当前状态不允许执行这个操作。",
+      "bytes": 126764,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\VOICE_CHECK.wav",
+      "voice": "Cherry",
+      "text": "检测到异常，请问您现在是否需要帮助？",
+      "bytes": 169004,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\VOICE_RECHECK.wav",
+      "voice": "Cherry",
+      "text": "我再确认一次，您现在是否需要帮助？",
+      "bytes": 157484,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\NO_RESPONSE_ESCALATED.wav",
+      "voice": "Cherry",
+      "text": "暂未收到您的有效回应，已为您联系家属和社区工作人员，请保持原位等待帮助。",
+      "bytes": 372524,
+      "provider": "dashscope/qwen3-tts-flash"
+    }
+  ]
+}

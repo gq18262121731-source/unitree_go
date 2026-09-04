@@ -1,0 +1,38 @@
+{
+  "transport": "WebRTCDataChannel",
+  "connectionMode": "LocalSTA",
+  "robotIp": "192.168.8.252",
+  "stage": "stop",
+  "videoEnabled": false,
+  "audioEnabled": false,
+  "connected": true,
+  "sportStateReceived": true,
+  "motionCommandsSent": 4,
+  "completed": true,
+  "preStop": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "zeroVelocity": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "postZeroStop": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "stateSampleCounts": {
+    "rt/lf/sportmodestate": 1
+  },
+  "latestStateFresh": true,
+  "finalStopAttempted": true,
+  "finalStop": {
+    "statusCode": 0,
+    "acknowledged": true
+  },
+  "physicalObservation": {
+    "noMovementOrTwist": true,
+    "normalPostureAndGait": true,
+    "remoteImmediateTakeover": true
+  }
+}

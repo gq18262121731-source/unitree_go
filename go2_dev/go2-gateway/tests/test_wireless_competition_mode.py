@@ -19,6 +19,8 @@ from tools.go2_wireless_runtime import (
     CONFIRM_POSE_AUDIO,
     CONFIRM_WRITER,
     RuntimeConsole,
+    WALK_FOLLOW_PRESET,
+    WALK_FOLLOW_TEXT,
     _confirm_startup,
     _wait_for_video,
     discover_lan_ipv4,
@@ -68,6 +70,7 @@ def test_voice_control_preload_uses_one_batch_and_keeps_per_preset_status(
 
     filenames = {
         *runtime_tool.VOICE_CONTROL_PRESETS.values(),
+        runtime_tool.WALK_FOLLOW_PRESET,
         "START_REJECTED.wav",
         "RESUME_REJECTED.wav",
         "CONTROL_REJECTED.wav",
@@ -116,6 +119,136 @@ def test_voice_control_preload_uses_one_batch_and_keeps_per_preset_status(
         "(attempts=2, reason=TimeoutError: AudioHub upload exceeded 53.0s)"
         in output
     )
+
+
+def test_required_demo_preload_batches_start_and_walk_follow(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    filenames = ("START_COMPANION.wav", runtime_tool.WALK_FOLLOW_PRESET)
+    for filename in filenames:
+        (tmp_path / filename).write_bytes(b"RIFF" + b"\0" * 40)
+
+    class Runtime:
+        def __init__(self) -> None:
+            self.calls = []
+
+        def preload_audio_files(self, paths, *, retry_attempts):
+            observed = tuple(Path(path) for path in paths)
+            self.calls.append((observed, retry_attempts))
+            return {
+                str(path.resolve()): SimpleNamespace(
+                    ready=True,
+                    attempts=0,
+                    error=None,
+                )
+                for path in observed
+            }
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+
+    console.preload_required_demo_presets()
+
+    assert len(runtime.calls) == 1
+    assert runtime.calls[0][1] == 2
+    assert {path.name for path in runtime.calls[0][0]} == set(filenames)
+    output = capsys.readouterr().out
+    assert "DEMO_AUDIO_PRELOAD_READY: START_COMPANION.wav" in output
+    assert "DEMO_AUDIO_PRELOAD_READY: WALK_FOLLOW.wav" in output
+
+
+def test_walk_follow_plays_fixed_preset_then_enters_existing_manual(
+    tmp_path, monkeypatch
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    preset = tmp_path / WALK_FOLLOW_PRESET
+    preset.write_bytes(b"RIFF" + b"\0" * 40)
+    events: list[object] = []
+
+    class Runtime:
+        def play_audio_file(self, path, *, timeout_seconds):
+            events.append(("play", Path(path).name, timeout_seconds))
+
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    monkeypatch.setattr(console, "_wav_duration_seconds", lambda _path: 1.25)
+    monkeypatch.setattr(runtime_tool.time, "sleep", lambda value: events.append(("wait", value)))
+    monkeypatch.setattr(console, "_manual_console", lambda: events.append("manual"))
+
+    console._walk_follow()
+
+    assert WALK_FOLLOW_TEXT == (
+        "您当前心率为76次每分钟，血氧为98%，状态正常。"
+        "伴随模式已启动，请注意出行安全。"
+    )
+    assert events == [
+        ("play", WALK_FOLLOW_PRESET, 5.0),
+        ("wait", 1.25),
+        "manual",
+    ]
+
+
+def test_walk_follow_voice_failure_still_enters_manual(
+    tmp_path, monkeypatch, caplog
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    preset = tmp_path / WALK_FOLLOW_PRESET
+    preset.write_bytes(b"RIFF" + b"\0" * 40)
+    entered: list[bool] = []
+
+    class Runtime:
+        def play_audio_file(self, _path, *, timeout_seconds):
+            raise RuntimeError("speaker unavailable")
+
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    monkeypatch.setattr(console, "_wav_duration_seconds", lambda _path: 1.0)
+    monkeypatch.setattr(console, "_manual_console", lambda: entered.append(True))
+
+    with caplog.at_level("WARNING"):
+        console._walk_follow()
+
+    assert entered == [True]
+    assert "WALK_FOLLOW voice playback failed" in caplog.text
+
+
+def test_start_announcement_uses_existing_preset_and_waits_for_playback(
+    tmp_path, monkeypatch
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    preset = tmp_path / "START_COMPANION.wav"
+    preset.write_bytes(b"RIFF" + b"\0" * 40)
+    events: list[object] = []
+
+    class Runtime:
+        def play_audio_file(self, path, *, timeout_seconds):
+            events.append(("play", Path(path).name, timeout_seconds))
+
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    monkeypatch.setattr(console, "_wav_duration_seconds", lambda _path: 1.75)
+    monkeypatch.setattr(
+        runtime_tool.time,
+        "sleep",
+        lambda value: events.append(("wait", value)),
+    )
+
+    console._play_start_announcement()
+
+    assert events == [
+        ("play", "START_COMPANION.wav", 3.0),
+        ("wait", 1.75),
+    ]
 
 
 def test_auto_demo_requires_competition_confirmation(tmp_path, monkeypatch) -> None:
@@ -171,10 +304,16 @@ def _start_command_console(*, manual_confirm_start: bool):
     console.lan_ip = "192.168.8.254"
     console._motion_thread = None
     console.manual_confirm_start = manual_confirm_start
-    console.start_companion = lambda: {
-        "state": "FOLLOWING",
-        "runtime_active": True,
-    }
+    def start_companion(*, before_start=None):
+        if before_start is not None:
+            before_start()
+        return {
+            "state": "FOLLOWING",
+            "runtime_active": True,
+        }
+
+    console.start_companion = start_companion
+    console._play_start_announcement = lambda: None
     console.stop_motion = lambda: None
     console.shutdown_calls = shutdown_calls
     return console
@@ -200,6 +339,26 @@ def test_console_start_defaults_to_lifecycle_without_confirmation(
     assert "WIRELESS_COMPANION_START_APPROVED" not in output
     assert "START accepted -> FOLLOWING" in output
     assert console.shutdown_calls == [True]
+
+
+def test_console_start_plays_announcement_before_starting_follow(
+    monkeypatch,
+) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    events: list[str] = []
+    console._play_start_announcement = lambda: events.append("announcement")
+    def start_companion(*, before_start=None):
+        if before_start is not None:
+            before_start()
+        events.append("start")
+        return {"state": "FOLLOWING", "runtime_active": True}
+
+    console.start_companion = start_companion
+    commands = iter(("START", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert events == ["announcement", "start"]
 
 
 def test_console_start_debug_switch_restores_single_confirmation(
@@ -230,7 +389,7 @@ def test_console_start_reports_lifecycle_rejection_reason_without_prompt(
 ) -> None:
     console = _start_command_console(manual_confirm_start=False)
 
-    def reject_start():
+    def reject_start(*, before_start=None):
         from app.webrtc.video_bridge import WirelessCompanionControlError
 
         raise WirelessCompanionControlError(
@@ -247,6 +406,20 @@ def test_console_start_reports_lifecycle_rejection_reason_without_prompt(
         "START_REJECTED:UWB_NOT_READY:uwb_not_fresh"
         in capsys.readouterr().out
     )
+
+
+def test_console_walk_follow_command_dispatches_without_changing_manual(
+    monkeypatch,
+) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    calls: list[str] = []
+    console._walk_follow = lambda: calls.append("walk_follow")
+    commands = iter(("WALK_FOLLOW", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert calls == ["walk_follow"]
+    assert console.shutdown_calls == [True]
 
 
 class FakeRuntime:
@@ -789,7 +962,7 @@ def test_manual_key_preempts_to_single_writer_and_release_stays_idle() -> None:
 
     assert manual["companion"]["state"] == "MANUAL_CONTROL"
     assert manual["companion"]["motion"]["authority"] == "MANUAL"
-    assert service.refreshes == [(0.49, 0.0, 0.0, "wireless_manual")]
+    assert service.refreshes == [(0.35, 0.0, 0.0, "wireless_manual")]
     assert released["state"] == "IDLE"
     assert released["runtime_active"] is False
 
@@ -820,7 +993,7 @@ def test_manual_preempts_following_space_stops_and_exit_never_auto_resumes() -> 
     released = console.release_manual()
 
     assert manual["companion"]["state"] == "MANUAL_CONTROL"
-    assert manual["command"]["wz"] == 1.32
+    assert manual["command"]["wz"] == 0.55
     assert stopped["state"] == "MANUAL_CONTROL"
     assert any("manual_space" in source for source in service.stops)
     assert released["state"] == "IDLE"
