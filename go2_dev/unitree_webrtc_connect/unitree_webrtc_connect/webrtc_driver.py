@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import json
+import time
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceServer, RTCConfiguration
 from aiortc.contrib.media import MediaPlayer
 from aiortc.mediastreams import MediaStreamError
@@ -50,11 +51,78 @@ class UnitreeWebRTCConnection:
         self.aes_128_key = aes_128_key
         self.region = region
         self.device_type = device_type
+        # Populated by the owning runtime when available.  These diagnostics
+        # deliberately record timings and stage names only; SDP secrets remain
+        # the responsibility of the caller and are never emitted here.
+        self.diagnostic_generation = None
+        self.connection_trace = {
+            "current_stage": None,
+            "active_stages": [],
+            "stage_durations_ms": {},
+            "total_ms": None,
+            "error": None,
+        }
+        self._diagnostic_event_stage_started = {}
         self.token = (
             fetch_token(username, password, region=region, device_type=device_type)
             if username and password
             else ""
         )
+
+    def _trace_stage_start(self, stage):
+        active_stages = self.connection_trace.setdefault("active_stages", [])
+        if stage not in active_stages:
+            active_stages.append(stage)
+        self.connection_trace["current_stage"] = stage
+        logging.info(
+            "WEBRTC_CONNECT_STAGE_START generation=%s stage=%s",
+            self.diagnostic_generation,
+            stage,
+        )
+        return time.monotonic()
+
+    def _trace_stage_done(self, stage, started):
+        duration_ms = max(0.0, (time.monotonic() - started) * 1000.0)
+        self.connection_trace["stage_durations_ms"][stage] = duration_ms
+        active_stages = self.connection_trace.setdefault("active_stages", [])
+        if stage in active_stages:
+            active_stages.remove(stage)
+        self.connection_trace["current_stage"] = (
+            active_stages[-1] if active_stages else None
+        )
+        logging.info(
+            "WEBRTC_CONNECT_STAGE_DONE generation=%s stage=%s duration_ms=%.3f",
+            self.diagnostic_generation,
+            stage,
+            duration_ms,
+        )
+
+    def _trace_stage_failed(self, stage, started, exc):
+        duration_ms = max(0.0, (time.monotonic() - started) * 1000.0)
+        self.connection_trace["stage_durations_ms"][stage] = duration_ms
+        active_stages = self.connection_trace.setdefault("active_stages", [])
+        if stage in active_stages:
+            active_stages.remove(stage)
+        self.connection_trace["current_stage"] = stage
+        self.connection_trace["error"] = f"{type(exc).__name__}: {exc}"
+        logging.warning(
+            "WEBRTC_CONNECT_STAGE_FAILED generation=%s stage=%s "
+            "duration_ms=%.3f error=%s",
+            self.diagnostic_generation,
+            stage,
+            duration_ms,
+            type(exc).__name__,
+        )
+
+    async def _trace_async_stage(self, stage, awaitable):
+        started = self._trace_stage_start(stage)
+        try:
+            result = await awaitable
+        except BaseException as exc:
+            self._trace_stage_failed(stage, started, exc)
+            raise
+        self._trace_stage_done(stage, started)
+        return result
 
     async def connect(self):
         print_status("WebRTC connection", "🟡 started")
@@ -131,14 +199,23 @@ class UnitreeWebRTCConnection:
         return configuration
 
     async def init_webrtc(self, turn_server_info=None, ip=None):
+        total_started = time.monotonic()
+        self.connection_trace = {
+            "current_stage": None,
+            "active_stages": [],
+            "stage_durations_ms": {},
+            "total_ms": None,
+            "error": None,
+        }
+        self._diagnostic_event_stage_started = {}
+        peer_started = self._trace_stage_start("peer_create")
         configuration = self.create_webrtc_configuration(turn_server_info)
         self.pc = RTCPeerConnection(configuration)
-
-
         self.datachannel = WebRTCDataChannel(self, self.pc)
 
         self.audio = WebRTCAudioChannel(self.pc, self.datachannel)
         self.video = WebRTCVideoChannel(self.pc, self.datachannel)
+        self._trace_stage_done("peer_create", peer_started)
 
         @self.pc.on("icegatheringstatechange")
         async def on_ice_gathering_state_change():
@@ -155,10 +232,28 @@ class UnitreeWebRTCConnection:
         async def on_ice_connection_state_change():
             state = self.pc.iceConnectionState
             if state == "checking":
+                if "ice_check" not in self._diagnostic_event_stage_started:
+                    self._diagnostic_event_stage_started["ice_check"] = (
+                        self._trace_stage_start("ice_check")
+                    )
                 print_status("ICE Connection State", "🔵 checking")
             elif state == "completed":
+                ice_started = self._diagnostic_event_stage_started.pop(
+                    "ice_check", None
+                )
+                if ice_started is not None:
+                    self._trace_stage_done("ice_check", ice_started)
                 print_status("ICE Connection State", "🟢 completed")
             elif state == "failed":
+                ice_started = self._diagnostic_event_stage_started.pop(
+                    "ice_check", None
+                )
+                if ice_started is not None:
+                    self._trace_stage_failed(
+                        "ice_check",
+                        ice_started,
+                        RuntimeError("ICE connection failed"),
+                    )
                 print_status("ICE Connection State", "🔴 failed")
             elif state == "closed":
                 print_status("ICE Connection State", "⚫ closed")
@@ -212,8 +307,10 @@ class UnitreeWebRTCConnection:
                 logging.debug("Track %s ended", track.kind)
 
         logging.info("Creating offer...")
-        offer = await self.pc.createOffer()
-        await self.pc.setLocalDescription(offer)
+        offer = await self._trace_async_stage("create_offer", self.pc.createOffer())
+        await self._trace_async_stage(
+            "set_local_description", self.pc.setLocalDescription(offer)
+        )
         # aiortc 1.15 schedules an internal __connect task from
         # setLocalDescription().  Let that task observe the still-empty remote
         # ICE map and finish before setRemoteDescription starts populating it.
@@ -222,9 +319,15 @@ class UnitreeWebRTCConnection:
         await asyncio.sleep(0)
 
         if self.connectionMethod == WebRTCConnectionMethod.Remote:
-            peer_answer_json = await self.get_answer_from_remote_peer(self.pc, turn_server_info)
+            peer_answer_json = await self._trace_async_stage(
+                "signaling_http",
+                self.get_answer_from_remote_peer(self.pc, turn_server_info),
+            )
         elif self.connectionMethod == WebRTCConnectionMethod.LocalSTA or self.connectionMethod == WebRTCConnectionMethod.LocalAP:
-            peer_answer_json = await self.get_answer_from_local_peer(self.pc, self.ip)
+            peer_answer_json = await self._trace_async_stage(
+                "signaling_http",
+                self.get_answer_from_local_peer(self.pc, self.ip),
+            )
 
         if peer_answer_json is None:
             raise NoSdpAnswerError()
@@ -234,9 +337,21 @@ class UnitreeWebRTCConnection:
             raise RobotBusyError()
 
         remote_sdp = RTCSessionDescription(sdp=peer_answer['sdp'], type=peer_answer['type']) 
-        await self.pc.setRemoteDescription(remote_sdp)
+        await self._trace_async_stage(
+            "set_remote_description", self.pc.setRemoteDescription(remote_sdp)
+        )
    
-        await self.datachannel.wait_datachannel_open()
+        await self._trace_async_stage(
+            "datachannel_open", self.datachannel.wait_datachannel_open()
+        )
+        self.connection_trace["total_ms"] = max(
+            0.0, (time.monotonic() - total_started) * 1000.0
+        )
+        logging.info(
+            "WEBRTC_CONNECT_TOTAL generation=%s duration_ms=%.3f",
+            self.diagnostic_generation,
+            self.connection_trace["total_ms"],
+        )
 
     
     async def get_answer_from_remote_peer(self, pc, turn_server_info):

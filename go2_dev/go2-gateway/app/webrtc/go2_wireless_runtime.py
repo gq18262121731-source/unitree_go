@@ -157,6 +157,78 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat()
 
 
+def _sdp_identity(description: Any) -> dict[str, object]:
+    """Return only safe, compact ICE/session identity fields from an SDP."""
+
+    sdp = getattr(description, "sdp", None)
+    if not isinstance(sdp, str):
+        return {
+            "iceUfrag": None,
+            "icePwdHash": None,
+            "fingerprint": None,
+            "setup": None,
+            "candidateCount": 0,
+        }
+    values: dict[str, str | None] = {
+        "iceUfrag": None,
+        "icePwd": None,
+        "fingerprint": None,
+        "setup": None,
+    }
+    candidate_count = 0
+    for raw_line in sdp.splitlines():
+        line = raw_line.strip()
+        if line.startswith("a=candidate:"):
+            candidate_count += 1
+        elif values["iceUfrag"] is None and line.startswith("a=ice-ufrag:"):
+            values["iceUfrag"] = line.partition(":")[2]
+        elif values["icePwd"] is None and line.startswith("a=ice-pwd:"):
+            values["icePwd"] = line.partition(":")[2]
+        elif values["fingerprint"] is None and line.startswith("a=fingerprint:"):
+            values["fingerprint"] = line.partition(":")[2]
+        elif values["setup"] is None and line.startswith("a=setup:"):
+            values["setup"] = line.partition(":")[2]
+    ice_pwd = values.pop("icePwd")
+    return {
+        "iceUfrag": values["iceUfrag"],
+        "icePwdHash": (
+            hashlib.sha256(ice_pwd.encode("utf-8")).hexdigest()[:8]
+            if ice_pwd
+            else None
+        ),
+        "fingerprint": values["fingerprint"],
+        "setup": values["setup"],
+        "candidateCount": candidate_count,
+    }
+
+
+def _selected_candidate_pairs(pc: Any) -> list[dict[str, object]]:
+    """Read aiortc/aioice's nominated pairs without changing ICE behavior."""
+
+    sctp = getattr(pc, "sctp", None)
+    dtls_transport = getattr(sctp, "transport", None)
+    ice_transport = getattr(dtls_transport, "transport", None)
+    ice_connection = getattr(ice_transport, "_connection", None)
+    nominated = getattr(ice_connection, "_nominated", None)
+    if not isinstance(nominated, dict):
+        return []
+    pairs: list[dict[str, object]] = []
+    for component, pair in sorted(nominated.items(), key=lambda item: str(item[0])):
+        local_candidate = getattr(pair, "local_candidate", None)
+        remote_candidate = getattr(pair, "remote_candidate", None)
+        pairs.append(
+            {
+                "component": component,
+                "local": list(getattr(pair, "local_addr", ())) or None,
+                "remote": list(getattr(pair, "remote_addr", ())) or None,
+                "localType": getattr(local_candidate, "type", None),
+                "remoteType": getattr(remote_candidate, "type", None),
+                "protocol": getattr(local_candidate, "transport", None),
+            }
+        )
+    return pairs
+
+
 @dataclass(frozen=True)
 class LatestVideoFrame:
     jpeg: bytes
@@ -396,6 +468,12 @@ class Go2WirelessRuntime:
         self._reconnect_failure_streak = 0
         self._last_reconnect_delay_seconds: float | None = None
         self._next_reconnect_delay_seconds: float | None = None
+        self._last_peer_closed_at: str | None = None
+        self._last_peer_closed_monotonic: float | None = None
+        self._last_peer_close_duration_ms: float | None = None
+        self._last_connect_trace: dict[str, Any] | None = None
+        self._recent_connect_traces: deque[dict[str, Any]] = deque(maxlen=20)
+        self._connect_trace_started_monotonic: float | None = None
         self._transport_disconnected_since: float | None = None
         self._transport_disconnect_reason: str | None = None
         self._transport_grace_recovery_in_progress = False
@@ -1316,6 +1394,14 @@ class Go2WirelessRuntime:
                 "reconnectStableResetSeconds": (
                     self.reconnect_stable_reset_seconds
                 ),
+                "connectionDiagnostics": {
+                    "lastPeerClosedAt": self._last_peer_closed_at,
+                    "lastPeerCloseDurationMs": self._last_peer_close_duration_ms,
+                    "lastConnectTrace": deepcopy(self._last_connect_trace),
+                    "recentConnectTraces": deepcopy(
+                        list(self._recent_connect_traces)
+                    ),
+                },
                 "transportDisconnectGrace": {
                     "active": self._transport_disconnected_since is not None,
                     "reason": self._transport_disconnect_reason,
@@ -1630,6 +1716,7 @@ class Go2WirelessRuntime:
                 except asyncio.CancelledError:
                     raise
                 except Exception as exc:
+                    self._mark_connect_trace_failed(exc)
                     await self._cleanup_connection()
                     if initial_connection:
                         self._initial_connection_error = exc
@@ -1695,6 +1782,93 @@ class Go2WirelessRuntime:
             self.reconnect_delay_seconds
             + ((2**exponent) - 1) * self.reconnect_backoff_step_seconds,
         )
+
+    def _mark_connect_trace_failed(self, exc: Exception) -> None:
+        with self._lock:
+            trace = self._last_connect_trace
+            generation = self._connection_generation
+            if trace is None or trace.get("generation") != generation:
+                return
+            if trace.get("result") == "failed":
+                return
+            trace["result"] = "failed"
+            trace["error"] = type(exc).__name__
+            if self._connect_trace_started_monotonic is not None:
+                trace["elapsedMs"] = max(
+                    0.0,
+                    (
+                        time.monotonic()
+                        - self._connect_trace_started_monotonic
+                    )
+                    * 1000.0,
+                )
+            connection = self._connection
+            trace["sdk"] = deepcopy(
+                getattr(connection, "connection_trace", None)
+            )
+            failed_trace = deepcopy(trace)
+        failed_trace = self._record_connect_trace(failed_trace)
+        LOGGER.warning(
+            "WEBRTC_CONNECT_TRACE_FAILED %s",
+            json.dumps(failed_trace, ensure_ascii=True, separators=(",", ":")),
+        )
+
+    def _record_connect_trace(
+        self, trace: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Store a sanitized per-generation trace and flag credential reuse."""
+
+        recorded = deepcopy(trace)
+        generation = recorded.get("generation")
+        with self._lock:
+            previous = next(
+                (
+                    item
+                    for item in reversed(self._recent_connect_traces)
+                    if item.get("generation") != generation
+                ),
+                None,
+            )
+            if previous is not None:
+                for prefix, key in (
+                    ("local", "localSdp"),
+                    ("remote", "remoteSdp"),
+                ):
+                    current_identity = recorded.get(key) or {}
+                    previous_identity = previous.get(key) or {}
+                    current_ufrag = current_identity.get("iceUfrag")
+                    current_pwd_hash = current_identity.get("icePwdHash")
+                    comparable = bool(
+                        current_ufrag
+                        and current_pwd_hash
+                        and previous_identity.get("iceUfrag")
+                        and previous_identity.get("icePwdHash")
+                    )
+                    reused = bool(
+                        comparable
+                        and current_ufrag == previous_identity.get("iceUfrag")
+                        and current_pwd_hash
+                        == previous_identity.get("icePwdHash")
+                    )
+                    recorded[f"{prefix}IceCredentialsReused"] = (
+                        reused if comparable else None
+                    )
+            else:
+                recorded["localIceCredentialsReused"] = None
+                recorded["remoteIceCredentialsReused"] = None
+
+            traces = list(self._recent_connect_traces)
+            replaced = False
+            for index in range(len(traces) - 1, -1, -1):
+                if traces[index].get("generation") == generation:
+                    traces[index] = deepcopy(recorded)
+                    replaced = True
+                    break
+            if not replaced:
+                traces.append(deepcopy(recorded))
+            self._recent_connect_traces = deque(traces[-20:], maxlen=20)
+            self._last_connect_trace = deepcopy(recorded)
+        return deepcopy(recorded)
 
     async def _activate_companion_inputs_async(
         self, *, enable_multiple_state: bool
@@ -1849,12 +2023,28 @@ class Go2WirelessRuntime:
                 self._audio_channel_available = True
 
     async def _connect_once(self) -> None:
+        connect_trace_started = time.monotonic()
+        with self._lock:
+            last_peer_closed_monotonic = self._last_peer_closed_monotonic
+            self._connect_trace_started_monotonic = connect_trace_started
+        time_since_old_peer_closed_ms = (
+            None
+            if last_peer_closed_monotonic is None
+            else max(
+                0.0,
+                (connect_trace_started - last_peer_closed_monotonic) * 1000.0,
+            )
+        )
         connection, rtc_topic, sport_cmd = self._connection_factory(
             self.robot_ip, self.aes_key
         )
         with self._lock:
             self._connection_generation += 1
             generation = self._connection_generation
+            try:
+                setattr(connection, "diagnostic_generation", generation)
+            except Exception:
+                pass
             self._connection = connection
             self._rtc_topic = dict(rtc_topic)
             self._sport_cmd = dict(sport_cmd)
@@ -1906,9 +2096,47 @@ class Go2WirelessRuntime:
         if self._connection_lost_event is not None:
             self._connection_lost_event.clear()
 
-        await asyncio.wait_for(
-            connection.connect(), timeout=self.connect_timeout_seconds
+        LOGGER.info(
+            "WEBRTC_CONNECT_TRACE_START generation=%d "
+            "time_since_old_peer_closed_ms=%s",
+            generation,
+            "none"
+            if time_since_old_peer_closed_ms is None
+            else f"{time_since_old_peer_closed_ms:.3f}",
         )
+        try:
+            await asyncio.wait_for(
+                connection.connect(), timeout=self.connect_timeout_seconds
+            )
+        except BaseException as exc:
+            sdk_trace = deepcopy(getattr(connection, "connection_trace", None))
+            pc = getattr(connection, "pc", None)
+            failed_trace = {
+                "processId": os.getpid(),
+                "generation": generation,
+                "peerId": None if pc is None else f"0x{id(pc):x}",
+                "result": "failed",
+                "error": type(exc).__name__,
+                "elapsedMs": max(
+                    0.0, (time.monotonic() - connect_trace_started) * 1000.0
+                ),
+                "timeSinceOldPeerClosedMs": time_since_old_peer_closed_ms,
+                "sdk": sdk_trace,
+                "localSdp": _sdp_identity(
+                    getattr(pc, "localDescription", None)
+                ),
+                "remoteSdp": _sdp_identity(
+                    getattr(pc, "remoteDescription", None)
+                ),
+                "selectedPairs": _selected_candidate_pairs(pc),
+            }
+            failed_trace = self._record_connect_trace(failed_trace)
+            LOGGER.warning(
+                "WEBRTC_CONNECT_TRACE_FAILED %s",
+                json.dumps(failed_trace, ensure_ascii=True, separators=(",", ":")),
+            )
+            raise
+        transport_connected_monotonic = time.monotonic()
         self._attach_connection_listeners(connection)
         peer_state, ice_state = self._read_transport_states(connection)
         if peer_state in {"closed", "failed", "disconnected"}:
@@ -1917,6 +2145,32 @@ class Go2WirelessRuntime:
             raise RuntimeError(f"ICE connection became {ice_state} during connect")
         datachannel = getattr(connection, "datachannel", None)
         data_ready = bool(getattr(datachannel, "data_channel_opened", True))
+        pc = getattr(connection, "pc", None)
+        completed_trace = {
+            "processId": os.getpid(),
+            "generation": generation,
+            "peerId": None if pc is None else f"0x{id(pc):x}",
+            "result": "transport_connected",
+            "error": None,
+            "elapsedMs": max(
+                0.0,
+                (transport_connected_monotonic - connect_trace_started) * 1000.0,
+            ),
+            "transportConnectMs": max(
+                0.0,
+                (transport_connected_monotonic - connect_trace_started) * 1000.0,
+            ),
+            "timeSinceOldPeerClosedMs": time_since_old_peer_closed_ms,
+            "sdk": deepcopy(getattr(connection, "connection_trace", None)),
+            "localSdp": _sdp_identity(getattr(pc, "localDescription", None)),
+            "remoteSdp": _sdp_identity(getattr(pc, "remoteDescription", None)),
+            "selectedPairs": _selected_candidate_pairs(pc),
+        }
+        completed_trace = self._record_connect_trace(completed_trace)
+        LOGGER.info(
+            "WEBRTC_TRANSPORT_TRACE_DONE %s",
+            json.dumps(completed_trace, ensure_ascii=True, separators=(",", ":")),
+        )
         with self._lock:
             stop_required_after_reconnect = self._stop_required_after_reconnect
             if self._connection is not connection:
@@ -2011,6 +2265,35 @@ class Go2WirelessRuntime:
         with self._lock:
             if generation != self._connection_generation or not self._connected:
                 raise RuntimeError("WebRTC connection was lost during initialization")
+            ready_monotonic = time.monotonic()
+            validation_ms = max(
+                0.0,
+                (ready_monotonic - transport_connected_monotonic) * 1000.0,
+            )
+            current_trace = deepcopy(self._last_connect_trace)
+            if current_trace is not None and current_trace.get("generation") == generation:
+                current_trace["result"] = "ready"
+                current_trace["validationMs"] = validation_ms
+                current_trace["elapsedMs"] = max(
+                    0.0, (ready_monotonic - connect_trace_started) * 1000.0
+                )
+            else:
+                current_trace = None
+        ready_trace = (
+            None
+            if current_trace is None
+            else self._record_connect_trace(current_trace)
+        )
+        LOGGER.info(
+            "WEBRTC_CONNECT_VALIDATION_DONE generation=%d duration_ms=%.3f",
+            generation,
+            validation_ms,
+        )
+        if ready_trace is not None:
+            LOGGER.info(
+                "WEBRTC_CONNECT_TRACE_DONE %s",
+                json.dumps(ready_trace, ensure_ascii=True, separators=(",", ":")),
+            )
 
     async def _confirm_stop_after_reconnect(
         self,
@@ -2110,13 +2393,64 @@ class Go2WirelessRuntime:
             if self._stop.is_set():
                 self._connection_state = "disconnected"
         if connection is not None:
+            pc = getattr(connection, "pc", None)
+            peer_id = None if pc is None else f"0x{id(pc):x}"
+            peer_state_before, ice_state_before = self._read_transport_states(
+                connection
+            )
+            datachannel = getattr(connection, "datachannel", None)
+            data_open_before = getattr(
+                datachannel, "data_channel_opened", None
+            )
+            close_started = time.monotonic()
+            LOGGER.info(
+                "WEBRTC_PEER_CLOSE_BEGIN generation=%d peer_id=%s "
+                "peer_state=%s ice_state=%s datachannel_open=%s",
+                generation,
+                peer_id,
+                peer_state_before,
+                ice_state_before,
+                data_open_before,
+            )
             self._quiesce_connection_helpers(connection)
             await self._cancel_sdk_network_status_tasks(connection)
             await self._cancel_connection_tasks(generation)
+            close_error: Exception | None = None
             try:
                 await connection.disconnect()
             except Exception as exc:
+                close_error = exc
                 LOGGER.debug("WebRTC cleanup failed: %s", exc)
+            finally:
+                closed_monotonic = time.monotonic()
+                close_duration_ms = max(
+                    0.0, (closed_monotonic - close_started) * 1000.0
+                )
+                peer_state_after = str(
+                    getattr(pc, "connectionState", "unavailable")
+                )
+                ice_state_after = str(
+                    getattr(pc, "iceConnectionState", "unavailable")
+                )
+                data_open_after = getattr(
+                    datachannel, "data_channel_opened", None
+                )
+                with self._lock:
+                    self._last_peer_closed_at = _now_iso()
+                    self._last_peer_closed_monotonic = closed_monotonic
+                    self._last_peer_close_duration_ms = close_duration_ms
+                LOGGER.info(
+                    "WEBRTC_PEER_CLOSE_END generation=%d peer_id=%s "
+                    "duration_ms=%.3f peer_state=%s ice_state=%s "
+                    "datachannel_open=%s error=%s",
+                    generation,
+                    peer_id,
+                    close_duration_ms,
+                    peer_state_after,
+                    ice_state_after,
+                    data_open_after,
+                    "none" if close_error is None else type(close_error).__name__,
+                )
         if connected:
             with self._lock:
                 self._disconnect_count += 1
@@ -3812,16 +4146,49 @@ finally {
                 raw_received_monotonic = time.monotonic()
                 raw_received_at = _now_iso()
                 recovery: dict[str, float | int] | None = None
+                first_video_frame_ms: float | None = None
                 with self._lock:
                     if self._connection is not connection or not self._connected:
                         return
                     generation = self._connection_generation
+                    is_first_generation_frame = (
+                        self._last_raw_frame_monotonic is None
+                        or self._last_raw_frame_generation != generation
+                    )
                     self._raw_frame_count += 1
                     self._last_raw_frame_monotonic = raw_received_monotonic
                     self._last_raw_frame_iso = raw_received_at
                     self._last_raw_frame_generation = generation
+                    if (
+                        is_first_generation_frame
+                        and self._connect_trace_started_monotonic is not None
+                    ):
+                        first_video_frame_ms = max(
+                            0.0,
+                            (
+                                raw_received_monotonic
+                                - self._connect_trace_started_monotonic
+                            )
+                            * 1000.0,
+                        )
+                        current_trace = deepcopy(self._last_connect_trace)
+                    else:
+                        current_trace = None
                     recovery = self._record_video_recovery_frame_locked(
                         raw_received_monotonic
+                    )
+                if first_video_frame_ms is not None:
+                    if (
+                        current_trace is not None
+                        and current_trace.get("generation") == generation
+                    ):
+                        current_trace["firstVideoFrameMs"] = first_video_frame_ms
+                        self._record_connect_trace(current_trace)
+                    LOGGER.info(
+                        "WEBRTC_FIRST_VIDEO_FRAME generation=%d "
+                        "elapsed_ms=%.3f",
+                        generation,
+                        first_video_frame_ms,
                     )
                 if recovery is not None:
                     LOGGER.info(

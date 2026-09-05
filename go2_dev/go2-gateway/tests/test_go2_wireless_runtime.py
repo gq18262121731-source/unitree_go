@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import inspect
 import logging
 from pathlib import Path
@@ -15,6 +16,8 @@ from app.webrtc.go2_wireless_runtime import (
     ExpectedAioiceBindNoiseFilter,
     Go2WirelessRuntime,
     HighFrequencyUnitreeDataLogFilter,
+    _sdp_identity,
+    _selected_candidate_pairs,
 )
 from app.adapters.webrtc_motion_backend import WebRTCMotionBackend
 from app.webrtc.video_bridge import create_video_bridge
@@ -35,6 +38,206 @@ COMMANDS = {
     "Move": 1008,
     "BodyHeight": 1013,
 }
+
+
+def test_sdp_identity_hashes_password_and_counts_candidates() -> None:
+    description = type(
+        "Description",
+        (),
+        {
+            "sdp": "\r\n".join(
+                (
+                    "v=0",
+                    "a=ice-ufrag:test-ufrag",
+                    "a=ice-pwd:never-log-this-password",
+                    "a=fingerprint:sha-256 AA:BB:CC",
+                    "a=setup:actpass",
+                    "a=candidate:one 1 udp 1 192.168.56.1 5000 typ host",
+                    "a=candidate:two 1 udp 2 192.168.8.254 5001 typ host",
+                )
+            )
+        },
+    )()
+
+    identity = _sdp_identity(description)
+
+    assert identity == {
+        "iceUfrag": "test-ufrag",
+        "icePwdHash": hashlib.sha256(
+            b"never-log-this-password"
+        ).hexdigest()[:8],
+        "fingerprint": "sha-256 AA:BB:CC",
+        "setup": "actpass",
+        "candidateCount": 2,
+    }
+    assert "never-log-this-password" not in repr(identity)
+
+
+def test_selected_candidate_pairs_reports_only_nominated_transport() -> None:
+    local_candidate = type(
+        "Candidate", (), {"type": "host", "transport": "udp"}
+    )()
+    remote_candidate = type("Candidate", (), {"type": "host"})()
+    pair = type(
+        "Pair",
+        (),
+        {
+            "local_addr": ("192.168.8.254", 5001),
+            "remote_addr": ("192.168.8.245", 44379),
+            "local_candidate": local_candidate,
+            "remote_candidate": remote_candidate,
+        },
+    )()
+    ice_connection = type("IceConnection", (), {"_nominated": {1: pair}})()
+    ice_transport = type("IceTransport", (), {"_connection": ice_connection})()
+    dtls_transport = type("DtlsTransport", (), {"transport": ice_transport})()
+    sctp = type("Sctp", (), {"transport": dtls_transport})()
+    pc = type("Peer", (), {"sctp": sctp})()
+
+    assert _selected_candidate_pairs(pc) == [
+        {
+            "component": 1,
+            "local": ["192.168.8.254", 5001],
+            "remote": ["192.168.8.245", 44379],
+            "localType": "host",
+            "remoteType": "host",
+            "protocol": "udp",
+        }
+    ]
+
+
+def test_runtime_records_sanitized_connection_trace_and_selected_pair(
+    caplog,
+) -> None:
+    connection = LifecycleConnection()
+    connection.connection_trace = {
+        "current_stage": None,
+        "active_stages": [],
+        "stage_durations_ms": {"signaling_http": 12.5},
+        "total_ms": 25.0,
+        "error": None,
+    }
+    local_description = type(
+        "Description",
+        (),
+        {
+            "sdp": "\r\n".join(
+                (
+                    "v=0",
+                    "a=ice-ufrag:local-ufrag",
+                    "a=ice-pwd:local-password-secret",
+                    "a=fingerprint:sha-256 AA:BB",
+                    "a=setup:actpass",
+                    "a=candidate:one 1 udp 1 192.168.8.254 5001 typ host",
+                )
+            )
+        },
+    )()
+    remote_description = type(
+        "Description",
+        (),
+        {
+            "sdp": "\r\n".join(
+                (
+                    "v=0",
+                    "a=ice-ufrag:remote-ufrag",
+                    "a=ice-pwd:remote-password-secret",
+                    "a=fingerprint:sha-256 CC:DD",
+                    "a=setup:active",
+                    "a=candidate:two 1 udp 1 192.168.8.245 44379 typ host",
+                )
+            )
+        },
+    )()
+    connection.pc.localDescription = local_description
+    connection.pc.remoteDescription = remote_description
+    local_candidate = type(
+        "Candidate", (), {"type": "host", "transport": "udp"}
+    )()
+    remote_candidate = type("Candidate", (), {"type": "host"})()
+    pair = type(
+        "Pair",
+        (),
+        {
+            "local_addr": ("192.168.8.254", 5001),
+            "remote_addr": ("192.168.8.245", 44379),
+            "local_candidate": local_candidate,
+            "remote_candidate": remote_candidate,
+        },
+    )()
+    ice_connection = type("IceConnection", (), {"_nominated": {1: pair}})()
+    ice_transport = type("IceTransport", (), {"_connection": ice_connection})()
+    dtls_transport = type("DtlsTransport", (), {"transport": ice_transport})()
+    connection.pc.sctp = type("Sctp", (), {"transport": dtls_transport})()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.245",
+        enable_video=False,
+        enable_sport_state=False,
+        enable_uwb=False,
+        enable_multiple_state=False,
+        enable_low_state=False,
+        enable_audio=False,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+
+    caplog.set_level(logging.INFO)
+    runtime.start()
+    try:
+        trace = runtime.status()["connectionDiagnostics"]["lastConnectTrace"]
+        rendered_logs = caplog.text
+        assert trace["result"] == "ready"
+        assert trace["localSdp"]["iceUfrag"] == "local-ufrag"
+        assert trace["localSdp"]["icePwdHash"] == hashlib.sha256(
+            b"local-password-secret"
+        ).hexdigest()[:8]
+        assert trace["remoteSdp"]["iceUfrag"] == "remote-ufrag"
+        assert trace["selectedPairs"][0]["local"] == [
+            "192.168.8.254",
+            5001,
+        ]
+        assert "WEBRTC_CONNECT_TRACE_DONE" in rendered_logs
+        assert "local-password-secret" not in rendered_logs
+        assert "remote-password-secret" not in rendered_logs
+    finally:
+        runtime.close(send_stop=False)
+
+    diagnostics = runtime.status()["connectionDiagnostics"]
+    assert diagnostics["lastPeerClosedAt"] is not None
+    assert diagnostics["lastPeerCloseDurationMs"] is not None
+    assert "WEBRTC_PEER_CLOSE_BEGIN" in caplog.text
+    assert "WEBRTC_PEER_CLOSE_END" in caplog.text
+
+
+def test_connection_trace_history_flags_in_process_ice_credential_reuse() -> None:
+    runtime = Go2WirelessRuntime(
+        "192.168.8.245",
+        enable_video=False,
+        enable_sport_state=False,
+        enable_uwb=False,
+        enable_multiple_state=False,
+        enable_low_state=False,
+        enable_audio=False,
+    )
+    first = {
+        "generation": 1,
+        "localSdp": {"iceUfrag": "same-local", "icePwdHash": "11111111"},
+        "remoteSdp": {"iceUfrag": "remote-one", "icePwdHash": "22222222"},
+    }
+    second = {
+        "generation": 2,
+        "localSdp": {"iceUfrag": "same-local", "icePwdHash": "11111111"},
+        "remoteSdp": {"iceUfrag": "remote-two", "icePwdHash": "33333333"},
+    }
+
+    first_recorded = runtime._record_connect_trace(first)
+    second_recorded = runtime._record_connect_trace(second)
+    diagnostics = runtime.status()["connectionDiagnostics"]
+
+    assert first_recorded["localIceCredentialsReused"] is None
+    assert second_recorded["localIceCredentialsReused"] is True
+    assert second_recorded["remoteIceCredentialsReused"] is False
+    assert len(diagnostics["recentConnectTraces"]) == 2
+    assert diagnostics["lastConnectTrace"]["generation"] == 2
 
 
 class FakePubSub:
