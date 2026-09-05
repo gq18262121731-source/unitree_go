@@ -11,7 +11,7 @@
 | 资产 | 当前状态 | 是否上传公开仓库 | 处理结论 |
 |---|---|---:|---|
 | `health_new_p04/.env` | 本机存在，包含云端语音、Qwen、天气等真实凭据 | 否 | 仅放入离线补充包；跨电脑前建议轮换密钥，并通过加密介质传输 |
-| `.go2_aes_key.dpapi` | 本机存在，Windows DPAPI 加密 | 否 | 仅留作原机恢复证据；它与原电脑/Windows 用户绑定，新电脑不能直接使用 |
+| `.go2_aes_key.dpapi` | 本机存在，Windows DPAPI 加密；原始 Go2 AES Key 已确认另有安全保存 | 否 | 旧 DPAPI 仅留作原机恢复证据；新电脑使用现成 AES Key 重新生成自己的 DPAPI |
 | `health_new_p04/data/app.db` | 本机存在，含设备、传感器和告警业务数据 | 否 | 已用 SQLite 在线备份方式生成一致副本，放入离线补充包 |
 | 跌倒检测 `.pt` 模型 | 找到完整模型包 | 暂不上传 | 自训练/私有数据模型的权属和隐私许可尚未确认；先离线保存 |
 | 完整独立 PFV2/生产视觉服务 | 未找到 | 无法上传 | 当前只找到 `camera-service` 文档目录和仓库内的部分 camera runtime，不足以还原完整独立服务 |
@@ -103,14 +103,16 @@ health_new_p04/fall_detection_model_bundle/configs/model_registry.yaml
 
 这些文件主要用于故障复盘，不是正常启动必需项。默认不要恢复到运行目录。需要排错时，只复制与问题时间段相关的最小文件集，并在共享前清除个人声音、设备标识、IP、令牌和业务记录。
 
-## 4. 仍然无法复现的部分
+## 4. 本次复刻不要求的部分
 
-以下缺口不能靠当前补充包解决：
+本次目标是复刻旧电脑当前实际状态。以下内容在旧电脑上本来就不存在，因此不作为复刻失败项：
 
-- 没有找到完整独立的 PFV2/生产视觉服务源码、镜像或部署包；当前仓库只能复现已有 camera runtime 和视觉相关文档覆盖的部分。
-- 没有找到 `static_health_model.pt`、`feature_scaler.joblib`、`static_health_training_cleaned.csv`、`patients_data_with_alerts.xlsx`。如果配置禁止 rule-only fallback，静态健康模型链路不能完整启动。
+- 没有找到完整独立的 PFV2/生产视觉服务源码、镜像或部署包；新电脑保持与旧电脑相同的视觉能力边界。
+- 没有找到 `static_health_model.pt`、`feature_scaler.joblib`、`feature_columns.json` 及训练源数据；新电脑保持与旧电脑相同的静态健康模型缺失状态。
 - Docker daemon 在审计时不可用，因此没有核实或导出可能存在的 Docker volumes。
 - 没有找到移动端正式签名密钥；如需生成与原发行版同签名的安装包，必须从原签名保管处取得密钥。
+
+无线 Go2 不再属于缺失资产：用户已确认原始 AES Key 有现成的安全副本。新电脑不得使用旧 DPAPI，而应运行 `setup_wireless.ps1` 并交互输入现成 AES Key。
 
 ## 5. 安全底线
 
