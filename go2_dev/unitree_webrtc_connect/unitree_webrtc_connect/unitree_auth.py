@@ -202,10 +202,15 @@ def _calc_local_path_ending(data1):
 
 # ─── HTTP helpers for the LAN flow ────────────────────────────────────
 
-def make_local_request(path, body=None, headers=None):
+def make_local_request(path, body=None, headers=None, timeout=(2.0, 3.0)):
     """LAN-side POST. Returns the response object on success, None otherwise."""
     try:
-        response = requests.post(url=path, data=body, headers=headers)
+        response = requests.post(
+            url=path,
+            data=body,
+            headers=headers,
+            timeout=timeout,
+        )
         response.raise_for_status()
         return response if response.status_code == 200 else None
     except requests.exceptions.RequestException as e:

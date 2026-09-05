@@ -18,6 +18,11 @@ GATEWAY_ID = "robot-video-gateway"
 RUNTIME_ID = "go2-wireless-runtime"
 API_VERSION = "1"
 SERVICE_VERSION = "1.2.0"
+NO_CACHE_HEADERS = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "Pragma": "no-cache",
+    "Expires": "0",
+}
 
 
 class WirelessCompanionControlError(RuntimeError):
@@ -178,6 +183,7 @@ def create_video_bridge(
                 "lastDisconnectAt": source.get("lastDisconnectAt"),
                 "lastDisconnectReason": source.get("lastDisconnectReason"),
                 "diagnosticReason": source.get("diagnosticReason"),
+                "connectionDiagnostics": source.get("connectionDiagnostics"),
                 "recentDisconnects": source.get("recentDisconnects", []),
                 "lastReconnectAt": source.get("lastReconnectAt"),
                 "staleTimeoutSeconds": source.get("staleTimeoutSeconds"),
@@ -274,7 +280,7 @@ def create_video_bridge(
         return Response(
             frame.jpeg,
             media_type="image/jpeg",
-            headers={"X-Frame-Seq": str(frame.sequence)},
+            headers={**NO_CACHE_HEADERS, "X-Frame-Seq": str(frame.sequence)},
         )
 
     @app.get("/debug/follow-target")
@@ -416,12 +422,14 @@ def create_video_bridge(
             try:
                 while True:
                     source = runtime.status()
+                    # A transient WebRTC outage must not destroy the downstream
+                    # MJPEG session.  Keep the HTTP connection open and resume
+                    # on the first fresh sequence from the recovered transport.
+                    # Runtime shutdown is the only state-level end-of-stream.
+                    if source.get("started") is False:
+                        return
                     if not source.get("videoReady"):
-                        if not source.get("connected") or source.get(
-                            "videoState"
-                        ) in {"offline", "stalled"}:
-                            return
-                        await asyncio.sleep(0.02)
+                        await asyncio.sleep(0.05)
                         continue
                     current_frame = getattr(runtime, "current_frame", None)
                     frame = (
@@ -443,7 +451,9 @@ def create_video_bridge(
                 runtime.unregister_video_client()
 
         return StreamingResponse(
-            generate(), media_type=f"multipart/x-mixed-replace; boundary={boundary}"
+            generate(),
+            media_type=f"multipart/x-mixed-replace; boundary={boundary}",
+            headers=NO_CACHE_HEADERS,
         )
 
     return app
@@ -492,6 +502,9 @@ DASHBOARD = """<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Go2 统一无线 Runtime</title><style>
 body{margin:0;background:#111318;color:#eef2f7;font-family:Arial,"Microsoft YaHei",sans-serif}header{padding:16px 20px;background:#191d24;border-bottom:1px solid #333942;display:flex;justify-content:space-between}h1{font-size:20px;margin:0}main{padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px}.video{background:#050608;border:1px solid #333942;border-radius:6px;overflow:hidden}.video img{display:block;width:100%;height:calc(100vh - 90px);object-fit:contain}.panel{background:#191d24;border:1px solid #333942;border-radius:6px;padding:14px}.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #333942}.label{color:#aeb7c5}.ok{color:#61df8a}.bad{color:#ff7070}@media(max-width:850px){main{grid-template-columns:1fr}.video img{height:55vh}}
-</style></head><body><header><h1>Go2 无线视频 + 运动</h1><span id="state" class="bad">正在连接</span></header><main><section class="video"><img src="/stream.mjpg" alt="Go2 第一视角"></section><aside class="panel"><div class="row"><span class="label">唯一连接</span><span id="connections">-</span></div><div class="row"><span class="label">DataChannel</span><span id="data">-</span></div><div class="row"><span class="label">SportState</span><span id="sport">-</span></div><div class="row"><span class="label">画面</span><span id="frame">-</span></div><div class="row"><span class="label">帧率</span><span id="fps">-</span></div><div class="row"><span class="label">错误</span><span id="error">-</span></div></aside></main><script>
-async function refresh(){try{const j=await(await fetch('/status',{cache:'no-store'})).json();const d=j.data;const f=d.latestFrame;state.textContent=d.hasFrame?'无线视频在线':(d.connected?'等待画面':'正在连接');state.className=d.hasFrame?'ok':'bad';connections.textContent=`${d.connectionCount}（应为1）`;data.textContent=d.dataChannelReady?'READY':'NOT READY';sport.textContent=d.sportStateReady?'READY':'NOT READY';frame.textContent=f?`${f.width}x${f.height} #${f.sequence}`:'-';fps.textContent=Number(d.captureFps||0).toFixed(1);error.textContent=d.lastError||'无'}catch(e){state.textContent='服务离线';state.className='bad'}}refresh();setInterval(refresh,1000)
+</style></head><body><header><h1>Go2 无线视频 + 运动</h1><span id="state" class="bad">正在连接</span></header><main><section class="video"><img id="video" src="/stream.mjpg" alt="Go2 第一视角"></section><aside class="panel"><div class="row"><span class="label">唯一连接</span><span id="connections">-</span></div><div class="row"><span class="label">DataChannel</span><span id="data">-</span></div><div class="row"><span class="label">SportState</span><span id="sport">-</span></div><div class="row"><span class="label">画面</span><span id="frame">-</span></div><div class="row"><span class="label">帧率</span><span id="fps">-</span></div><div class="row"><span class="label">错误</span><span id="error">-</span></div></aside></main><script>
+const video=document.getElementById('video');let reconnectTimer=null;let previousVideoReady=null;
+function reconnectVideo(delay=750){if(reconnectTimer!==null)return;reconnectTimer=setTimeout(()=>{reconnectTimer=null;video.src=`/stream.mjpg?t=${Date.now()}`},delay)}
+video.addEventListener('error',()=>reconnectVideo());
+async function refresh(){try{const j=await(await fetch('/status',{cache:'no-store'})).json();const d=j.data;const f=d.latestFrame;if(previousVideoReady===false&&d.hasFrame)reconnectVideo(0);previousVideoReady=Boolean(d.hasFrame);state.textContent=d.hasFrame?'无线视频在线':(d.connected?'等待画面':'正在连接');state.className=d.hasFrame?'ok':'bad';connections.textContent=`${d.connectionCount}（应为1）`;data.textContent=d.dataChannelReady?'READY':'NOT READY';sport.textContent=d.sportStateReady?'READY':'NOT READY';frame.textContent=f?`${f.width}x${f.height} #${f.sequence}`:'-';fps.textContent=Number(d.captureFps||0).toFixed(1);error.textContent=d.lastError||'无'}catch(e){state.textContent='服务离线';state.className='bad';reconnectVideo()}}refresh();setInterval(refresh,1000)
 </script></body></html>"""

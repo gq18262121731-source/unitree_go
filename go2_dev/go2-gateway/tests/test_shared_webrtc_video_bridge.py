@@ -23,6 +23,7 @@ class FakeRuntime:
         )
         self.clients = 0
         self.connected = True
+        self.started = True
         self.video_ready = True
         self.video_state = "live"
         self.frame_age_ms = 10.0
@@ -30,6 +31,7 @@ class FakeRuntime:
 
     def status(self) -> dict:
         return {
+            "started": self.started,
             "videoState": self.video_state,
             "robotIp": "192.168.8.252",
             "connected": self.connected,
@@ -43,6 +45,10 @@ class FakeRuntime:
             "lastDisconnectAt": None,
             "lastDisconnectReason": None,
             "diagnosticReason": None,
+            "connectionDiagnostics": {
+                "lastConnectTrace": {"generation": 1},
+                "recentConnectTraces": [{"generation": 1}],
+            },
             "recentDisconnects": [],
             "lastReconnectAt": None,
             "reconnectCount": self.reconnect_count,
@@ -111,6 +117,7 @@ def test_status_and_snapshot_are_views_over_shared_runtime() -> None:
     assert payload["encodeDurationMsLast"] == 12.5
     assert payload["sportStateAgeSeconds"] == 0.006
     assert payload["recentDisconnects"] == []
+    assert payload["connectionDiagnostics"]["lastConnectTrace"]["generation"] == 1
     assert payload["transportHealthState"] == "healthy"
     assert payload["watchdogPolicy"] == "hard_transport_or_raw_plus_sport_stale"
     assert payload["videoHealthState"] == "healthy"
@@ -122,6 +129,11 @@ def test_status_and_snapshot_are_views_over_shared_runtime() -> None:
     assert response.status_code == 200
     assert response.content == b"jpeg-bytes"
     assert response.headers["x-frame-seq"] == "9"
+    assert response.headers["cache-control"] == (
+        "no-store, no-cache, must-revalidate, max-age=0"
+    )
+    assert response.headers["pragma"] == "no-cache"
+    assert response.headers["expires"] == "0"
 
 
 def test_public_video_gateway_contract_hides_webrtc_details() -> None:
@@ -196,6 +208,11 @@ def test_mjpeg_stream_does_not_create_connection_or_leak_client() -> None:
     assert response.status_code == 200
     assert b"Content-Type: image/jpeg" in response.content
     assert b"jpeg-bytes" in response.content
+    assert response.headers["cache-control"] == (
+        "no-store, no-cache, must-revalidate, max-age=0"
+    )
+    assert response.headers["pragma"] == "no-cache"
+    assert response.headers["expires"] == "0"
     assert runtime.clients == 0
 
 
@@ -226,9 +243,10 @@ def test_stale_snapshot_returns_503_instead_of_cached_jpeg() -> None:
     assert response.json()["frameAgeSeconds"] == 15.0
 
 
-def test_disconnected_mjpeg_stream_ends_and_releases_client() -> None:
+def test_runtime_shutdown_ends_mjpeg_stream_and_releases_client() -> None:
     runtime = FakeRuntime()
     runtime.connected = False
+    runtime.started = False
     runtime.video_ready = False
     runtime.video_state = "offline"
     client = TestClient(create_video_bridge(runtime))
@@ -238,6 +256,55 @@ def test_disconnected_mjpeg_stream_ends_and_releases_client() -> None:
     assert response.status_code == 200
     assert response.content == b""
     assert runtime.clients == 0
+
+
+def test_stalled_and_offline_mjpeg_streams_wait_and_resume_same_connection() -> None:
+    async def exercise(video_state: str) -> None:
+        runtime = FakeRuntime()
+        runtime.connected = video_state != "offline"
+        runtime.video_ready = False
+        runtime.video_state = video_state
+        app = create_video_bridge(runtime)
+        route = next(
+            route
+            for route in app.routes
+            if getattr(route, "path", None) == "/stream.mjpg"
+        )
+        response = route.endpoint(frames=1)
+        pending_frame = asyncio.create_task(response.body_iterator.__anext__())
+
+        await asyncio.sleep(0.08)
+        assert not pending_frame.done()
+        assert runtime.clients == 1
+
+        runtime.connected = True
+        runtime.video_ready = True
+        runtime.video_state = "live"
+        runtime.frame = LatestVideoFrame(
+            jpeg=f"recovered-{video_state}".encode(),
+            sequence=10,
+            captured_at="2026-09-05T10:00:00+08:00",
+            width=1280,
+            height=720,
+            fps=15.0,
+        )
+        recovered = await asyncio.wait_for(pending_frame, timeout=0.5)
+        assert f"recovered-{video_state}".encode() in recovered
+        await response.body_iterator.aclose()
+        assert runtime.clients == 0
+
+    asyncio.run(exercise("stalled"))
+    asyncio.run(exercise("offline"))
+
+
+def test_dashboard_reconnects_stream_on_error_and_video_recovery() -> None:
+    response = TestClient(create_video_bridge(FakeRuntime())).get("/")
+
+    assert response.status_code == 200
+    assert 'id="video"' in response.text
+    assert "video.addEventListener('error'" in response.text
+    assert "previousVideoReady===false&&d.hasFrame" in response.text
+    assert "/stream.mjpg?t=${Date.now()}" in response.text
 
 
 def test_mjpeg_generator_cancellation_releases_client() -> None:

@@ -319,6 +319,7 @@ class Go2WirelessRuntime:
         reconnect_max_delay_seconds: float = 15.0,
         reconnect_stable_reset_seconds: float = 30.0,
         disconnect_grace_seconds: float = 3.0,
+        video_track_end_grace_seconds: float = 2.5,
         reconnect_on_multi_signal_stale: bool = False,
         multi_signal_stale_grace_seconds: float = 10.0,
         enable_video_active_recovery: bool = False,
@@ -377,6 +378,9 @@ class Go2WirelessRuntime:
         )
         self.disconnect_grace_seconds = max(
             0.1, float(disconnect_grace_seconds)
+        )
+        self.video_track_end_grace_seconds = max(
+            0.1, float(video_track_end_grace_seconds)
         )
         self.reconnect_on_multi_signal_stale = bool(
             reconnect_on_multi_signal_stale
@@ -477,6 +481,14 @@ class Go2WirelessRuntime:
         self._transport_disconnected_since: float | None = None
         self._transport_disconnect_reason: str | None = None
         self._transport_grace_recovery_in_progress = False
+        self._video_track_serial = 0
+        self._active_video_track_serial: int | None = None
+        self._video_track_end_pending_serial: int | None = None
+        self._video_track_end_started_monotonic: float | None = None
+        self._video_track_end_reason: str | None = None
+        self._video_track_end_count = 0
+        self._video_track_end_recovered_count = 0
+        self._video_track_end_confirmed_count = 0
         self._subscribed_topics: list[str] = []
         self._rtc_topic: dict[str, str] = {}
         self._sport_cmd: dict[str, int] = {}
@@ -1557,6 +1569,30 @@ class Go2WirelessRuntime:
                 ),
                 "videoWatchdog": {
                     "state": self._video_watchdog_state,
+                    "track_state": (
+                        "ended_grace"
+                        if self._video_track_end_pending_serial is not None
+                        else "active"
+                        if self._active_video_track_serial is not None
+                        else "awaiting_track"
+                    ),
+                    "track_end_count": self._video_track_end_count,
+                    "track_end_recovered_count": (
+                        self._video_track_end_recovered_count
+                    ),
+                    "track_end_confirmed_count": (
+                        self._video_track_end_confirmed_count
+                    ),
+                    "track_end_grace_remaining_ms": (
+                        0.0
+                        if self._video_track_end_started_monotonic is None
+                        else max(
+                            0.0,
+                            self.video_track_end_grace_seconds
+                            - (now - self._video_track_end_started_monotonic),
+                        )
+                        * 1000.0
+                    ),
                     "video_stale_count": self._video_stale_count,
                     "soft_recovery_count": self._video_soft_recovery_count,
                     "soft_recovery_success_count": (
@@ -1596,6 +1632,9 @@ class Go2WirelessRuntime:
                     ),
                     "thresholds": {
                         "degraded_seconds": self.frame_stale_seconds,
+                        "track_end_grace_seconds": (
+                            self.video_track_end_grace_seconds
+                        ),
                         "first_frame_wait_seconds": (
                             self.video_first_frame_wait_seconds
                         ),
@@ -2090,6 +2129,10 @@ class Go2WirelessRuntime:
             self._transport_disconnected_since = None
             self._transport_disconnect_reason = None
             self._transport_grace_recovery_in_progress = False
+            self._active_video_track_serial = None
+            self._video_track_end_pending_serial = None
+            self._video_track_end_started_monotonic = None
+            self._video_track_end_reason = None
             self._reset_connection_samples_locked()
         self._first_state.clear()
         self._clear_raw_frames()
@@ -2205,8 +2248,16 @@ class Go2WirelessRuntime:
         # Motion remains locked independently until the reconnect StopMove ACK.
         if self.enable_video:
             async def receive_video(track: Any) -> None:
+                track_serial = self._register_video_track(connection)
+                if track_serial is None:
+                    return
                 await self._run_connection_task(
-                    generation, self._receive_video(track, connection)
+                    generation,
+                    self._receive_video(
+                        track,
+                        connection,
+                        track_serial=track_serial,
+                    ),
                 )
 
             connection.video.add_track_callback(receive_video)
@@ -2792,6 +2843,9 @@ class Go2WirelessRuntime:
             generation = self._connection_generation
             sport_enabled = self.enable_sport_state
             video_channel_enabled_at = self._video_channel_enabled_monotonic
+            video_track_end_pending = (
+                self._video_track_end_pending_serial is not None
+            )
         if connection is None or not connected:
             return
         peer_state, ice_state = self._read_transport_states(connection)
@@ -2876,7 +2930,9 @@ class Go2WirelessRuntime:
             >= self.video_first_frame_wait_seconds
         )
         video_reason = (
-            "raw_frame_stale"
+            "video_track_ended_pending"
+            if video_track_end_pending
+            else "raw_frame_stale"
             if raw_stale
             else "encoded_frame_stale"
             if encoded_stale
@@ -4139,7 +4195,155 @@ finally {
                 return payload[name]
         return None
 
-    async def _receive_video(self, track: Any, connection: Any) -> None:
+    def _register_video_track(self, connection: Any) -> int | None:
+        recovered_reason: str | None = None
+        with self._lock:
+            if self._connection is not connection or not self._connected:
+                return None
+            if self._video_track_end_pending_serial is not None:
+                recovered_reason = self._video_track_end_reason
+                self._video_track_end_recovered_count += 1
+            self._video_track_serial += 1
+            track_serial = self._video_track_serial
+            self._active_video_track_serial = track_serial
+            self._video_track_end_pending_serial = None
+            self._video_track_end_started_monotonic = None
+            self._video_track_end_reason = None
+        if recovered_reason is not None:
+            LOGGER.info(
+                "VIDEO_TRACK_RECOVERED reason=%s replacement_track=%d "
+                "action=keep_transport",
+                recovered_reason,
+                track_serial,
+            )
+        return track_serial
+
+    def _handle_video_track_ended(
+        self,
+        reason: str,
+        connection: Any,
+        *,
+        track_serial: int,
+    ) -> None:
+        peer_state, ice_state = self._read_transport_states(connection)
+        datachannel = getattr(connection, "datachannel", None)
+        data_open = getattr(datachannel, "data_channel_opened", True) is not False
+        if (
+            peer_state in {"closed", "failed"}
+            or ice_state in {"closed", "failed"}
+            or not data_open
+        ):
+            self._handle_connection_lost(reason, connection)
+            return
+
+        now = time.monotonic()
+        with self._lock:
+            if (
+                self._connection is not connection
+                or not self._connected
+                or self._active_video_track_serial != track_serial
+                or self._video_track_end_pending_serial == track_serial
+            ):
+                return
+            generation = self._connection_generation
+            raw_age = (
+                None
+                if self._last_raw_frame_monotonic is None
+                or self._last_raw_frame_generation != generation
+                else max(0.0, now - self._last_raw_frame_monotonic)
+            )
+            self._video_track_end_count += 1
+            self._video_track_end_pending_serial = track_serial
+            self._video_track_end_started_monotonic = now
+            self._video_track_end_reason = reason
+            self._video_watchdog_state = "DEGRADED"
+            self._video_degraded_reason = "video_track_ended_pending"
+            if self._video_stale_started_monotonic is None:
+                self._video_stale_started_monotonic = now
+            if self._video_recovery_started_monotonic is None:
+                self._video_recovery_started_monotonic = now
+        LOGGER.warning(
+            "VIDEO_TRACK_ENDED_GRACE_STARTED reason=%s peer=%s ice=%s "
+            "data_channel_ready=%s raw_age=%s grace_seconds=%.3f "
+            "action=keep_transport",
+            reason,
+            peer_state,
+            ice_state,
+            str(data_open).lower(),
+            self._diagnostic_number(raw_age),
+            self.video_track_end_grace_seconds,
+        )
+        asyncio.create_task(
+            self._run_connection_task(
+                generation,
+                self._confirm_video_track_loss(
+                    connection,
+                    generation=generation,
+                    track_serial=track_serial,
+                    reason=reason,
+                ),
+            )
+        )
+
+    async def _confirm_video_track_loss(
+        self,
+        connection: Any,
+        *,
+        generation: int,
+        track_serial: int,
+        reason: str,
+    ) -> None:
+        await asyncio.sleep(self.video_track_end_grace_seconds)
+        with self._lock:
+            if (
+                self._connection is not connection
+                or not self._connected
+                or self._connection_generation != generation
+                or self._video_track_end_pending_serial != track_serial
+                or self._active_video_track_serial != track_serial
+            ):
+                return
+        peer_state, ice_state = self._read_transport_states(connection)
+        datachannel = getattr(connection, "datachannel", None)
+        data_open = getattr(datachannel, "data_channel_opened", True) is not False
+        with self._lock:
+            if (
+                self._connection is not connection
+                or not self._connected
+                or self._connection_generation != generation
+                or self._video_track_end_pending_serial != track_serial
+            ):
+                return
+            self._video_track_end_pending_serial = None
+            self._video_track_end_started_monotonic = None
+            self._video_track_end_reason = None
+            self._video_track_end_confirmed_count += 1
+            self._video_full_reconnect_count += 1
+            self._video_watchdog_state = "OFFLINE"
+            self._video_degraded_reason = "video_track_confirmed_lost"
+            self._video_recovery_required_on_next_connection = True
+        LOGGER.warning(
+            "VIDEO_TRACK_CONFIRMED_LOST reason=%s peer=%s ice=%s "
+            "data_channel_ready=%s grace_seconds=%.3f action=full_reconnect",
+            reason,
+            peer_state,
+            ice_state,
+            str(data_open).lower(),
+            self.video_track_end_grace_seconds,
+        )
+        self._handle_connection_lost(
+            "video_track_confirmed_lost",
+            connection,
+            diagnostic_reason=reason,
+        )
+
+    async def _receive_video(
+        self,
+        track: Any,
+        connection: Any,
+        *,
+        track_serial: int,
+    ) -> None:
         try:
             while not self._stop.is_set() and self._is_current_connection(connection):
                 frame = await track.recv()
@@ -4216,8 +4420,10 @@ finally {
         except asyncio.CancelledError:
             raise
         except Exception as exc:
-            self._handle_connection_lost(
-                f"video_track_ended:{type(exc).__name__}", connection
+            self._handle_video_track_ended(
+                f"video_track_ended:{type(exc).__name__}",
+                connection,
+                track_serial=track_serial,
             )
 
     def _record_video_recovery_frame_locked(

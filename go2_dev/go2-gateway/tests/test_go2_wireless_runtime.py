@@ -1040,7 +1040,7 @@ def test_cleanup_quiesces_old_generation_before_next_connect() -> None:
         runtime.close(send_stop=False)
 
 
-def test_video_track_end_uses_the_same_connection_loss_path() -> None:
+def test_video_track_end_is_confirmed_before_using_connection_loss_path() -> None:
     first = LifecycleConnection()
     second = LifecycleConnection(connect_blocked=True)
     connections = iter((first, second))
@@ -1051,6 +1051,7 @@ def test_video_track_end_uses_the_same_connection_loss_path() -> None:
         state_timeout_seconds=0.5,
         state_stale_seconds=5.0,
         frame_stale_seconds=5.0,
+        video_track_end_grace_seconds=0.10,
         reconnect_delay_seconds=0.02,
         connection_factory=lambda _ip, _key: (
             next(connections),
@@ -1064,11 +1065,18 @@ def test_video_track_end_uses_the_same_connection_loss_path() -> None:
             first.video.callback(EndedTrack()), runtime._loop
         )
         future.result(timeout=1.0)
+        wait_until(
+            lambda: runtime.status()["videoWatchdog"]["track_state"]
+            == "ended_grace"
+        )
+        assert runtime.status()["connected"] is True
+        assert not second.connect_started.is_set()
         assert second.connect_started.wait(timeout=1.0)
         status = runtime.status()
         assert status["connected"] is False
         assert status["videoReady"] is False
-        assert status["lastDisconnectReason"] == "video_track_ended:RuntimeError"
+        assert status["lastDisconnectReason"] == "video_track_confirmed_lost"
+        assert status["diagnosticReason"] == "video_track_ended:RuntimeError"
         assert status["reconnectCount"] == 1
         second.allow_connect.set()
         wait_until(lambda: runtime.status()["connected"] is True)
@@ -1289,6 +1297,92 @@ def test_video_watchdog_waits_for_current_generation_first_raw_frame() -> None:
     finally:
         keepalive_stop.set()
         keepalive_thread.join(timeout=1.0)
+        runtime.close(send_stop=False)
+
+
+def test_video_track_end_uses_media_grace_before_full_reconnect(caplog) -> None:
+    first = LifecycleConnection()
+    second = LifecycleConnection(connect_blocked=True)
+    connections = iter((first, second))
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        video_track_end_grace_seconds=0.10,
+        reconnect_delay_seconds=0.01,
+        connection_factory=lambda _ip, _key: (next(connections), TOPICS, COMMANDS),
+    )
+    caplog.set_level(logging.INFO)
+    runtime.start()
+    ended = asyncio.run_coroutine_threadsafe(
+        first.video.callback(EndedTrack()), runtime._loop
+    )
+    try:
+        ended.result(timeout=1.0)
+        wait_until(
+            lambda: runtime.status()["videoWatchdog"]["track_state"]
+            == "ended_grace"
+        )
+        grace = runtime.status()
+        assert grace["connected"] is True
+        assert grace["reconnectCount"] == 0
+        assert grace["videoHealthState"] == "degraded"
+        assert grace["videoDegradedReason"] == "video_track_ended_pending"
+        assert not second.connect_started.is_set()
+        assert "VIDEO_TRACK_ENDED_GRACE_STARTED" in caplog.text
+        assert "action=keep_transport" in caplog.text
+
+        assert second.connect_started.wait(timeout=1.0)
+        confirmed = runtime.status()
+        assert confirmed["lastDisconnectReason"] == "video_track_confirmed_lost"
+        assert confirmed["diagnosticReason"] == "video_track_ended:RuntimeError"
+        assert confirmed["videoWatchdog"]["track_end_confirmed_count"] == 1
+        assert "VIDEO_TRACK_CONFIRMED_LOST" in caplog.text
+    finally:
+        second.allow_connect.set()
+        runtime.close(send_stop=False)
+
+
+def test_replacement_video_track_during_grace_keeps_peer_connection() -> None:
+    first = LifecycleConnection()
+    second = LifecycleConnection(connect_blocked=True)
+    connections = iter((first, second))
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        video_track_end_grace_seconds=0.15,
+        reconnect_delay_seconds=0.01,
+        capture_fps=30,
+        connection_factory=lambda _ip, _key: (next(connections), TOPICS, COMMANDS),
+    )
+    runtime.start()
+    ended = asyncio.run_coroutine_threadsafe(
+        first.video.callback(EndedTrack()), runtime._loop
+    )
+    replacement = None
+    try:
+        ended.result(timeout=1.0)
+        wait_until(
+            lambda: runtime.status()["videoWatchdog"]["track_state"]
+            == "ended_grace"
+        )
+        replacement = asyncio.run_coroutine_threadsafe(
+            first.video.callback(RepeatingFrameTrack()), runtime._loop
+        )
+        wait_until(lambda: runtime.status()["videoReady"] is True)
+        time.sleep(0.20)
+        status = runtime.status()
+        assert status["connected"] is True
+        assert status["reconnectCount"] == 0
+        assert status["videoWatchdog"]["track_state"] == "active"
+        assert status["videoWatchdog"]["track_end_recovered_count"] == 1
+        assert status["videoWatchdog"]["track_end_confirmed_count"] == 0
+        assert not second.connect_started.is_set()
+    finally:
+        if replacement is not None:
+            replacement.cancel()
+        second.allow_connect.set()
         runtime.close(send_stop=False)
 
 

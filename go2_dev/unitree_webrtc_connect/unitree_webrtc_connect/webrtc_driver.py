@@ -388,8 +388,14 @@ class UnitreeWebRTCConnection:
             "token": self.token
         }
 
-        peer_answer_json = send_sdp_to_local_peer(
-            ip, json.dumps(sdp_offer_json), aes_128_key=self.aes_128_key,
+        # LAN signaling uses requests internally. Keep that bounded work off
+        # the aiortc event loop so a slow :9991 endpoint cannot stall ICE,
+        # DataChannel callbacks, or the outer asyncio timeout.
+        peer_answer_json = await asyncio.to_thread(
+            send_sdp_to_local_peer,
+            ip,
+            json.dumps(sdp_offer_json),
+            aes_128_key=self.aes_128_key,
         )
 
         return peer_answer_json
