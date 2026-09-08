@@ -1,6 +1,6 @@
 param(
     [string]$CameraServiceIp = "192.168.8.253",
-    [string]$RobotIp = "192.168.8.245",
+    [string]$RobotIp = "192.168.8.254",
     [string]$HealthNewUrl = "http://127.0.0.1:8000",
     [string]$ElderId = "elder01_02",
     [ValidateSet("Cherry", "Serena", "Ethan", "Chelsie")]

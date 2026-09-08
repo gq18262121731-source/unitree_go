@@ -160,8 +160,13 @@ class RealGo2Provider:
     def _create_discovered_readers(
         dds: DdsReader, topics: list[DiscoveredTopic]
     ) -> list[tuple[str, str, Any]]:
-        from unitree_sdk2py.idl.sensor_msgs.msg.dds_ import PointCloud2_
-        from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_, SportModeState_
+        try:
+            from unitree_sdk2py.idl.sensor_msgs.msg.dds_ import PointCloud2_
+            from unitree_sdk2py.idl.unitree_go.msg.dds_ import LowState_, SportModeState_
+        except ModuleNotFoundError:
+            if isinstance(dds, DdsReader):
+                raise
+            PointCloud2_ = LowState_ = SportModeState_ = object
 
         readers: list[tuple[str, str, Any]] = []
         seen: set[tuple[str, str]] = set()

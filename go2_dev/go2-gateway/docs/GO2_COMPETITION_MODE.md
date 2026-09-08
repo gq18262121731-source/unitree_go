@@ -25,7 +25,7 @@ cd "E:\笨笨狗\go2_dev\go2-gateway"
 The launcher fixes these competition settings:
 
 ```text
-RobotIp   = 192.168.8.252
+RobotIp   = 192.168.8.254
 VideoBind = 0.0.0.0
 VideoPort = 8093
 AutoDemo  = phone_demo
@@ -65,7 +65,7 @@ The Computer A address is printed as the `LAN` URL at startup. With the current
 network it is expected to resemble:
 
 ```text
-http://192.168.8.254:8093/stream.mjpg
+http://192.168.8.249:8093/stream.mjpg
 ```
 
 Computer B may also use:

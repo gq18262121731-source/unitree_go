@@ -2,7 +2,7 @@
 set -euo pipefail
 
 GATEWAY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SDK_ROOT="${UNITREE_SDK2_PYTHON_ROOT:-/mnt/e/笨笨狗/go2_dev/unitree_sdk2_python}"
+SDK_ROOT="${UNITREE_SDK2_PYTHON_ROOT:-/mnt/e/unitree/unitree_go/go2_dev/unitree_sdk2_python}"
 ROBOT_IP="${UNITREE_ROBOT_IP:-192.168.123.161}"
 NETWORK_INTERFACE="${UNITREE_NETWORK_INTERFACE:-}"
 RISK_EVENTS=""

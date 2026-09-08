@@ -44,7 +44,7 @@ python tools/go2_uwb_telemetry.py --mock
 先在第一个 PowerShell 窗口启动现有无线 Runtime：
 
 ```powershell
-.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.252
+.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.254
 ```
 
 再在第二个 PowerShell 窗口启动只读 Dashboard：

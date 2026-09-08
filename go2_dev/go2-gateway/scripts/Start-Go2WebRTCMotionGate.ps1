@@ -1,7 +1,7 @@
 param(
     [ValidateSet("ReadOnly", "Stop", "ForwardPulse")]
     [string]$Stage = "ReadOnly",
-    [string]$RobotIp = "192.168.8.252",
+    [string]$RobotIp = "192.168.8.254",
     [ValidateRange(0.20, 0.23)]
     [double]$Speed = 0.23,
     [ValidateRange(0.20, 0.50)]

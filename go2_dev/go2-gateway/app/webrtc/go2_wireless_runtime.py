@@ -510,6 +510,8 @@ class Go2WirelessRuntime:
         self._microphone_vad_rms_threshold = 650.0
         self._microphone_vad_peak_threshold = 1800
         self._last_microphone_capture: dict[str, object] | None = None
+        self._microphone_frame_probe_logged = False
+        self._microphone_pcm_consumers: list[Callable[[bytes, int, int], None]] = []
         self._started = False
         self._connected = False
         self._connection_count = 0
@@ -826,6 +828,21 @@ class Go2WirelessRuntime:
             "WebRTC voice deactivation",
             timeout=2.0,
         )
+
+    def register_microphone_pcm_consumer(
+        self, callback: Callable[[bytes, int, int], None]
+    ) -> None:
+        with self._lock:
+            if callback not in self._microphone_pcm_consumers:
+                self._microphone_pcm_consumers.append(callback)
+
+    def unregister_microphone_pcm_consumer(
+        self, callback: Callable[[bytes, int, int], None]
+    ) -> None:
+        with self._lock:
+            self._microphone_pcm_consumers = [
+                item for item in self._microphone_pcm_consumers if item is not callback
+            ]
 
     def send_move(self, vx: float, vy: float, wz: float) -> int:
         with self._lock:
@@ -2747,12 +2764,15 @@ class Go2WirelessRuntime:
 
     async def _wait_for_connection_loss(self) -> bool:
         stable_window_reached = False
+        health_poll_interval = min(
+            0.25, max(0.02, self.stale_timeout_seconds / 2.0)
+        )
         while not self._stop.is_set():
             event = self._connection_lost_event
             if event is None:
                 return stable_window_reached
             try:
-                await asyncio.wait_for(event.wait(), timeout=0.25)
+                await asyncio.wait_for(event.wait(), timeout=health_poll_interval)
                 return stable_window_reached
             except asyncio.TimeoutError:
                 self._poll_connection_health()
@@ -3421,6 +3441,7 @@ class Go2WirelessRuntime:
             self._microphone_vad_calibration_samples = 0
             self._microphone_vad_rms_threshold = 650.0
             self._microphone_vad_peak_threshold = 1800
+            self._microphone_frame_probe_logged = False
             self._pending_microphone_vad_min_duration = max(
                 0.2, float(vad_min_capture_seconds)
             )
@@ -3477,7 +3498,8 @@ class Go2WirelessRuntime:
 
     async def _receive_audio_frame(self, frame: Any) -> None:
         with self._lock:
-            if not self._microphone_recording:
+            has_consumers = bool(self._microphone_pcm_consumers)
+            if not self._microphone_recording and not has_consumers:
                 return
         try:
             import numpy as np
@@ -3504,6 +3526,28 @@ class Go2WirelessRuntime:
                 if values.size
                 else 0.0
             )
+            with self._lock:
+                probe_logged = self._microphone_frame_probe_logged
+                if not probe_logged:
+                    self._microphone_frame_probe_logged = True
+            if not probe_logged:
+                LOGGER.info(
+                    "GO2_AUDIO_FRAME_PROBE sample_rate=%s channels=%s dtype=%s shape=%s format=%s frame_samples=%s frame_duration_ms=%.1f",
+                    sample_rate,
+                    channels,
+                    str(array.dtype),
+                    tuple(array.shape),
+                    format_name or "unknown",
+                    samples,
+                    (samples / float(sample_rate)) * 1000.0,
+                )
+            with self._lock:
+                consumers = tuple(self._microphone_pcm_consumers)
+            for consumer in consumers:
+                try:
+                    consumer(pcm, sample_rate, channels)
+                except Exception as exc:
+                    LOGGER.warning("MICROPHONE_PCM_CONSUMER_FAILED: %s", exc)
             with self._lock:
                 if not self._microphone_recording:
                     return
@@ -3598,6 +3642,9 @@ class Go2WirelessRuntime:
             audio_hub = self._audio_hub
         if audio_hub is None:
             raise RuntimeError("WebRTC AudioHub is unavailable")
+        set_play_mode = getattr(audio_hub, "set_play_mode", None)
+        if callable(set_play_mode):
+            await set_play_mode("single_cycle")
         await audio_hub.play_by_uuid(unique_id)
 
     async def _preload_audio_files_async(

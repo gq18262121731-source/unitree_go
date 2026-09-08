@@ -1,7 +1,7 @@
 param(
     [ValidateSet("W3Clockwise30", "W4ForwardClockwise90", "PhoneDemo")]
     [string]$Stage = "W3Clockwise30",
-    [string]$RobotIp = "192.168.8.252"
+    [string]$RobotIp = "192.168.8.254"
 )
 
 $ErrorActionPreference = "Stop"

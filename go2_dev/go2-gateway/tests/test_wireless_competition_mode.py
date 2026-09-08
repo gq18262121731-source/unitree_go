@@ -161,6 +161,88 @@ def test_required_demo_preload_batches_start_and_walk_follow(
     assert "DEMO_AUDIO_PRELOAD_READY: WALK_FOLLOW.wav" in output
 
 
+def test_voice_clip_playback_resolves_clip_ids_in_order(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    for filename in (
+        "outing_allow_health_good.wav",
+        "health_hr_prefix.wav",
+        "num_76.wav",
+        "unit_bpm.wav",
+    ):
+        (tmp_path / filename).write_bytes(b"RIFF" + b"\0" * 40)
+
+    class Runtime:
+        def __init__(self) -> None:
+            self.played: list[tuple[str, float]] = []
+
+        def play_audio_file(self, path, *, timeout_seconds):
+            self.played.append((Path(path).name, timeout_seconds))
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+
+    result = console.play_voice_clips(
+        [
+            "outing.allow.health_good",
+            "health.hr.prefix",
+            "num.76",
+            "unit.bpm",
+        ]
+    )
+
+    assert result == {
+        "clips": [
+            "outing.allow.health_good",
+            "health.hr.prefix",
+            "num.76",
+            "unit.bpm",
+        ],
+        "played": 4,
+        "status": "done",
+        "missing_clips": [],
+    }
+    assert runtime.played == [
+        ("outing_allow_health_good.wav", 3.0),
+        ("health_hr_prefix.wav", 3.0),
+        ("num_76.wav", 3.0),
+        ("unit_bpm.wav", 3.0),
+    ]
+    assert "VOICE_CLIPS_PLAYED: 4/4" in capsys.readouterr().out
+
+
+def test_voice_clip_playback_refuses_partial_sentence_when_clip_missing(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    (tmp_path / "health_hr_prefix.wav").write_bytes(b"RIFF" + b"\0" * 40)
+
+    class Runtime:
+        def __init__(self) -> None:
+            self.played: list[str] = []
+
+        def play_audio_file(self, path, *, timeout_seconds):
+            self.played.append(Path(path).name)
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+
+    result = console.play_voice_clips(["health.hr.prefix", "num.76"])
+
+    assert result["status"] == "missing"
+    assert result["played"] == 0
+    assert result["missing_clips"] == ["num.76"]
+    assert runtime.played == []
+    assert "VOICE_CLIPS_MISSING: num.76" in capsys.readouterr().out
+
+
 def test_walk_follow_plays_fixed_preset_then_enters_existing_manual(
     tmp_path, monkeypatch
 ) -> None:
@@ -210,7 +292,6 @@ def test_walk_follow_voice_failure_still_enters_manual(
     console = RuntimeConsole.__new__(RuntimeConsole)
     console.runtime = Runtime()
     monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
-    monkeypatch.setattr(console, "_wav_duration_seconds", lambda _path: 1.0)
     monkeypatch.setattr(console, "_manual_console", lambda: entered.append(True))
 
     with caplog.at_level("WARNING"):

@@ -1,5 +1,5 @@
 param(
-    [string]$RobotIp = "192.168.8.252",
+    [string]$RobotIp = "192.168.8.254",
     [ValidatePattern("^(?i:[ABCDV](,[ABCDV])*)$")]
     [string]$TestGroups = "A,B,C,D",
     [ValidateRange(1.0, 86400.0)]

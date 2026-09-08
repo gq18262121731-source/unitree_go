@@ -126,7 +126,7 @@ cd "E:\笨笨狗\go2_dev\go2-gateway"
 脚本当前默认：
 
 ```text
-Go2                 192.168.8.252
+Go2                 192.168.8.254
 camera-service 电脑B 192.168.8.253
 视频                 0.0.0.0:8093
 目标状态 UDP          192.168.8.253:8766 / 20 Hz
@@ -157,7 +157,7 @@ $env:FOLLOW_TARGET_FORWARD_STALE_SECONDS="1.0"
 $env:FOLLOW_TARGET_FORWARD_STATS_INTERVAL_SECONDS="10"
 
 cd "E:\笨笨狗\go2_dev\go2-gateway"
-.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.252 -HealthNewUrl "http://127.0.0.1:8765" -ElderId "elder01_02" -ListenHost 0.0.0.0
+.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.254 -HealthNewUrl "http://127.0.0.1:8765" -ElderId "elder01_02" -ListenHost 0.0.0.0
 ```
 
 把示例中的 `192.168.8.10` 换成电脑 B 在两台电脑共同网络上的实际

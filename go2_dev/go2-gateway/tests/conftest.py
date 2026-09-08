@@ -6,6 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+SDK_ROOT = ROOT.parent / "unitree_sdk2_python"
+if SDK_ROOT.exists() and str(SDK_ROOT) not in sys.path:
+    sys.path.insert(0, str(SDK_ROOT))
 
 import pytest
 from fastapi.testclient import TestClient

@@ -23,7 +23,7 @@ def test_wrapper_uses_named_hashtable_splatting_for_base_launcher() -> None:
 def test_wrapper_uses_current_go2_address_by_default() -> None:
     source = LAUNCHER.read_text(encoding="utf-8")
 
-    assert '[string]$RobotIp = "192.168.8.245"' in source
+    assert '[string]$RobotIp = "192.168.8.254"' in source
 
 
 def test_wrapper_keeps_follow_target_environment_configuration() -> None:

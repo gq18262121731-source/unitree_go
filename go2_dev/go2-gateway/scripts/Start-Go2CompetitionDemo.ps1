@@ -1,5 +1,5 @@
 param(
-    [string]$RobotIp = "192.168.8.252",
+    [string]$RobotIp = "192.168.8.254",
     [ValidateRange(1, 65535)]
     [int]$VideoPort = 8093,
     [string]$TtsVoice = "Microsoft Huihui Desktop",

@@ -491,6 +491,7 @@ class FakeAudioHub:
         self.audio_list_requests = 0
         self.uploads: list[str] = []
         self.played: list[str] = []
+        self.play_modes: list[str] = []
         self.deleted: list[str] = []
         self.uploaded_bytes: list[bytes] = []
 
@@ -509,6 +510,9 @@ class FakeAudioHub:
 
     async def play_by_uuid(self, unique_id: str) -> None:
         self.played.append(unique_id)
+
+    async def set_play_mode(self, play_mode: str) -> None:
+        self.play_modes.append(play_mode)
 
     async def delete_record(self, unique_id: str) -> None:
         self.deleted.append(unique_id)
@@ -1952,7 +1956,7 @@ def test_formal_launcher_uses_current_robot_and_lan_video_defaults() -> None:
         / "Start-Go2WirelessRuntime.ps1"
     ).read_text(encoding="utf-8")
 
-    assert '[string]$RobotIp = "192.168.8.245"' in launcher
+    assert '[string]$RobotIp = "192.168.8.254"' in launcher
     assert '[string]$ListenHost = "0.0.0.0"' in launcher
     assert '$env:GO2_MAX_VX = "0.42"' in launcher
     assert '$env:GO2_MAX_WZ = "0.55"' in launcher
@@ -2201,6 +2205,7 @@ def test_pose_and_audio_share_the_existing_connection(tmp_path, monkeypatch) -> 
             "z": 0.0,
         }
         assert len(audio_hub.uploads) == 2
+        assert audio_hub.play_modes == ["single_cycle", "single_cycle"]
         assert audio_hub.played == ["uuid-1", "uuid-2"]
     finally:
         runtime.close()
@@ -2456,6 +2461,53 @@ def test_microphone_capture_uses_existing_connection_and_sends_no_motion(tmp_pat
         assert connection.datachannel.pub_sub.requests == []
         assert runtime.status()["microphone"]["available"] is True
     finally:
+        runtime.close(send_stop=False)
+
+
+def test_microphone_capture_logs_first_audio_frame_probe(tmp_path, caplog) -> None:
+    caplog.set_level(logging.INFO)
+    connection = FakeConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video=False,
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+    runtime.start()
+    try:
+        runtime.record_microphone_wav(tmp_path / "mic.wav", duration_seconds=0.5)
+        assert "GO2_AUDIO_FRAME_PROBE sample_rate=100 channels=2" in caplog.text
+        assert caplog.text.count("GO2_AUDIO_FRAME_PROBE") == 1
+    finally:
+        runtime.close(send_stop=False)
+
+
+def test_microphone_pcm_consumer_receives_pcm_frames(tmp_path) -> None:
+    received: list[tuple[int, int, int]] = []
+    connection = FakeConnection()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video=False,
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+    )
+
+    def consumer(pcm: bytes, sample_rate: int, channels: int) -> None:
+        received.append((len(pcm), sample_rate, channels))
+
+    runtime.register_microphone_pcm_consumer(consumer)
+    runtime.start()
+    try:
+        runtime.record_microphone_wav(tmp_path / "mic.wav", duration_seconds=0.5)
+        assert received
+        assert received[0][1:] == (100, 2)
+        assert received[0][0] > 0
+    finally:
+        runtime.unregister_microphone_pcm_consumer(consumer)
         runtime.close(send_stop=False)
 
 

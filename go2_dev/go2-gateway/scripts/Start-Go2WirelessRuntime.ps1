@@ -1,5 +1,5 @@
 param(
-    [string]$RobotIp = "192.168.8.245",
+    [string]$RobotIp = "192.168.8.254",
     [Alias("VideoBind")]
     [ValidateSet("127.0.0.1", "0.0.0.0")]
     [string]$ListenHost = "0.0.0.0",

@@ -37,6 +37,10 @@ class CompanionLifecycleState(str, Enum):
     PAUSED_BY_FALL = "PAUSED_BY_FALL"
 
 
+WAKE_WORD = "小康"
+WAKE_WORD_ALIASES = ("小康", "晓康", "小慷", "小亢", "小汤", "小仓", "小刚")
+
+
 @dataclass(frozen=True)
 class CompanionLifecycleSnapshot:
     state: CompanionLifecycleState
@@ -155,12 +159,28 @@ class VoiceFastIntentRouter:
 class WakeWordMatcher:
     """Conservative wake-word matching with known ASR homophone tolerance."""
 
-    _ALIASES = {"小康", "小仓", "小汤", "晓康", "小刚"}
+    WAKE_WORD = WAKE_WORD
+    WAKE_ALIASES = WAKE_WORD_ALIASES
+    _ALIASES = set(WAKE_WORD_ALIASES)
 
     @classmethod
     def matches(cls, transcript: str) -> bool:
         normalized = re.sub(r"[\s，。！？、,.!?]+", "", str(transcript or ""))
         return normalized in cls._ALIASES
+
+    @classmethod
+    def strip_wake_word(cls, transcript: str) -> tuple[str | None, str]:
+        original = str(transcript or "").strip()
+        if not original:
+            return None, ""
+        pattern = re.compile(
+            rf"^\s*(?:{'|'.join(re.escape(alias) for alias in sorted(cls._ALIASES, key=len, reverse=True))})"
+            r"[\s，。！？、,.!?]*"
+        )
+        match = pattern.match(original)
+        if not match:
+            return None, original
+        return match.group(0).strip(" \t\r\n，。！？、,.!?"), original[match.end():].strip()
 
 
 @dataclass(frozen=True)

@@ -60,7 +60,7 @@ video process separately.
 
 ```powershell
 cd "E:\笨笨狗\go2_dev\go2-gateway"
-.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.252
+.\scripts\Start-Go2WirelessRuntime.ps1 -RobotIp 192.168.8.254
 ```
 
 Confirm:
@@ -111,7 +111,7 @@ start the wireless Runtime with the elder identity used for grounded dialogue:
 
 ```powershell
 .\scripts\Start-Go2WirelessRuntime.ps1 `
-  -RobotIp 192.168.8.252 `
+  -RobotIp 192.168.8.254 `
   -HealthNewUrl http://127.0.0.1:8000 `
   -ElderId elder01_02
 ```

@@ -39,6 +39,15 @@ from app.motion.manual_control import (
 )
 from app.motion.contracts import ExternalRiskEvent, ExternalRiskEventType
 from app.services.robot_service import RobotService
+from app.voice.local_voice import (
+    ConsoleMockTransport,
+    FunASRLocalASRService,
+    Go2ASRAudioBridge,
+    LocalVoicePipeline,
+    LocalVoiceSessionManager,
+    WindowsWaveInMicrophoneSource,
+)
+from app.voice.clip_composer import clip_id_to_filename
 from app.webrtc.go2_wireless_runtime import (
     ExpectedAioiceBindNoiseFilter,
     Go2WirelessRuntime,
@@ -53,10 +62,20 @@ from app.webrtc.uwb_follow import (
     WirelessUwbFollowSession,
     load_wireless_uwb_follow_config,
 )
-from app.webrtc.video_bridge import (
-    WirelessCompanionControlError,
-    create_video_bridge,
-)
+try:
+    from app.webrtc.video_bridge import (
+        WirelessCompanionControlError,
+        create_video_bridge,
+    )
+except ModuleNotFoundError as exc:
+    class WirelessCompanionControlError(RuntimeError):
+        pass
+
+    def create_video_bridge(*_args: Any, **_kwargs: Any) -> Any:
+        raise ModuleNotFoundError(
+            "video bridge dependencies are unavailable; install fastapi to use the "
+            "robot/WebRTC runtime"
+        ) from exc
 from app.webrtc.voice_intent import (
     CompanionAgentClient,
     AgentTurn,
@@ -131,6 +150,13 @@ CONFIRM_COMPANION_START = "WIRELESS_COMPANION_START_APPROVED"
 CONFIRM_FOLLOW_NO_LIDAR = "UWB_ONLY_NO_LIDAR_OPEN_AREA"
 CONFIRM_REMOTE_STOP = "REMOTE_STOP_READY"
 CONFIRM_MIC_READONLY = "WEBRTC_MIC_READONLY_GATE"
+
+
+def _default_local_asr_backend() -> str:
+    value = str(os.environ.get("GO2_ASR_BACKEND", "funasr-local")).strip().lower()
+    if value in {"funasr", "funasr-local", "local"}:
+        return "funasr-local"
+    return "remote"
 
 
 def discover_lan_ipv4(robot_ip: str) -> str | None:
@@ -1226,6 +1252,71 @@ class RuntimeConsole:
                 f"({filename}, {type(exc).__name__}: {exc})"
             )
 
+    def _voice_clip_paths(self, clips: list[str] | tuple[str, ...]) -> tuple[list[Path], list[str]]:
+        paths: list[Path] = []
+        missing: list[str] = []
+        for clip in clips:
+            clip_id = str(clip or "").strip()
+            if not clip_id:
+                continue
+            try:
+                path = VOICE_PRESET_DIR / clip_id_to_filename(clip_id)
+            except Exception:
+                missing.append(clip_id)
+                continue
+            if path.is_file():
+                paths.append(path)
+            else:
+                missing.append(clip_id)
+        return paths, missing
+
+    def preload_voice_clips(self, clips: list[str] | tuple[str, ...]) -> dict[str, object]:
+        paths, missing = self._voice_clip_paths(clips)
+        if missing:
+            return {
+                "clips": [str(item).strip() for item in clips if str(item).strip()],
+                "played": 0,
+                "status": "missing",
+                "missing_clips": missing,
+            }
+        if not paths:
+            return {"clips": [], "played": 0, "status": "missing", "missing_clips": []}
+        results = self.runtime.preload_audio_files(tuple(paths), retry_attempts=2)
+        failed = [
+            clip
+            for clip, path in zip([str(item).strip() for item in clips if str(item).strip()], paths)
+            if not (results.get(str(path.resolve())) and results[str(path.resolve())].ready)
+        ]
+        return {
+            "clips": [str(item).strip() for item in clips if str(item).strip()],
+            "played": 0,
+            "status": "done" if not failed else "error",
+            "missing_clips": failed,
+        }
+
+    def play_voice_clips(self, clips: list[str] | tuple[str, ...]) -> dict[str, object]:
+        normalized = [str(item).strip() for item in clips if str(item).strip()]
+        paths, missing = self._voice_clip_paths(tuple(normalized))
+        if missing:
+            print(f"VOICE_CLIPS_MISSING: {','.join(missing)}")
+            return {
+                "clips": normalized,
+                "played": 0,
+                "status": "missing",
+                "missing_clips": missing,
+            }
+        played = 0
+        for path in paths:
+            self.runtime.play_audio_file(path, timeout_seconds=3.0)
+            played += 1
+        print(f"VOICE_CLIPS_PLAYED: {played}/{len(normalized)}")
+        return {
+            "clips": normalized,
+            "played": played,
+            "status": "done",
+            "missing_clips": [],
+        }
+
     def preload_voice_control_presets(self) -> None:
         filenames = {
             *VOICE_CONTROL_PRESETS.values(),
@@ -1851,10 +1942,7 @@ class RuntimeConsole:
                     execution_reason = f"{exc.code}: {exc.message}"
                     print(f"VOICE_LIFECYCLE_EXECUTION_FAILED: {execution_reason}")
 
-            playback_reply = VOICE_CONTROL_FEEDBACK_TEXT.get(
-                turn.intent,
-                turn.reply,
-            )
+            playback_reply = VOICE_CONTROL_FEEDBACK_TEXT.get(turn.intent, turn.reply)
             print(f"INTENT_ROUTE: {intent_route}")
             if turn.reply and playback_reply != turn.reply:
                 print(f"AGENT_RAW_REPLY: {turn.reply}")
@@ -2394,6 +2482,18 @@ def _confirm_startup(
             )
 
 
+def _print_audio_devices(devices: list[object]) -> None:
+    if not devices:
+        print("[AUDIO] no capture devices found")
+        return
+    print("[AUDIO] available capture devices")
+    for device in devices:
+        print(
+            f"[{device.index}] {device.name} "
+            f"(channels={device.channels}, formats=0x{device.formats:08x})"
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Unified Go2 WebRTC motion + video runtime")
     parser.add_argument("--host", choices=("127.0.0.1", "0.0.0.0"), default="127.0.0.1")
@@ -2421,6 +2521,73 @@ def main(argv: list[str] | None = None) -> int:
         "--voice-session-id",
         default=os.environ.get("HEALTH_NEW_VOICE_SESSION_ID", "go2-wireless"),
     )
+    parser.add_argument(
+        "--audio-source",
+        choices=("webrtc", "go2", "local"),
+        default="webrtc",
+        help="select Go2 WebRTC audio, or local Windows microphone test mode",
+    )
+    parser.add_argument(
+        "--asr-backend",
+        choices=("remote", "funasr-local"),
+        default=_default_local_asr_backend(),
+        help="ASR backend for local microphone mode",
+    )
+    parser.add_argument(
+        "--funasr-model",
+        default=os.environ.get("GO2_FUNASR_MODEL", "paraformer-zh-streaming"),
+        help="FunASR model name for local ASR",
+    )
+    parser.add_argument(
+        "--funasr-hub",
+        default=os.environ.get("GO2_FUNASR_HUB", "ms"),
+        help="FunASR hub name for local ASR",
+    )
+    parser.add_argument(
+        "--funasr-device",
+        default=os.environ.get("GO2_FUNASR_DEVICE", "cpu"),
+        help="FunASR device for local ASR",
+    )
+    parser.add_argument(
+        "--funasr-ncpu",
+        type=int,
+        default=int(os.environ.get("GO2_FUNASR_NCPU", "4")),
+        help="CPU worker count for local FunASR",
+    )
+    parser.add_argument(
+        "--list-audio-devices",
+        action="store_true",
+        help="print local microphone devices and exit",
+    )
+    parser.add_argument(
+        "--mic-device",
+        type=int,
+        default=None,
+        help="local microphone device index; omit to use the system default",
+    )
+    parser.add_argument(
+        "--device-id",
+        default=os.environ.get("GO2_DEVICE_ID", "DOG-LJG-001"),
+        help="contract device_id used in local microphone test mode",
+    )
+    parser.add_argument(
+        "--session-timeout",
+        type=float,
+        default=15.0,
+        help="local voice session idle timeout in seconds",
+    )
+    parser.add_argument(
+        "--capture-seconds",
+        type=float,
+        default=15.0,
+        help="local microphone capture window in seconds",
+    )
+    parser.add_argument(
+        "--vad-trailing-silence-seconds",
+        type=float,
+        default=0.3,
+        help="local microphone trailing silence threshold in seconds",
+    )
     parser.add_argument("--execute", action="store_true")
     parser.add_argument(
         "--manual-confirm-start",
@@ -2445,6 +2612,36 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not 1 <= args.port <= 65535:
         parser.error("--port must be in [1, 65535]")
+
+    if args.audio_source == "local":
+        microphone = WindowsWaveInMicrophoneSource()
+        if args.list_audio_devices:
+            _print_audio_devices(microphone.list_devices())
+            return 0
+        if args.asr_backend == "funasr-local":
+            asr_service = FunASRLocalASRService(
+                model=args.funasr_model,
+                hub=args.funasr_hub,
+                device=args.funasr_device,
+                ncpu=args.funasr_ncpu,
+            )
+        else:
+            asr_service = HealthNewASRService(args.health_new_url)
+        pipeline = LocalVoicePipeline(
+            microphone=microphone,
+            asr_service=asr_service,
+            device_id=args.device_id,
+            topic_prefix=load_settings().mqtt_topic_prefix,
+            microphone_device_index=args.mic_device,
+            session_timeout_seconds=args.session_timeout,
+            capture_seconds=args.capture_seconds,
+            vad_trailing_silence_seconds=args.vad_trailing_silence_seconds,
+        )
+        try:
+            pipeline.run_forever()
+            return 0
+        except KeyboardInterrupt:
+            return 130
 
     import uvicorn
 
@@ -2550,8 +2747,18 @@ def main(argv: list[str] | None = None) -> int:
         load_scripted_motion_config(MOTION_CONFIG),
     )
 
+    def create_asr_service() -> Any:
+        if args.asr_backend == "funasr-local":
+            return FunASRLocalASRService(
+                model=args.funasr_model,
+                hub=args.funasr_hub,
+                device=args.funasr_device,
+                ncpu=args.funasr_ncpu,
+            )
+        return HealthNewASRService(args.health_new_url)
+
     def create_voice_services() -> tuple[Any, Any, Any]:
-        asr_service = HealthNewASRService(args.health_new_url)
+        asr_service = create_asr_service()
         tts_service = HealthNewTTSService(
             args.health_new_url,
             cache_dir=ROOT / "data" / "voice" / "dynamic_cache",
@@ -2568,6 +2775,21 @@ def main(argv: list[str] | None = None) -> int:
             else None
         )
         return asr_service, tts_service, agent_client
+
+    go2_bridge: Go2ASRAudioBridge | None = None
+    if args.audio_source == "go2":
+        go2_bridge = Go2ASRAudioBridge(
+            asr_service=create_asr_service(),
+            session_manager=LocalVoiceSessionManager(
+                ConsoleMockTransport(),
+                device_id=args.device_id,
+                topic_prefix=load_settings().mqtt_topic_prefix,
+                # The Go2 microphone path currently accepts only the normal
+                # wake-word/session flow. Emergency bypass is a later phase.
+                emergency_bypass_enabled=False,
+            ),
+            printer=print,
+        )
 
     console = RuntimeConsole(
         runtime,
@@ -2611,6 +2833,13 @@ def main(argv: list[str] | None = None) -> int:
                 video_status.get("reconnectCount"),
             )
         time.sleep(1.0)
+        if go2_bridge is not None:
+            runtime.register_microphone_pcm_consumer(go2_bridge.push_pcm)
+            go2_bridge.start()
+            try:
+                runtime.activate_voice()
+            except Exception as exc:
+                LOGGER.warning("GO2_AUDIO_BRIDGE_ACTIVATION_FAILED: %s", exc)
         if not args.no_open_browser:
             webbrowser.open(f"http://127.0.0.1:{args.port}/")
         console.preload_required_demo_presets()
@@ -2624,6 +2853,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"WIRELESS_RUNTIME_FAILED: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
     finally:
+        if go2_bridge is not None:
+            try:
+                runtime.unregister_microphone_pcm_consumer(go2_bridge.push_pcm)
+            except Exception:
+                pass
+            go2_bridge.stop()
         follow_target_source.set_follow_active(False)
         follow_target_forwarder.close()
         controller.stop()

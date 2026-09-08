@@ -8,6 +8,14 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.voice.clip_composer import clip_id_to_filename, dynamic_clip_phrases
 
 
 AUDITION_TEXT = "好的，我陪您出去走走。"
@@ -72,6 +80,28 @@ def _decode_audio(payload: dict[str, object]) -> bytes:
     raise RuntimeError(str(payload.get("error") or "TTS returned no audio"))
 
 
+def _repair_wav_sizes(audio: bytes) -> bytes:
+    if len(audio) < 44 or audio[:4] != b"RIFF" or audio[8:12] != b"WAVE":
+        return audio
+    repaired = bytearray(audio)
+    repaired[4:8] = (len(repaired) - 8).to_bytes(4, "little")
+    offset = 12
+    while offset + 8 <= len(repaired):
+        chunk_id = bytes(repaired[offset : offset + 4])
+        chunk_size = int.from_bytes(repaired[offset + 4 : offset + 8], "little")
+        data_start = offset + 8
+        if chunk_id == b"data":
+            repaired[offset + 4 : offset + 8] = (
+                len(repaired) - data_start
+            ).to_bytes(4, "little")
+            break
+        next_offset = data_start + chunk_size + (chunk_size % 2)
+        if next_offset <= offset:
+            break
+        offset = next_offset
+    return bytes(repaired)
+
+
 def _synthesize(
     *, health_url: str, text: str, voice: str, speed: float
 ) -> tuple[bytes, dict[str, object]]:
@@ -82,6 +112,7 @@ def _synthesize(
     if payload.get("ok") is not True:
         raise RuntimeError(str(payload.get("error") or "TTS request failed"))
     audio = _decode_audio(payload)
+    audio = _repair_wav_sizes(audio)
     if len(audio) < 44 or audio[:4] != b"RIFF" or audio[8:12] != b"WAVE":
         raise RuntimeError("TTS response is not a valid WAV file")
     return audio, payload
@@ -100,6 +131,11 @@ def main() -> int:
     parser.add_argument("--speed", type=float, default=1.0)
     parser.add_argument("--audition", action="store_true")
     parser.add_argument(
+        "--dynamic-clips",
+        action="store_true",
+        help="build the optional fixed-phrase and number clip dictionary",
+    )
+    parser.add_argument(
         "--only",
         choices=tuple(PRESET_PHRASES),
         help="Build only one named preset instead of the full preset set.",
@@ -112,9 +148,19 @@ def main() -> int:
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.audition and args.dynamic_clips:
+        parser.error("--audition and --dynamic-clips cannot be used together")
+    if args.dynamic_clips and args.only:
+        parser.error("--only cannot be combined with --dynamic-clips")
+
     items = (
         [(voice, AUDITION_TEXT, f"audition_{voice}.wav") for voice in BUILTIN_VOICES]
         if args.audition
+        else [
+            (args.voice, text, clip_id_to_filename(clip_id))
+            for clip_id, text in dynamic_clip_phrases().items()
+        ]
+        if args.dynamic_clips
         else [
             (
                 args.voice,
@@ -136,7 +182,7 @@ def main() -> int:
         "files": [],
     }
     manifest_path = args.output_dir / "manifest.json"
-    if args.only and manifest_path.is_file():
+    if (args.only or args.dynamic_clips) and manifest_path.is_file():
         try:
             existing = json.loads(manifest_path.read_text(encoding="utf-8"))
         except (OSError, ValueError, TypeError):
@@ -147,13 +193,13 @@ def main() -> int:
             manifest["model"] = "qwen3-tts-flash"
             manifest["voice"] = args.voice
             manifest["speed"] = args.speed
-            target_name = f"{args.only}.wav"
+            target_names = {filename for _voice, _text, filename in items}
             manifest["files"] = [
                 item
                 for item in manifest["files"]
                 if not (
                     isinstance(item, dict)
-                    and Path(str(item.get("path") or "")).name == target_name
+                    and Path(str(item.get("path") or "")).name in target_names
                 )
             ]
     for voice, text, filename in items:
