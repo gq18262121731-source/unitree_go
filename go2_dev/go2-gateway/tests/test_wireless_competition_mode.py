@@ -245,13 +245,18 @@ def test_voice_clip_playback_timeout_scales_with_wav_duration(
 
     _write_pcm16_wav(tmp_path / "WAKE_READY.wav", [1000, -1000] * 120000)
     timeouts: list[float] = []
+    stops: list[str] = []
+    sleeps: list[float] = []
 
     class Runtime:
         def play_audio_file(self, _path, *, timeout_seconds):
             timeouts.append(timeout_seconds)
 
+        def stop_audio_playback(self, *, reason, timeout_seconds):
+            stops.append(reason)
+
     monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
-    monkeypatch.setattr(runtime_tool.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(runtime_tool.time, "sleep", lambda seconds: sleeps.append(seconds))
     console = RuntimeConsole.__new__(RuntimeConsole)
     console.runtime = Runtime()
 
@@ -260,6 +265,11 @@ def test_voice_clip_playback_timeout_scales_with_wav_duration(
     assert result["status"] == "done"
     assert timeouts == [
         pytest.approx(10.0 + runtime_tool.VOICE_PLAYBACK_TIMEOUT_MARGIN_SECONDS)
+    ]
+    assert stops == ["voice_clip_complete:sess.wake_ack", "voice_playback_cleanup"]
+    assert sleeps == [
+        pytest.approx(10.0 + runtime_tool.VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS),
+        pytest.approx(runtime_tool.VOICE_PLAYBACK_ECHO_GUARD_SECONDS),
     ]
 
 

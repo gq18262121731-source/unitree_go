@@ -2237,6 +2237,7 @@ def test_pose_and_audio_share_the_existing_connection(tmp_path, monkeypatch) -> 
         }
         assert len(audio_hub.uploads) == 2
         assert audio_hub.play_modes == ["no_cycle", "no_cycle"]
+        assert audio_hub.play_mode_readbacks == 2
         assert audio_hub.played == ["uuid-1", "uuid-2"]
         assert audio_hub.pauses == 2
     finally:
@@ -2485,6 +2486,36 @@ def test_audiohub_upload_repairs_streaming_wav_header_and_adds_silent_tail(
         assert uploaded[-100:] == b"\0" * 100
     finally:
         runtime.close(send_stop=False)
+
+
+def test_audiohub_wav_info_reports_physical_chunk_counts(tmp_path) -> None:
+    audio_file = tmp_path / "WAKE_READY.wav"
+    pcm = (1000).to_bytes(2, "little", signed=True) * 1200
+    audio_file.write_bytes(
+        b"RIFF"
+        + (0x7FFFFFFF).to_bytes(4, "little")
+        + b"WAVEfmt "
+        + (16).to_bytes(4, "little")
+        + (1).to_bytes(2, "little")
+        + (1).to_bytes(2, "little")
+        + (24000).to_bytes(4, "little")
+        + (48000).to_bytes(4, "little")
+        + (2).to_bytes(2, "little")
+        + (16).to_bytes(2, "little")
+        + b"data"
+        + (0x7FFFFFFF).to_bytes(4, "little")
+        + pcm
+    )
+
+    info = Go2WirelessRuntime._audiohub_wav_info(str(audio_file))
+
+    assert info["riff_count"] == 1
+    assert info["wave_count"] == 1
+    assert info["fmt_count"] == 1
+    assert info["data_count"] == 1
+    assert info["riff_offsets"] == [0]
+    assert info["data_offsets"] == [36]
+    assert info["md5"] == hashlib.md5(audio_file.read_bytes()).hexdigest()
 
 
 def test_microphone_capture_uses_existing_connection_and_sends_no_motion(tmp_path) -> None:
