@@ -182,6 +182,18 @@ def test_local_session_wake_sentence_publishes_session_and_speech() -> None:
     assert any("[VOICE] wake: 小康" in line for line in logs)
 
 
+def test_local_session_wake_sentence_without_punctuation_keeps_outing_text() -> None:
+    transport = MockTransport()
+    manager = LocalVoiceSessionManager(transport)
+
+    manager.process_transcript("小康陪我出去走走")
+
+    speech = transport.published[-1]
+    assert speech.payload["text"] == "陪我出去走走"
+    assert speech.payload["wake_word"] == "小康"
+    assert speech.payload["is_wake_turn"] is True
+
+
 def test_local_session_wake_only_then_follow_up_reuses_same_session() -> None:
     transport = MockTransport()
     manager = LocalVoiceSessionManager(transport)
@@ -189,15 +201,70 @@ def test_local_session_wake_only_then_follow_up_reuses_same_session() -> None:
     manager.process_transcript("小康")
     first_session_id = transport.published[0].payload["session_id"]
     assert transport.published[0].payload["event"] == "session_start"
-    assert len(transport.published) == 1
+    assert transport.published[1].payload["command"] == "tts_speak"
+    assert transport.published[1].payload["payload"]["clips"] == ["sess.wake_ack"]
 
     manager.process_transcript("我想看看今天能不能出去")
-    assert len(transport.published) == 2
-    speech = transport.published[1]
+    assert len(transport.published) == 3
+    speech = transport.published[2]
     assert speech.payload["session_id"] == first_session_id
     assert speech.payload["turn"] == 1
     assert speech.payload["is_wake_turn"] is False
     assert speech.payload["text"] == "我想看看今天能不能出去"
+
+
+def test_wake_only_mode_accepts_wake_but_ignores_business_speech() -> None:
+    transport = MockTransport()
+    logs: list[str] = []
+    manager = LocalVoiceSessionManager(
+        transport,
+        wake_only=True,
+        emergency_bypass_enabled=False,
+        voice_debug=True,
+        printer=logs.append,
+    )
+
+    manager.process_transcript("小康")
+    session_id = manager.active_session_id
+    assert session_id is not None
+    assert transport.published[0].payload["event"] == "session_start"
+    assert transport.published[1].payload["command"] == "tts_speak"
+    assert transport.published[1].payload["payload"]["clips"] == ["sess.wake_ack"]
+
+    repeated_wake = manager.process_transcript("小康，陪我出去走走")
+    assert len(repeated_wake) == 1
+    assert repeated_wake[0].payload["command"] == "tts_speak"
+    assert repeated_wake[0].payload["payload"]["clips"] == ["sess.wake_ack"]
+    assert manager.process_transcript("今天身体怎么样") == []
+    assert manager.process_transcript("现在出发") == []
+    assert manager.active_session_id == session_id
+    assert not any(message.topic.endswith("/speech") for message in transport.published)
+    assert any("wake_only" in line for line in logs)
+
+
+def test_duplicate_wake_word_is_wake_only_and_does_not_consume_turn() -> None:
+    transport = MockTransport()
+    manager = LocalVoiceSessionManager(transport)
+
+    manager.process_transcript("小康小康")
+    session_id = manager.active_session_id
+    assert session_id is not None
+    assert [message.payload.get("event") for message in transport.published] == [
+        "session_start",
+        None,
+    ]
+    assert transport.published[1].payload["command"] == "tts_speak"
+    assert not any(
+        message.topic.endswith("/speech") for message in transport.published
+    )
+
+    manager.process_transcript("陪我出去走走")
+
+    speech = transport.published[-1]
+    assert speech.topic.endswith("/speech")
+    assert speech.payload["session_id"] == session_id
+    assert speech.payload["turn"] == 1
+    assert speech.payload["text"] == "陪我出去走走"
 
 
 def test_local_session_emergency_bypasses_wake_without_prior_session() -> None:
@@ -445,6 +512,63 @@ def test_go2_audio_bridge_clear_pending_audio_resets_current_stream(monkeypatch)
 
     assert finish_calls == 0
     assert transport.published == []
+
+
+def test_go2_audio_bridge_waits_for_quiet_after_playback(monkeypatch) -> None:
+    transport = MockTransport()
+    manager = LocalVoiceSessionManager(transport, emergency_bypass_enabled=False)
+    logs: list[str] = []
+    fed_peaks: list[int] = []
+
+    class FakeStreamingSession:
+        def __init__(self, _service) -> None:
+            pass
+
+        def feed_pcm(self, pcm: bytes, *, sample_rate: int, channels: int) -> str:
+            assert sample_rate == 16000
+            assert channels == 1
+            values = np.frombuffer(pcm, dtype=np.int16)
+            fed_peaks.append(int(np.max(np.abs(values))) if values.size else 0)
+            return "小康我想出去"
+
+        def finish(self) -> str:
+            return "小康，我想出去走走"
+
+    monkeypatch.setattr(
+        "app.voice.local_voice.FunASRStreamingSession",
+        FakeStreamingSession,
+    )
+    bridge = Go2ASRAudioBridge(
+        asr_service=object(),  # type: ignore[arg-type]
+        session_manager=manager,
+        printer=logs.append,
+        vad_min_capture_seconds=0.02,
+        vad_trailing_silence_seconds=0.04,
+        queue_size=32,
+        voice_debug=True,
+        post_playback_quiet_min_mute_seconds=0.0,
+        post_playback_quiet_seconds=0.04,
+    )
+    bridge.start()
+    try:
+        echo = np.full(320, 12000, dtype=np.int16).tobytes()
+        quiet = np.zeros(320, dtype=np.int16).tobytes()
+        speech = np.full(320, 5000, dtype=np.int16).tobytes()
+
+        bridge.arm_post_playback_quiet_gate()
+        for frame in [echo, echo, quiet, quiet, speech, speech, quiet, quiet, quiet]:
+            bridge.push_pcm(frame, 16000, 1)
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and not transport.published:
+            time.sleep(0.01)
+    finally:
+        bridge.stop()
+
+    assert fed_peaks
+    assert max(fed_peaks) <= 5000
+    assert any("post_playback_quiet_gate armed" in line for line in logs)
+    assert any("post_playback_quiet_gate ready" in line for line in logs)
+    assert transport.published[-1].payload["text"] == "我想出去走走"
 
 
 def test_go2_audio_bridge_warmup_runs_before_audio_thread() -> None:
@@ -720,12 +844,159 @@ def test_local_session_timeout_ends_open_session() -> None:
     manager.process_transcript("小康")
     manager.expire_if_idle()
 
-    assert [message.payload.get("event") for message in transport.published] == [
-        "session_start",
-        "session_end",
-    ]
+    assert [
+        message.payload.get("event")
+        for message in transport.published
+        if message.payload.get("event") is not None
+    ] == ["session_start", "session_end"]
     assert transport.published[-1].payload["reason"] == "timeout"
     assert transport.published[-1].payload["turns"] == 0
+
+
+def test_clip_done_refreshes_session_timeout_after_playback() -> None:
+    transport = MockTransport()
+    now = [0.0]
+    manager = LocalVoiceSessionManager(
+        transport,
+        emergency_bypass_enabled=False,
+        session_timeout_seconds=10.0,
+        monotonic_clock=lambda: now[0],
+    )
+
+    manager.process_transcript("小康")
+    session_id = manager.active_session_id
+    assert session_id is not None
+
+    now[0] = 9.5
+    transport.publish(
+        MqttContractMessage(
+            topic=contract_topic("DOG-LJG-001", "event"),
+            payload={
+                "device_id": "DOG-LJG-001",
+                "source": "simulator",
+                "ts": "",
+                "event": "clip_done",
+                "session_id": session_id,
+                "status": "done",
+            },
+        )
+    )
+
+    now[0] = 15.0
+    manager.process_transcript("陪我出去走走")
+
+    assert manager.active_session_id == session_id
+    assert transport.published[-1].payload["text"] == "陪我出去走走"
+    assert not any(
+        message.payload.get("event") == "session_end"
+        for message in transport.published
+    )
+
+
+def test_post_playback_unknown_transcript_is_dropped_without_consuming_turn() -> None:
+    transport = MockTransport()
+    logs: list[str] = []
+    now = [0.0]
+    manager = LocalVoiceSessionManager(
+        transport,
+        emergency_bypass_enabled=False,
+        session_timeout_seconds=10.0,
+        max_turns=2,
+        monotonic_clock=lambda: now[0],
+        printer=logs.append,
+    )
+
+    manager.process_transcript("小康")
+    session_id = manager.active_session_id
+    assert session_id is not None
+    now[0] = 1.0
+    transport.publish(
+        MqttContractMessage(
+            topic=contract_topic("DOG-LJG-001", "event"),
+            payload={
+                "device_id": "DOG-LJG-001",
+                "source": "simulator",
+                "ts": "",
+                "event": "clip_done",
+                "session_id": session_id,
+                "status": "done",
+            },
+        )
+    )
+
+    now[0] = 1.4
+    manager.process_transcript("喝水子")
+    now[0] = 2.2
+    manager.process_transcript("陪我出去走")
+
+    speech_messages = [
+        message for message in transport.published if message.topic.endswith("/speech")
+    ]
+    assert len(speech_messages) == 1
+    assert speech_messages[0].payload["text"] == "陪我出去走"
+    assert speech_messages[0].payload["turn"] == 1
+    assert not any(
+        message.payload.get("event") == "session_end"
+        for message in transport.published
+    )
+    assert "[VOICE] ignored: post_playback_echo (喝水子)" in logs
+
+
+def test_session_unknown_transcript_is_forwarded_without_consuming_business_turn() -> None:
+    transport = MockTransport()
+    logs: list[str] = []
+    now = [0.0]
+    manager = LocalVoiceSessionManager(
+        transport,
+        emergency_bypass_enabled=False,
+        session_timeout_seconds=10.0,
+        max_turns=2,
+        monotonic_clock=lambda: now[0],
+        printer=logs.append,
+    )
+
+    manager.process_transcript("小康")
+    session_id = manager.active_session_id
+    assert session_id is not None
+    now[0] = 1.0
+    transport.publish(
+        MqttContractMessage(
+            topic=contract_topic("DOG-LJG-001", "event"),
+            payload={
+                "device_id": "DOG-LJG-001",
+                "source": "simulator",
+                "ts": "",
+                "event": "clip_done",
+                "session_id": session_id,
+                "status": "done",
+            },
+        )
+    )
+
+    now[0] = 4.0
+    unknown_messages = manager.process_transcript("我怀疑他没有二轮对话的能力呢")
+    assert len(unknown_messages) == 1
+    assert unknown_messages[0].topic.endswith("/speech")
+    assert unknown_messages[0].payload["text"] == "我怀疑他没有二轮对话的能力呢"
+    assert unknown_messages[0].payload["turn"] == 1
+    now[0] = 4.5
+    manager.process_transcript("陪我出去走")
+
+    speech_messages = [
+        message for message in transport.published if message.topic.endswith("/speech")
+    ]
+    assert len(speech_messages) == 2
+    assert speech_messages[0].payload["text"] == "我怀疑他没有二轮对话的能力呢"
+    assert speech_messages[0].payload["turn"] == 1
+    assert speech_messages[1].payload["text"] == "陪我出去走"
+    assert speech_messages[1].payload["turn"] == 2
+    assert manager.active_session_id == session_id
+    assert not any(
+        message.payload.get("event") == "session_end"
+        for message in transport.published
+    )
+    assert "[VOICE] user: 我怀疑他没有二轮对话的能力呢" in logs
+    assert "[VOICE] user: 陪我出去走" in logs
 
 
 def test_voice_listener_pause_hard_mutes_business_transcripts() -> None:

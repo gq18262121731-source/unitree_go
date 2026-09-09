@@ -966,6 +966,76 @@ class Go2WirelessRuntime:
                 )
         return 0
 
+    def play_audio_files(
+        self,
+        audio_files: list[str | os.PathLike[str]] | tuple[str | os.PathLike[str], ...],
+        *,
+        timeout_seconds: float | None = None,
+        inter_clip_gap_seconds: float | list[float] | tuple[float, ...] = 0.08,
+    ) -> int:
+        """Play multiple prepared WAV files as one contiguous AudioHub session."""
+
+        sources: list[str] = []
+        for audio_file in audio_files:
+            source = os.path.abspath(os.fspath(audio_file))
+            if not os.path.isfile(source):
+                raise ValueError(f"audio file does not exist: {source}")
+            if os.path.splitext(source)[1].lower() != ".wav":
+                raise ValueError("WebRTC AudioHub playback currently requires WAV files")
+            sources.append(source)
+        if not sources:
+            return 0
+
+        raw_gaps = (
+            list(inter_clip_gap_seconds)
+            if isinstance(inter_clip_gap_seconds, (list, tuple))
+            else [float(inter_clip_gap_seconds)] * max(0, len(sources) - 1)
+        )
+        gaps = [max(0.0, float(item)) for item in raw_gaps[: max(0, len(sources) - 1)]]
+        while len(gaps) < len(sources) - 1:
+            gaps.append(0.08)
+
+        with self._audio_io_lock:
+            with tempfile.TemporaryDirectory(prefix="go2-audio-batch-") as temp_dir:
+                prepared: list[tuple[str, str, str, float]] = []
+                total_duration = 0.0
+                for source in sources:
+                    digest = self._audiohub_digest(source)
+                    stem = self._safe_audio_name(
+                        os.path.splitext(os.path.basename(source))[0]
+                    )
+                    custom_name = f"go2_{stem}_{digest}"
+                    upload_path = os.path.join(temp_dir, f"{custom_name}.wav")
+                    self._prepare_audiohub_wav(source, upload_path)
+                    wav_info = self._audiohub_wav_info(upload_path)
+                    duration = float(wav_info.get("duration_seconds") or 0.0)
+                    total_duration += duration
+                    LOGGER.info(
+                        "AUDIOHUB_BATCH_WAV_PREPARED custom_name=%s duration=%.3fs bytes=%s md5=%s",
+                        custom_name,
+                        duration,
+                        wav_info.get("bytes"),
+                        wav_info.get("md5"),
+                    )
+                    prepared.append((source, upload_path, custom_name, duration))
+                playback_timeout = (
+                    max(
+                        self.command_timeout_seconds + 1.0,
+                        total_duration + sum(gaps) + 20.0,
+                    )
+                    if timeout_seconds is None
+                    else max(0.5, float(timeout_seconds))
+                )
+                self._run_runtime_coroutine(
+                    self._play_audio_files_async(
+                        prepared,
+                        inter_clip_gaps=gaps,
+                    ),
+                    "AudioHub batch playback",
+                    timeout=playback_timeout,
+                )
+        return 0
+
     def stop_audio_playback(
         self,
         *,
@@ -3779,6 +3849,108 @@ class Go2WirelessRuntime:
             await play_by_uuid(unique_id)
         LOGGER.info("AUDIOHUB_PLAY_ACK seq=%03d uuid=%s", play_seq, unique_id)
 
+    async def _play_audio_files_async(
+        self,
+        prepared: list[tuple[str, str, str, float]],
+        *,
+        inter_clip_gaps: list[float],
+    ) -> None:
+        playable: list[tuple[str, str, float]] = []
+        for _source, upload_path, custom_name, duration in prepared:
+            unique_id = await self._preload_audio_file_async(upload_path, custom_name)
+            playable.append((custom_name, unique_id, max(0.0, float(duration))))
+
+        with self._lock:
+            audio_hub = self._audio_hub
+        if audio_hub is None:
+            raise RuntimeError("WebRTC AudioHub is unavailable")
+
+        with self._lock:
+            self._audio_play_seq += 1
+            batch_seq = self._audio_play_seq
+        pause = getattr(audio_hub, "pause", None)
+        if callable(pause):
+            try:
+                LOGGER.info("AUDIOHUB_BATCH_PRE_PLAY_PAUSE_REQ seq=%03d", batch_seq)
+                await pause()
+                LOGGER.info("AUDIOHUB_BATCH_PRE_PLAY_PAUSE_ACK seq=%03d", batch_seq)
+            except Exception as exc:
+                LOGGER.warning(
+                    "AUDIOHUB_BATCH_PRE_PLAY_PAUSE_FAILED seq=%03d error=%s",
+                    batch_seq,
+                    self._exception_detail(exc),
+                )
+        set_play_mode = getattr(audio_hub, "set_play_mode", None)
+        if callable(set_play_mode):
+            LOGGER.info(
+                "AUDIOHUB_BATCH_PLAY_MODE_SET_REQ seq=%03d requested_mode=no_cycle",
+                batch_seq,
+            )
+            await set_play_mode("no_cycle")
+            LOGGER.info(
+                "AUDIOHUB_BATCH_PLAY_MODE_SET_ACK seq=%03d requested_mode=no_cycle",
+                batch_seq,
+            )
+            get_play_mode = getattr(audio_hub, "get_play_mode", None)
+            if callable(get_play_mode):
+                try:
+                    readback = await get_play_mode()
+                    LOGGER.info(
+                        "AUDIOHUB_BATCH_PLAY_MODE seq=%03d requested_mode=no_cycle actual_mode=%s raw=%s",
+                        batch_seq,
+                        self._audiohub_play_mode_label(readback),
+                        readback,
+                    )
+                except Exception as exc:
+                    LOGGER.warning(
+                        "AUDIOHUB_BATCH_PLAY_MODE_READBACK_FAILED seq=%03d error=%s",
+                        batch_seq,
+                        self._exception_detail(exc),
+                    )
+        else:
+            LOGGER.warning(
+                "AUDIOHUB_BATCH_PLAY_MODE_SET_SKIPPED seq=%03d set_play_mode=unavailable",
+                batch_seq,
+            )
+
+        play_by_uuid = getattr(audio_hub, "play_by_uuid")
+        try:
+            play_signature = inspect.signature(play_by_uuid)
+            supports_play_context = {
+                "clip_id",
+                "play_seq",
+            }.issubset(play_signature.parameters)
+        except (TypeError, ValueError):
+            supports_play_context = False
+        for index, (custom_name, unique_id, duration) in enumerate(playable):
+            with self._lock:
+                self._audio_play_seq += 1
+                play_seq = self._audio_play_seq
+            LOGGER.info(
+                "AUDIOHUB_BATCH_PLAY_PREPARED batch_seq=%03d seq=%03d custom_name=%s uuid=%s duration=%.3fs",
+                batch_seq,
+                play_seq,
+                custom_name,
+                unique_id,
+                duration,
+            )
+            if supports_play_context:
+                await play_by_uuid(
+                    unique_id,
+                    clip_id=custom_name,
+                    play_seq=play_seq,
+                )
+            else:
+                await play_by_uuid(unique_id)
+            LOGGER.info(
+                "AUDIOHUB_BATCH_PLAY_ACK batch_seq=%03d seq=%03d uuid=%s",
+                batch_seq,
+                play_seq,
+                unique_id,
+            )
+            gap = inter_clip_gaps[index] if index < len(inter_clip_gaps) else 0.0
+            await asyncio.sleep(max(0.0, duration + gap))
+
     async def _stop_audio_playback_async(self, *, reason: str) -> None:
         with self._lock:
             audio_hub = self._audio_hub
@@ -3991,7 +4163,14 @@ class Go2WirelessRuntime:
                 self._audio_hub = audio_hub
 
         unique_id = self._audio_uuid_cache.get(custom_name)
+        if unique_id is not None:
+            LOGGER.info(
+                "AUDIOHUB_UUID_CACHE_HIT custom_name=%s uuid=%s",
+                custom_name,
+                unique_id,
+            )
         if unique_id is None:
+            LOGGER.info("AUDIOHUB_UUID_CACHE_MISS custom_name=%s", custom_name)
             unique_id = self._find_audio_uuid(await audio_hub.get_audio_list(), custom_name)
         if unique_id is None:
             # Keep the upstream wire format unchanged while hiding its raw

@@ -74,6 +74,25 @@ class XiaokangDecision:
     reply: str = ""
 
 
+OUTING_REQUEST_TERMS = (
+    "出去",
+    "出门",
+    "走走",
+    "走一走",
+    "散步",
+    "转转",
+    "遛弯",
+    "陪我走",
+    "陪我走走",
+    "陪我出去",
+    "陪我出门",
+    "带我出去",
+    "带我出门",
+    "跟我走",
+    "一起出去",
+)
+
+
 @dataclass(frozen=True)
 class PendingAction:
     request_id: str
@@ -397,8 +416,8 @@ class XiaokangAgentService:
         return XiaokangDecision(
             intent="unknown",
             action=None,
-            clips=tuple(self.clip_assembler.wake_ack()),
-            reply="我在，您说。",
+            clips=(),
+            reply="",
         )
 
     def _handle_outing(self) -> XiaokangDecision:
@@ -439,19 +458,22 @@ class LocalFirstXiaokangAgent:
         *,
         topic_prefix: str = MQTT_TOPIC_PREFIX_DEFAULT,
         printer=print,
+        speech_enabled: bool = True,
     ) -> None:
         self.transport = transport
         self.device_id = device_id
         self.agent = agent
         self.topic_prefix = topic_prefix
         self._printer = printer
+        self._speech_enabled = bool(speech_enabled)
         self._pending_actions: dict[str, PendingAction] = {}
 
     def bind(self) -> None:
-        self.transport.subscribe(
-            contract_topic(self.device_id, "speech", topic_prefix=self.topic_prefix),
-            self._on_speech,
-        )
+        if self._speech_enabled:
+            self.transport.subscribe(
+                contract_topic(self.device_id, "speech", topic_prefix=self.topic_prefix),
+                self._on_speech,
+            )
         self.transport.subscribe(
             contract_topic(self.device_id, "event", topic_prefix=self.topic_prefix),
             self._on_event,
@@ -609,7 +631,7 @@ def _health_context_from_payload(payload: dict[str, Any]) -> HealthContext:
 
 
 def _is_outing_request(text: str) -> bool:
-    return any(term in text for term in ("出去", "走走", "散步", "转转", "陪我出门"))
+    return any(term in text for term in OUTING_REQUEST_TERMS)
 
 
 def _is_stop_follow(text: str) -> bool:

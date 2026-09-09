@@ -327,10 +327,11 @@ def test_session_timeout_requires_wake_word_again() -> None:
     now[0] = 16.0
     manager.process_transcript("我想出去")
 
-    assert [message.payload.get("event") for message in transport.published] == [
-        "session_start",
-        "session_end",
-    ]
+    assert [
+        message.payload.get("event")
+        for message in transport.published
+        if message.payload.get("event") is not None
+    ] == ["session_start", "session_end"]
     assert transport.published[-1].payload["reason"] == "timeout"
     assert manager.active_session_id is None
 

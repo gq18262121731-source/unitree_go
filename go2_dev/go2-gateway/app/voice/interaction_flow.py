@@ -9,6 +9,7 @@ from app.voice.xiaokang_agent import (
     HealthContext,
     HealthProvider,
     MedicationProvider,
+    OUTING_REQUEST_TERMS,
     WeatherCondition,
     WeatherProvider,
     XiaokangDecision,
@@ -311,13 +312,13 @@ class InteractionFlowController:
         return XiaokangDecision(
             intent="unknown",
             action=None,
-            clips=tuple(self.clip_assembler.wake_ack()),
-            reply="我在，您说。",
+            clips=(),
+            reply="",
         )
 
 
 def _is_outing_request(text: str) -> bool:
-    return any(term in text for term in ("出去", "走走", "散步", "转转", "陪我出门", "陪我走"))
+    return any(term in text for term in OUTING_REQUEST_TERMS)
 
 
 def _is_stop_follow(text: str) -> bool:

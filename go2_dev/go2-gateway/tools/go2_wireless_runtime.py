@@ -73,7 +73,7 @@ from app.voice.local_voice import (
     LocalVoiceSessionManager,
     WindowsWaveInMicrophoneSource,
 )
-from app.voice.clip_composer import clip_id_to_filename
+from app.voice.clip_composer import clip_id_to_filename, dynamic_clip_phrases
 from app.voice.interaction_flow import InteractionFlowController
 from app.voice.xiaokang_agent import (
     ClipAssembler,
@@ -149,8 +149,61 @@ VOICE_PLAYBACK_ECHO_GUARD_SECONDS = max(
     0.0,
     min(5.0, float(os.environ.get("GO2_VOICE_PLAYBACK_ECHO_GUARD_SECONDS", "1.5"))),
 )
+VOICE_PLAYBACK_INTER_CLIP_GAP_SECONDS = max(
+    0.0,
+    min(0.5, float(os.environ.get("GO2_VOICE_PLAYBACK_INTER_CLIP_GAP_SECONDS", "0.08"))),
+)
 EMERGENCY_VOICE_TIMEOUT_MARGIN_SECONDS = 6.0
 EMERGENCY_VOICE_TIMEOUT_MIN_SECONDS = 15.0
+XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS = (
+    "sess.wake_ack",
+    "outing.allow.health_good",
+    "health.hr.prefix",
+    "num.76",
+    "num.77",
+    "num.78",
+    "unit.bpm",
+    "health.spo2.98",
+    "health.temperature.36_5",
+    "health.temperature.prefix",
+    "weather.condition.sunny",
+    "weather.condition.cloudy",
+    "weather.condition.overcast",
+    "weather.condition.rain",
+    "weather.temperature.prefix",
+    "temperature.value.17",
+    "temperature.value.22",
+    "temperature.value.23",
+    "temperature.value.24",
+    "temperature.value.36_6",
+    "medication.reminder.before_outing",
+    "outing.allow.suffix",
+    "outing.medication_check",
+    "outing.start",
+    "follow.resume.safe",
+    "follow.stop",
+    "fall.confirm",
+    "fall.confirm.second",
+    "fall.alert.sound",
+    "fall.help.broadcast",
+    "fall.recovered",
+    "fall.normal_activity",
+    "reading.ask_book",
+)
+
+
+def _xiaokang_runtime_preload_clips() -> tuple[str, ...]:
+    ordered: list[str] = []
+    seen: set[str] = set()
+    for clip_id in (*XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS, *dynamic_clip_phrases().keys()):
+        normalized = str(clip_id or "").strip()
+        if normalized and normalized not in seen:
+            seen.add(normalized)
+            ordered.append(normalized)
+    return tuple(ordered)
+
+
+XIAOKANG_RUNTIME_PRELOAD_CLIPS = _xiaokang_runtime_preload_clips()
 VOICE_INTENT_CAPTURE_SECONDS = max(
     1.5,
     min(10.0, float(os.environ.get("GO2_VOICE_CAPTURE_SECONDS", "8.0"))),
@@ -338,6 +391,7 @@ class RuntimeConsole:
         follow_target_forwarder: UdpFollowTargetForwarder | None = None,
         voice_services_factory: Callable[[], tuple[Any, Any, Any]] | None = None,
         manual_confirm_start: bool = False,
+        voice_business_interactions_enabled: bool = True,
     ) -> None:
         self.runtime = runtime
         self.service = service
@@ -355,6 +409,9 @@ class RuntimeConsole:
         self.follow_target_forwarder = follow_target_forwarder
         self.voice_services_factory = voice_services_factory
         self.manual_confirm_start = bool(manual_confirm_start)
+        self.voice_business_interactions_enabled = bool(
+            voice_business_interactions_enabled
+        )
         self.voice_intent_adapter = VoiceIntentAdapter()
         self.lifecycle = CompetitionLifecycle()
         self.manual_controller = ManualKeyboardController(
@@ -383,6 +440,7 @@ class RuntimeConsole:
         self._voice_session_manager: LocalVoiceSessionManager | None = None
         self._interaction_flow_controller: InteractionFlowController | None = None
         self._voice_playback_lock = threading.Lock()
+        self._voice_playback_busy = False
         self._voice_playback_active = False
         self._voice_playback_signature: tuple[str, ...] | None = None
         self._voice_playback_seq = 0
@@ -552,6 +610,14 @@ class RuntimeConsole:
             "Hotkeys      : F1=start/resume | F2=stop motion | "
             "F5=fall | F6=recovered | F7=reading | F9=reset | "
             "F10=voice on/off | F12=safety stop motion"
+        )
+        print(
+            "Voice Mode   : "
+            + (
+                "wake-only (business actions use hotkeys)"
+                if not getattr(self, "voice_business_interactions_enabled", True)
+                else "wake + business speech"
+            )
         )
         print(
             "Voice rescue : Ctrl+F5=fall prompt | Ctrl+F6=second prompt | "
@@ -1637,9 +1703,19 @@ class RuntimeConsole:
     def _ensure_voice_playback_guard(self) -> None:
         if not hasattr(self, "_voice_playback_lock"):
             self._voice_playback_lock = threading.Lock()
+        if not hasattr(self, "_voice_playback_busy"):
+            self._voice_playback_busy = False
+        if not hasattr(self, "_voice_playback_active"):
             self._voice_playback_active = False
+        if not hasattr(self, "_voice_playback_signature"):
             self._voice_playback_signature = None
+        if not hasattr(self, "_voice_playback_seq"):
             self._voice_playback_seq = 0
+
+    def is_voice_playback_active(self) -> bool:
+        self._ensure_voice_playback_guard()
+        with self._voice_playback_lock:
+            return bool(self._voice_playback_active)
 
     def _next_voice_playback_seq(self) -> int:
         self._ensure_voice_playback_guard()
@@ -1681,7 +1757,7 @@ class RuntimeConsole:
             }
         signature = tuple(normalized)
         with self._voice_playback_lock:
-            if self._voice_playback_active:
+            if self._voice_playback_busy or self._voice_playback_active:
                 print(
                     "[AUDIO] duplicate playback dropped "
                     f"clips={list(signature)} active_clips={list(self._voice_playback_signature or ())}"
@@ -1693,57 +1769,124 @@ class RuntimeConsole:
                     "missing_clips": [],
                     "reason": "playback_active",
                 }
-            self._voice_playback_active = True
+            self._voice_playback_busy = True
             self._voice_playback_signature = signature
         played = 0
         current_clip_id = ""
         try:
+            playback_paths: list[Path] = []
+            durations: list[float] = []
+            gaps: list[float] = []
             for index, (clip_id, path) in enumerate(zip(normalized, paths)):
-                current_clip_id = clip_id
                 emergency = clip_id in EMERGENCY_VOICE_CLIPS
                 playback_path = (
                     _prepare_emergency_voice_file(path, gain=_emergency_volume_gain())
                     if emergency
                     else path
                 )
-                duration_seconds = self._voice_clip_duration_seconds(playback_path)
-                timeout_seconds = self._voice_clip_timeout_seconds(playback_path, emergency=emergency)
-                seq = self._next_voice_playback_seq()
+                playback_paths.append(playback_path)
+                durations.append(self._voice_clip_duration_seconds(playback_path))
+                if index + 1 < len(normalized):
+                    gaps.append(
+                        EMERGENCY_VOICE_ALARM_PAUSE_SECONDS
+                        if (
+                            clip_id == "fall.alert.sound"
+                            and normalized[index + 1] == "fall.help.broadcast"
+                        )
+                        else VOICE_PLAYBACK_INTER_CLIP_GAP_SECONDS
+                    )
+
+            preload_audio_files = getattr(self.runtime, "preload_audio_files", None)
+            if callable(preload_audio_files):
+                results = preload_audio_files(tuple(playback_paths), retry_attempts=2)
+                not_ready = [
+                    clip_id
+                    for clip_id, path in zip(normalized, playback_paths)
+                    if not (
+                        results.get(str(path.resolve()))
+                        and results[str(path.resolve())].ready
+                    )
+                ]
+                if not_ready:
+                    print(f"VOICE_CLIPS_NOT_READY: {','.join(not_ready)}")
+                    return {
+                        "clips": normalized,
+                        "played": 0,
+                        "status": "error",
+                        "missing_clips": not_ready,
+                    }
+
+            play_audio_files = getattr(self.runtime, "play_audio_files", None)
+            if callable(play_audio_files):
+                batch_timeout = self._voice_clip_batch_timeout_seconds(
+                    durations,
+                    gaps,
+                    emergency=any(clip_id in EMERGENCY_VOICE_CLIPS for clip_id in normalized),
+                )
                 print(
-                    "[AUDIO] PLAY_REQ "
-                    f"seq={seq:03d} clip={clip_id} "
+                    "[AUDIO] PLAY_BATCH_REQ "
+                    f"clips={normalized} "
                     f"session_id={str(session_id or '')} "
                     f"request_id={str(request_id or '')} "
                     f"source={str(source or '')} "
-                    f"duration={duration_seconds:.2f}s timeout={timeout_seconds:.1f}s "
-                    f"path={playback_path.name}"
+                    f"duration={sum(durations) + sum(gaps):.2f}s "
+                    f"timeout={batch_timeout:.1f}s"
                 )
-                self.runtime.play_audio_file(
-                    playback_path,
-                    timeout_seconds=timeout_seconds,
+                with self._voice_playback_lock:
+                    self._voice_playback_active = True
+                play_audio_files(
+                    tuple(playback_paths),
+                    timeout_seconds=batch_timeout,
+                    inter_clip_gap_seconds=gaps,
                 )
-                played += 1
-                if duration_seconds > 0.0:
-                    watchdog_seconds = (
-                        duration_seconds + VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS
-                    )
-                    print(
-                        "[AUDIO] WATCHDOG_ARMED "
-                        f"seq={seq:03d} clip={clip_id} "
-                        f"wait={watchdog_seconds:.2f}s"
-                    )
-                    time.sleep(watchdog_seconds)
-                self._stop_voice_audio_playback(
-                    reason=f"voice_clip_complete:{clip_id}"
-                )
-                if duration_seconds > 0.0 and VOICE_PLAYBACK_ECHO_GUARD_SECONDS > 0.0:
-                    time.sleep(VOICE_PLAYBACK_ECHO_GUARD_SECONDS)
-                if (
-                    clip_id == "fall.alert.sound"
-                    and index + 1 < len(normalized)
-                    and normalized[index + 1] == "fall.help.broadcast"
+                played = len(normalized)
+            else:
+                for index, (clip_id, playback_path, duration_seconds) in enumerate(
+                    zip(normalized, playback_paths, durations)
                 ):
-                    time.sleep(EMERGENCY_VOICE_ALARM_PAUSE_SECONDS)
+                    current_clip_id = clip_id
+                    emergency = clip_id in EMERGENCY_VOICE_CLIPS
+                    timeout_seconds = self._voice_clip_timeout_seconds(
+                        playback_path,
+                        emergency=emergency,
+                    )
+                    seq = self._next_voice_playback_seq()
+                    print(
+                        "[AUDIO] PLAY_REQ "
+                        f"seq={seq:03d} clip={clip_id} "
+                        f"session_id={str(session_id or '')} "
+                        f"request_id={str(request_id or '')} "
+                        f"source={str(source or '')} "
+                        f"duration={duration_seconds:.2f}s timeout={timeout_seconds:.1f}s "
+                        f"path={playback_path.name}"
+                    )
+                    with self._voice_playback_lock:
+                        self._voice_playback_active = True
+                    self.runtime.play_audio_file(
+                        playback_path,
+                        timeout_seconds=timeout_seconds,
+                    )
+                    played += 1
+                    if duration_seconds > 0.0:
+                        watchdog_seconds = (
+                            duration_seconds + VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS
+                        )
+                        print(
+                            "[AUDIO] WATCHDOG_ARMED "
+                            f"seq={seq:03d} clip={clip_id} "
+                            f"wait={watchdog_seconds:.2f}s"
+                        )
+                        time.sleep(watchdog_seconds)
+                    self._stop_voice_audio_playback(
+                        reason=f"voice_clip_complete:{clip_id}"
+                    )
+                    if (
+                        duration_seconds > 0.0
+                        and VOICE_PLAYBACK_ECHO_GUARD_SECONDS > 0.0
+                    ):
+                        time.sleep(VOICE_PLAYBACK_ECHO_GUARD_SECONDS)
+                    if index < len(gaps):
+                        time.sleep(gaps[index])
             print(f"VOICE_CLIPS_PLAYED: {played}/{len(normalized)}")
             return {
                 "clips": normalized,
@@ -1769,8 +1912,28 @@ class RuntimeConsole:
             self._stop_voice_audio_playback(reason="voice_playback_cleanup")
             with self._voice_playback_lock:
                 if self._voice_playback_signature == signature:
+                    self._voice_playback_busy = False
                     self._voice_playback_active = False
                     self._voice_playback_signature = None
+
+    @staticmethod
+    def _voice_clip_batch_timeout_seconds(
+        durations: list[float] | tuple[float, ...],
+        gaps: list[float] | tuple[float, ...],
+        *,
+        emergency: bool = False,
+    ) -> float:
+        total_duration = sum(max(0.0, float(item)) for item in durations)
+        total_gap = sum(max(0.0, float(item)) for item in gaps)
+        if emergency:
+            return max(
+                EMERGENCY_VOICE_TIMEOUT_MIN_SECONDS,
+                total_duration + total_gap + EMERGENCY_VOICE_TIMEOUT_MARGIN_SECONDS,
+            )
+        return max(
+            VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS,
+            total_duration + total_gap + VOICE_PLAYBACK_TIMEOUT_MARGIN_SECONDS,
+        )
 
     @staticmethod
     def _voice_clip_timeout_seconds(path: Path, *, emergency: bool = False) -> float:
@@ -1842,6 +2005,66 @@ class RuntimeConsole:
                 "VOICE_CONTROL_PRELOAD_FAILED: "
                 f"{path.name} (attempts={attempts}, reason={reason})"
             )
+
+    def preload_xiaokang_runtime_clips(
+        self,
+        clips: list[str] | tuple[str, ...] | None = None,
+        *,
+        label: str = "XIAOKANG_AUDIO_PRELOAD",
+    ) -> None:
+        clip_list = tuple(clips or XIAOKANG_RUNTIME_PRELOAD_CLIPS)
+        paths, missing = self._voice_clip_paths(clip_list)
+        print(
+            f"{label}_START "
+            f"clips={len(clip_list)} "
+            f"local_wavs={len(paths)} missing_local={len(missing)}"
+        )
+        for clip_id in missing:
+            print(f"{label}_FAILED: {clip_id} (missing local wav)")
+        if not paths:
+            return
+        try:
+            results = self.runtime.preload_audio_files(
+                tuple(paths),
+                retry_attempts=2,
+            )
+        except Exception as exc:
+            detail = str(exc).strip() or type(exc).__name__
+            for path in paths:
+                print(
+                    f"{label}_FAILED: "
+                    f"{path.name} ({type(exc).__name__}: {detail})"
+                )
+            return
+        ready_count = 0
+        failed_count = 0
+        for path in paths:
+            result = results.get(str(path.resolve()))
+            if result is not None and result.ready:
+                ready_count += 1
+                print(f"{label}_READY: {path.name}")
+                continue
+            failed_count += 1
+            reason = (
+                result.error
+                if result is not None and result.error
+                else "RuntimeError: preload returned no result"
+            )
+            attempts = result.attempts if result is not None else 0
+            print(
+                f"{label}_FAILED: "
+                f"{path.name} (attempts={attempts}, reason={reason})"
+            )
+        print(
+            f"{label}_DONE "
+            f"ready={ready_count} failed={failed_count} missing_local={len(missing)}"
+        )
+
+    def preload_xiaokang_required_clips(self) -> None:
+        self.preload_xiaokang_runtime_clips(
+            XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS,
+            label="XIAOKANG_AUDIO_REQUIRED_PRELOAD",
+        )
 
     def preload_required_demo_presets(self) -> None:
         """Preload the two fixed clips used before voice services are enabled."""
@@ -2946,7 +3169,7 @@ def _confirm_startup(
     )
     print("[GO2] Core Runtime starting")
     print(f"[GO2] Motion control {'enabled' if motion_enabled else 'disabled'}")
-    print(f"[VOICE] Xiaokang listener {'enabled' if voice_enabled else 'disabled'}")
+    print(f"[VOICE] Xiaokang listener {'initializing' if voice_enabled else 'disabled'}")
     print(f"[VIDEO] WebRTC video {'enabled' if video_enabled else 'disabled'}")
     print("[GO2] Companion IDLE check passed; runtime safety interlocks remain enabled")
 
@@ -3009,6 +3232,18 @@ def main(argv: list[str] | None = None) -> int:
         default=str(os.environ.get("GO2_NO_VOICE", "0")).strip().lower()
         in {"1", "true", "yes", "on"},
         help="disable the background Go2 voice listener",
+    )
+    parser.add_argument(
+        "--voice-business-interactions",
+        action="store_true",
+        default=str(
+            os.environ.get("GO2_VOICE_BUSINESS_INTERACTIONS", "0")
+        ).strip().lower()
+        in {"1", "true", "yes", "on"},
+        help=(
+            "allow speech after Xiaokang wake to trigger business actions; "
+            "default is wake-only and keyboard-driven"
+        ),
     )
     parser.add_argument(
         "--asr-backend",
@@ -3136,6 +3371,7 @@ def main(argv: list[str] | None = None) -> int:
             max_turns=args.voice_max_turns,
             capture_seconds=args.capture_seconds,
             vad_trailing_silence_seconds=args.vad_trailing_silence_seconds,
+            wake_only=not args.voice_business_interactions,
             voice_debug=args.voice_debug,
         )
         try:
@@ -3291,9 +3527,8 @@ def main(argv: list[str] | None = None) -> int:
         follow_target_forwarder=follow_target_forwarder,
         voice_services_factory=create_voice_services,
         manual_confirm_start=args.manual_confirm_start,
+        voice_business_interactions_enabled=args.voice_business_interactions,
     )
-    playback_active = threading.Event()
-
     def voice_clip_available(clip_id: str) -> bool:
         alias = {
             "sess.wake_ack": "WAKE_READY.wav",
@@ -3307,7 +3542,6 @@ def main(argv: list[str] | None = None) -> int:
         return (VOICE_PRESET_DIR / filename).is_file()
 
     def play_xiaokang_clips(message: CommandMessage) -> dict[str, Any]:
-        playback_active.set()
         try:
             return console.play_voice_clips(
                 [str(item) for item in list(message.payload.get("clips") or [])],
@@ -3330,9 +3564,9 @@ def main(argv: list[str] | None = None) -> int:
             }
         finally:
             time.sleep(0.4)
-            playback_active.clear()
             if go2_bridge is not None:
                 go2_bridge.clear_pending_audio()
+                go2_bridge.arm_post_playback_quiet_gate()
 
     def start_follow_from_adapter(message: CommandMessage) -> dict[str, Any]:
         if bool(message.payload.get("skip_start_announcement", False)):
@@ -3389,6 +3623,7 @@ def main(argv: list[str] | None = None) -> int:
             # The Go2 microphone path currently accepts only the normal
             # wake-word/session flow. Emergency bypass is a later phase.
             emergency_bypass_enabled=False,
+            wake_only=not args.voice_business_interactions,
             voice_debug=args.voice_debug,
         )
         LocalFirstXiaokangAgent(
@@ -3397,6 +3632,7 @@ def main(argv: list[str] | None = None) -> int:
             interaction_flow,
             topic_prefix=settings.mqtt_topic_prefix,
             printer=print,
+            speech_enabled=args.voice_business_interactions,
         ).bind()
         console.set_interaction_flow_controller(interaction_flow)
         console.set_voice_session_manager(voice_session_manager)
@@ -3408,7 +3644,7 @@ def main(argv: list[str] | None = None) -> int:
             asr_service=create_asr_service(),
             session_manager=voice_session_manager,
             printer=print,
-            is_playback_active=playback_active.is_set,
+            is_playback_active=console.is_voice_playback_active,
             voice_debug=args.voice_debug,
         )
     server = uvicorn.Server(
@@ -3440,17 +3676,20 @@ def main(argv: list[str] | None = None) -> int:
                 video_status.get("reconnectCount"),
             )
         time.sleep(1.0)
+        console.preload_required_demo_presets()
+        console.preload_xiaokang_required_clips()
         if go2_bridge is not None:
             go2_bridge.warmup()
             runtime.register_microphone_pcm_consumer(go2_bridge.push_pcm)
             go2_bridge.start()
             try:
                 runtime.activate_voice()
+                print("[VOICE] READY - say Xiaokang")
             except Exception as exc:
                 LOGGER.warning("GO2_AUDIO_BRIDGE_ACTIVATION_FAILED: %s", exc)
+                print("[VOICE] NOT_READY - Go2 audio activation failed")
         if not args.no_open_browser:
             webbrowser.open(f"http://127.0.0.1:{args.port}/")
-        console.preload_required_demo_presets()
         LOGGER.info(
             "RUNTIME_BASE_READY video=on companion=standby voice=standby "
             "audiohub_preload=required_presets_ready_or_reported"

@@ -7,6 +7,7 @@ import logging
 from pathlib import Path
 import threading
 import time
+import wave
 
 import numpy as np
 import pytest
@@ -485,6 +486,16 @@ def wait_until(predicate, timeout: float = 2.0) -> None:
             return
         time.sleep(0.01)
     raise AssertionError("condition did not become true before timeout")
+
+
+def write_pcm16_wav(path: Path, samples: list[int]) -> None:
+    with wave.open(str(path), "wb") as stream:
+        stream.setnchannels(1)
+        stream.setsampwidth(2)
+        stream.setframerate(24000)
+        stream.writeframes(
+            b"".join(int(sample).to_bytes(2, "little", signed=True) for sample in samples)
+        )
 
 
 class FakeAudioHub:
@@ -2372,6 +2383,45 @@ def test_audio_preset_batch_retries_failed_upload_and_reports_ready(tmp_path) ->
         assert audio_hub.upload_attempts == 2
         assert audio_hub.audio_list_requests == 3
         assert runtime._audiohub_upload_timeout(str(audio_file)) > 15.0
+    finally:
+        runtime.close(send_stop=False)
+
+
+def test_audiohub_batch_playback_uses_one_pause_and_one_play_mode(
+    tmp_path, monkeypatch
+) -> None:
+    async def fake_sleep(_seconds: float) -> None:
+        return None
+
+    connection = FakeConnection()
+    audio_hub = FakeAudioHub()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video=False,
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+        audio_hub_factory=lambda _connection: audio_hub,
+    )
+    first = tmp_path / "first.wav"
+    second = tmp_path / "second.wav"
+    write_pcm16_wav(first, [1000, -1000] * 120)
+    write_pcm16_wav(second, [1000, -1000] * 120)
+    monkeypatch.setattr("app.webrtc.go2_wireless_runtime.asyncio.sleep", fake_sleep)
+
+    runtime.start()
+    try:
+        assert runtime.play_audio_files(
+            (first, second),
+            inter_clip_gap_seconds=(0.08,),
+        ) == 0
+
+        assert len(audio_hub.uploads) == 2
+        assert audio_hub.played == ["uuid-1", "uuid-2"]
+        assert audio_hub.pauses == 1
+        assert audio_hub.play_modes == ["no_cycle"]
+        assert audio_hub.play_mode_readbacks == 1
     finally:
         runtime.close(send_stop=False)
 

@@ -8,7 +8,7 @@
       "path": "E:\\笨笨狗\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\WAKE_READY.wav",
       "voice": "Cherry",
       "text": "我在，请说。",
-      "bytes": 73004,
+      "bytes": 75404,
       "provider": "dashscope/qwen3-tts-flash"
     },
     {

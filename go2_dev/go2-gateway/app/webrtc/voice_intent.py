@@ -180,7 +180,14 @@ class WakeWordMatcher:
         match = pattern.match(original)
         if not match:
             return None, original
-        return match.group(0).strip(" \t\r\n，。！？、,.!?"), original[match.end():].strip()
+        wake_word = match.group(0).strip(" \t\r\n，。！？、,.!?")
+        remainder = original[match.end():].strip()
+        while True:
+            repeated = pattern.match(remainder)
+            if not repeated:
+                break
+            remainder = remainder[repeated.end():].strip()
+        return wake_word, remainder
 
 
 @dataclass(frozen=True)

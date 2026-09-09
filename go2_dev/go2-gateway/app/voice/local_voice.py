@@ -21,6 +21,7 @@ from typing import Any, Callable, Mapping, Protocol
 import sys
 
 from app.iot.mqtt_contract import (
+    build_command_message,
     build_session_end_message,
     build_session_start_message,
     build_speech_message,
@@ -78,6 +79,53 @@ USER_EXIT_PHRASES = {
     "没事了",
     "你歇着吧",
 }
+POST_PLAYBACK_TRANSCRIPT_GUARD_SECONDS = max(
+    0.0,
+    min(5.0, float(os.environ.get("GO2_POST_PLAYBACK_TRANSCRIPT_GUARD_SECONDS", "2.0"))),
+)
+POST_PLAYBACK_QUIET_MIN_MUTE_SECONDS = max(
+    0.0,
+    min(2.0, float(os.environ.get("GO2_ASR_POST_PLAYBACK_MIN_MUTE_SECONDS", "0.5"))),
+)
+POST_PLAYBACK_QUIET_SECONDS = max(
+    0.0,
+    min(1.5, float(os.environ.get("GO2_ASR_POST_PLAYBACK_QUIET_SECONDS", "0.4"))),
+)
+POST_PLAYBACK_QUIET_MAX_SECONDS = max(
+    0.2,
+    min(5.0, float(os.environ.get("GO2_ASR_POST_PLAYBACK_QUIET_MAX_SECONDS", "2.5"))),
+)
+POST_PLAYBACK_QUIET_RMS_THRESHOLD = max(
+    50.0,
+    float(os.environ.get("GO2_ASR_POST_PLAYBACK_QUIET_RMS_THRESHOLD", "650")),
+)
+POST_PLAYBACK_QUIET_PEAK_THRESHOLD = max(
+    100.0,
+    float(os.environ.get("GO2_ASR_POST_PLAYBACK_QUIET_PEAK_THRESHOLD", "1800")),
+)
+OUTING_REQUEST_TERMS = (
+    "出去",
+    "出门",
+    "走走",
+    "走一走",
+    "散步",
+    "转转",
+    "遛弯",
+    "陪我走",
+    "陪我走走",
+    "陪我出去",
+    "陪我出门",
+    "带我出去",
+    "带我出门",
+    "跟我走",
+    "一起出去",
+)
+HEALTH_WEATHER_TERMS = ("身体", "健康", "心率", "血氧", "天气", "气温", "体温")
+WEATHER_QUERY_TERMS = ("下雨", "雨", "晴", "阴", "多云", "冷", "热")
+STOP_FOLLOW_TERMS = ("停一下", "不用跟着", "停止伴随", "别跟着", "不要跟着")
+MEDICATION_TERMS = ("吃过了", "吃了", "服过了", "服药了", "已经吃", "已经服")
+DEPARTURE_TERMS = ("现在出发", "出发", "走吧", "可以走了", "开始走")
+USER_OK_TERMS = ("我没事", "没事", "还好", "不用帮忙", "没有摔")
 
 WAVE_MAPPER = ctypes.c_uint32(0xFFFFFFFF)
 WIM_DATA = 0x03C0
@@ -116,6 +164,24 @@ def _is_emergency_text(text: str) -> tuple[bool, str | None]:
 def _is_user_exit_text(text: str) -> bool:
     normalized = _normalize_text(text)
     return any(phrase in normalized for phrase in USER_EXIT_PHRASES)
+
+
+def _is_known_business_text(text: str) -> bool:
+    normalized = _normalize_text(text)
+    if not normalized:
+        return False
+    term_groups = (
+        OUTING_REQUEST_TERMS,
+        HEALTH_WEATHER_TERMS,
+        WEATHER_QUERY_TERMS,
+        STOP_FOLLOW_TERMS,
+        MEDICATION_TERMS,
+        DEPARTURE_TERMS,
+        USER_OK_TERMS,
+        USER_EXIT_PHRASES,
+        EMERGENCY_PHRASES,
+    )
+    return any(term in normalized for terms in term_groups for term in terms)
 
 
 def _merge_streaming_text(accumulated: str, chunk_text: str) -> str:
@@ -436,6 +502,9 @@ class Go2ASRAudioBridge:
         debug_audio_dir: str | Path | None = None,
         debug_audio_seconds: float | None = None,
         voice_debug: bool | None = None,
+        post_playback_quiet_min_mute_seconds: float | None = None,
+        post_playback_quiet_seconds: float | None = None,
+        post_playback_quiet_max_seconds: float | None = None,
     ) -> None:
         self.asr_service = asr_service
         self.session_manager = session_manager
@@ -465,6 +534,26 @@ class Go2ASRAudioBridge:
             maxsize=max(1, int(queue_size))
         )
         self._is_playback_active = is_playback_active or (lambda: False)
+        self._post_playback_quiet_min_mute_seconds = (
+            POST_PLAYBACK_QUIET_MIN_MUTE_SECONDS
+            if post_playback_quiet_min_mute_seconds is None
+            else max(0.0, float(post_playback_quiet_min_mute_seconds))
+        )
+        self._post_playback_quiet_seconds = (
+            POST_PLAYBACK_QUIET_SECONDS
+            if post_playback_quiet_seconds is None
+            else max(0.0, float(post_playback_quiet_seconds))
+        )
+        self._post_playback_quiet_max_seconds = (
+            POST_PLAYBACK_QUIET_MAX_SECONDS
+            if post_playback_quiet_max_seconds is None
+            else max(0.2, float(post_playback_quiet_max_seconds))
+        )
+        self._post_playback_quiet_lock = threading.Lock()
+        self._post_playback_quiet_active = False
+        self._post_playback_quiet_started_at = 0.0
+        self._post_playback_quiet_last_muted_at = 0.0
+        self._post_playback_quiet_samples = 0
         self._last_final_text = ""
         if debug_audio_seconds is None:
             debug_audio_seconds = float(os.environ.get("GO2_ASR_DEBUG_AUDIO_SECONDS", "0") or 0)
@@ -539,6 +628,17 @@ class Go2ASRAudioBridge:
             self._printer(f"[ASR] cleared_stale_pcm_frames: {drained}")
         return drained
 
+    def arm_post_playback_quiet_gate(self) -> None:
+        now = time.monotonic()
+        with self._post_playback_quiet_lock:
+            was_active = self._post_playback_quiet_active
+            self._post_playback_quiet_active = True
+            self._post_playback_quiet_started_at = now
+            self._post_playback_quiet_last_muted_at = now
+            self._post_playback_quiet_samples = 0
+        if not was_active:
+            self._debug("[ASR] post_playback_quiet_gate armed")
+
     def push_pcm(self, pcm: bytes, sample_rate: int, channels: int) -> None:
         if self._stop.is_set() or not pcm:
             return
@@ -603,6 +703,50 @@ class Go2ASRAudioBridge:
     def _log_vad_event(self, message: str) -> None:
         if self._vad_event_log_enabled:
             self._printer(message)
+
+    def _should_hold_post_playback_quiet_gate(
+        self,
+        *,
+        frame_rms: float,
+        frame_peak: int,
+        frame_samples: int,
+        sample_rate: int,
+    ) -> bool:
+        with self._post_playback_quiet_lock:
+            if not self._post_playback_quiet_active:
+                return False
+            now = time.monotonic()
+            elapsed = max(0.0, now - self._post_playback_quiet_started_at)
+            if elapsed >= self._post_playback_quiet_max_seconds:
+                self._post_playback_quiet_active = False
+                self._post_playback_quiet_samples = 0
+                self._debug("[ASR] post_playback_quiet_gate max_wait_elapsed")
+                return False
+            quiet = (
+                frame_rms <= POST_PLAYBACK_QUIET_RMS_THRESHOLD
+                and frame_peak <= POST_PLAYBACK_QUIET_PEAK_THRESHOLD
+            )
+            since_muted = max(0.0, now - self._post_playback_quiet_last_muted_at)
+            if since_muted < self._post_playback_quiet_min_mute_seconds:
+                self._post_playback_quiet_samples = 0
+                return True
+            if quiet:
+                self._post_playback_quiet_samples += int(frame_samples)
+            else:
+                self._post_playback_quiet_samples = 0
+                return True
+            quiet_ms = (
+                self._post_playback_quiet_samples * 1000.0 / max(1, sample_rate)
+            )
+            if quiet_ms < self._post_playback_quiet_seconds * 1000.0:
+                return True
+            self._post_playback_quiet_active = False
+            self._post_playback_quiet_samples = 0
+            self._debug(
+                "[ASR] post_playback_quiet_gate ready "
+                f"quiet_ms={int(round(quiet_ms))}"
+            )
+            return True
 
     def _write_debug_audio(
         self,
@@ -791,6 +935,14 @@ class Go2ASRAudioBridge:
                     if normalized.size
                     else 0.0
                 )
+                if self._should_hold_post_playback_quiet_gate(
+                    frame_rms=frame_rms,
+                    frame_peak=frame_peak,
+                    frame_samples=int(normalized.size),
+                    sample_rate=sample_rate,
+                ):
+                    self.session_manager.expire_if_timed_out()
+                    continue
                 sample_count += int(normalized.size)
                 if noise_rms:
                     rms_threshold = max(650.0, (sum(noise_rms) / len(noise_rms)) * 1.55)
@@ -1284,6 +1436,7 @@ class SessionState:
     session_id: str
     wake_word: str | None
     turn: int = 0
+    business_turn: int = 0
     started_at: str = field(default_factory=_now_iso)
 
 
@@ -1517,6 +1670,7 @@ class LocalVoiceSessionManager:
         session_timeout_seconds: float = DEFAULT_SESSION_TIMEOUT_SECONDS,
         max_turns: int = DEFAULT_SESSION_MAX_TURNS,
         emergency_bypass_enabled: bool = True,
+        wake_only: bool = False,
         voice_debug: bool | None = None,
         printer: Callable[[str], None] = print,
         monotonic_clock: Callable[[], float] = time.monotonic,
@@ -1529,6 +1683,7 @@ class LocalVoiceSessionManager:
         self.session_timeout_seconds = max(1.0, float(session_timeout_seconds))
         self.max_turns = max(1, int(max_turns))
         self._emergency_bypass_enabled = bool(emergency_bypass_enabled)
+        self._wake_only = bool(wake_only)
         if voice_debug is None:
             voice_debug = (
                 str(os.environ.get("GO2_VOICE_DEBUG", "0")).strip().lower()
@@ -1541,6 +1696,7 @@ class LocalVoiceSessionManager:
         self._session: SessionState | None = None
         self._last_activity_monotonic: float | None = None
         self._reply_without_wake_until: float | None = None
+        self._post_playback_guard_until: float | None = None
         self._listener_enabled = True
         self.voice_state = VoiceState.WAKE_GUARD
         try:
@@ -1572,10 +1728,12 @@ class LocalVoiceSessionManager:
             self._listener_enabled = True
             self.voice_state = VoiceState.WAKE_GUARD
             self._reply_without_wake_until = None
+            self._post_playback_guard_until = None
             self._printer("[VOICE] LISTENER ACTIVE - waiting for Xiaokang")
             return []
         self._listener_enabled = False
         self._reply_without_wake_until = None
+        self._post_playback_guard_until = None
         ended = self._end_session("listener_paused")
         self.voice_state = VoiceState.PAUSED
         self._printer("[VOICE] LISTENER PAUSED")
@@ -1620,6 +1778,14 @@ class LocalVoiceSessionManager:
         if wake_word is not None and self._state_machine is not None:
             self._state_machine.on_wake()
 
+        if self._wake_only:
+            if wake_word is not None:
+                self._printer(f"[VOICE] wake: {wake_word}")
+                return self._publish_wake_ack()
+            if self._session is not None:
+                self._debug(f"[VOICE] ignored: wake_only ({normalized})")
+            return []
+
         if self._session is None:
             if self._reply_without_wake_active():
                 self._start_session(None)
@@ -1638,17 +1804,19 @@ class LocalVoiceSessionManager:
 
         if wake_word is not None and stripped == "":
             self._printer(f"[VOICE] wake: {wake_word}")
-            return []
+            return self._publish_wake_ack()
 
         if _is_user_exit_text(stripped or normalized):
             self._printer("[SESSION] user_exit")
             return self._end_session("user_exit")
 
         text = stripped or normalized
+        if self._should_drop_post_playback_transcript(text, wake_word=wake_word):
+            self._printer(f"[VOICE] ignored: post_playback_echo ({text})")
+            return []
         if _is_filler_text(text):
             self._printer(f"[VOICE] ignored: filler_or_short ({text})")
             return []
-
         is_wake_turn = created_session and wake_word is not None
         if wake_word is not None:
             self._printer(f"[VOICE] wake: {wake_word}")
@@ -1695,6 +1863,24 @@ class LocalVoiceSessionManager:
         if self._voice_debug:
             self._printer(message)
 
+    def _publish_wake_ack(self) -> list[Any]:
+        if self._session is None:
+            return []
+        command = build_command_message(
+            self.device_id,
+            command="tts_speak",
+            request_id=f"xiaokang-wake-{self._session.session_id}",
+            payload={
+                "session_id": self._session.session_id,
+                "clips": ["sess.wake_ack"],
+                "interrupt": False,
+            },
+            source="simulator",
+            topic_prefix=self.topic_prefix,
+        )
+        self._publish(command)
+        return [command]
+
     def _publish_speech(
         self,
         text: str,
@@ -1711,6 +1897,8 @@ class LocalVoiceSessionManager:
         if is_wake_turn is None:
             is_wake_turn = self._session.turn == 0 and not bypass_wake
         self._session.turn += 1
+        if emergency or _is_known_business_text(text):
+            self._session.business_turn += 1
         self._last_activity_monotonic = self._clock()
         speech = build_speech_message(
             self.device_id,
@@ -1733,7 +1921,11 @@ class LocalVoiceSessionManager:
             self._state_machine.on_speech_submitted()
         self._publish(speech)
         messages = [speech]
-        if not emergency and self._session is not None and self._session.turn >= self.max_turns:
+        if (
+            not emergency
+            and self._session is not None
+            and self._session.business_turn >= self.max_turns
+        ):
             messages.extend(self._end_session("max_turns"))
         return messages
 
@@ -1763,6 +1955,19 @@ class LocalVoiceSessionManager:
             self._reply_without_wake_until = self._clock() + self.session_timeout_seconds
         elif event in {"FALL_RECOVERED", "SESSION_END"}:
             self._reply_without_wake_until = None
+        elif event == "CLIP_DONE":
+            session_id = str(payload.get("session_id") or "").strip()
+            status = str(payload.get("status") or "").strip().lower()
+            if (
+                self._session is not None
+                and session_id == self._session.session_id
+                and status == "done"
+            ):
+                self._last_activity_monotonic = self._clock()
+                self._post_playback_guard_until = (
+                    self._clock() + POST_PLAYBACK_TRANSCRIPT_GUARD_SECONDS
+                )
+                self._debug(f"[SESSION] playback_done: {session_id}")
 
     def _reply_without_wake_active(self) -> bool:
         if self._reply_without_wake_until is None:
@@ -1771,6 +1976,24 @@ class LocalVoiceSessionManager:
             return True
         self._reply_without_wake_until = None
         return False
+
+    def _should_drop_post_playback_transcript(
+        self,
+        text: str,
+        *,
+        wake_word: str | None,
+    ) -> bool:
+        if self._post_playback_guard_until is None:
+            return False
+        if self._clock() > self._post_playback_guard_until:
+            self._post_playback_guard_until = None
+            return False
+        if wake_word is not None:
+            return False
+        if _is_known_business_text(text):
+            self._post_playback_guard_until = None
+            return False
+        return True
 
 
 class LocalVoicePipeline:
@@ -1787,6 +2010,7 @@ class LocalVoicePipeline:
         microphone_device_index: int | None = None,
         capture_seconds: float = DEFAULT_CAPTURE_SECONDS,
         vad_trailing_silence_seconds: float = DEFAULT_TRAILING_SILENCE_SECONDS,
+        wake_only: bool = False,
         voice_debug: bool | None = None,
         printer: Callable[[str], None] = print,
     ) -> None:
@@ -1809,6 +2033,7 @@ class LocalVoicePipeline:
             topic_prefix=self.topic_prefix,
             session_timeout_seconds=self.session_timeout_seconds,
             max_turns=self.max_turns,
+            wake_only=wake_only,
             voice_debug=voice_debug,
             printer=printer,
         )
@@ -1870,6 +2095,7 @@ class LocalVoicePipeline:
         max_turns: int = DEFAULT_SESSION_MAX_TURNS,
         capture_seconds: float = DEFAULT_CAPTURE_SECONDS,
         vad_trailing_silence_seconds: float = DEFAULT_TRAILING_SILENCE_SECONDS,
+        wake_only: bool = False,
         voice_debug: bool | None = None,
         asr_backend: str = "remote",
         funasr_model: str = "paraformer-zh-streaming",
@@ -1898,6 +2124,7 @@ class LocalVoicePipeline:
             max_turns=max_turns,
             capture_seconds=capture_seconds,
             vad_trailing_silence_seconds=vad_trailing_silence_seconds,
+            wake_only=wake_only,
             voice_debug=voice_debug,
             printer=printer,
         )

@@ -178,6 +178,53 @@ def test_xiaokang_agent_builds_structured_outing_decision() -> None:
     ]
 
 
+def test_outing_phrase_variants_are_shared_by_agent_entrypoints() -> None:
+    phrases = [
+        "陪我出去走走",
+        "陪我走吧",
+        "陪我出门",
+        "带我出去",
+        "跟我走",
+        "咱们出去转转",
+    ]
+
+    for phrase in phrases:
+        assert _agent(auto_follow=False).handle_text(phrase).intent == "outing_request"
+        assert _flow_agent(auto_follow=False).handle_text(phrase).intent == "outing_request"
+
+
+def test_unknown_intent_stays_silent_in_active_session() -> None:
+    assert _agent(auto_follow=False).handle_text("喝水子").clips == ()
+    assert _flow_agent(auto_follow=False).handle_text("喝水子").clips == ()
+
+
+def test_local_first_agent_can_be_bound_for_events_without_speech_business() -> None:
+    transport = MockTransport()
+    logs: list[str] = []
+    LocalFirstXiaokangAgent(
+        transport,
+        "DOG-LJG-001",
+        _flow_agent(auto_follow=False),
+        speech_enabled=False,
+        printer=logs.append,
+    ).bind()
+
+    transport.publish(
+        build_speech_message(
+            "DOG-LJG-001",
+            text="陪我出去走走",
+            session_id="speech-disabled",
+            turn=1,
+            is_wake_turn=False,
+            wake_word=None,
+            bypass_wake=False,
+        )
+    )
+
+    assert not any(message.payload.get("command") == "tts_speak" for message in transport.published)
+    assert logs == []
+
+
 def test_weather_condition_mapping_uses_internal_enum() -> None:
     assert open_meteo_code_to_condition(0) is WeatherCondition.SUNNY
     assert open_meteo_code_to_condition(2) is WeatherCondition.CLOUDY

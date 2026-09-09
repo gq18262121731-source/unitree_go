@@ -184,6 +184,225 @@ def test_required_demo_preload_batches_start_and_walk_follow(
     assert "DEMO_AUDIO_PRELOAD_READY: WALK_FOLLOW.wav" in output
 
 
+def test_xiaokang_runtime_preload_batches_business_clips(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    filenames = {
+        "WAKE_READY.wav",
+        "outing_allow_health_good.wav",
+        "health_hr_prefix.wav",
+        "num_76.wav",
+        "unit_bpm.wav",
+        "health_spo2_98.wav",
+        "health_temperature_36_5.wav",
+        "weather_condition_sunny.wav",
+        "weather_temperature_prefix.wav",
+        "temperature_value_22.wav",
+        "temperature_value_24.wav",
+        "temperature_value_36_6.wav",
+        "medication_reminder_before_outing.wav",
+        "outing_allow_suffix.wav",
+        "outing_medication_check.wav",
+        "outing_start.wav",
+        "fall_confirm.wav",
+        "fall_help_broadcast.wav",
+    }
+    for filename in filenames:
+        (tmp_path / filename).write_bytes(b"RIFF" + b"\0" * 40)
+
+    class Runtime:
+        def __init__(self) -> None:
+            self.calls = []
+
+        def preload_audio_files(self, paths, *, retry_attempts):
+            observed = tuple(Path(path) for path in paths)
+            self.calls.append((observed, retry_attempts))
+            return {
+                str(path.resolve()): SimpleNamespace(
+                    ready=True,
+                    attempts=0,
+                    error=None,
+                )
+                for path in observed
+            }
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+
+    console.preload_xiaokang_runtime_clips()
+
+    assert len(runtime.calls) == 1
+    assert runtime.calls[0][1] == 2
+    preloaded = {path.name for path in runtime.calls[0][0]}
+    assert "WAKE_READY.wav" in preloaded
+    assert "outing_allow_health_good.wav" in preloaded
+    assert "outing_start.wav" in preloaded
+    assert "fall_help_broadcast.wav" in preloaded
+    assert "temperature_value_22.wav" in preloaded
+    assert "temperature_value_36_6.wav" in preloaded
+    output = capsys.readouterr().out
+    assert "XIAOKANG_AUDIO_PRELOAD_READY: WAKE_READY.wav" in output
+
+
+def test_xiaokang_required_preload_is_small_and_covers_live_demo_values(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    for clip_id in runtime_tool.XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS:
+        filename = (
+            "WAKE_READY.wav"
+            if clip_id == "sess.wake_ack"
+            else runtime_tool.clip_id_to_filename(clip_id)
+        )
+        (tmp_path / filename).write_bytes(b"RIFF" + b"\0" * 40)
+
+    class Runtime:
+        def __init__(self) -> None:
+            self.calls = []
+
+        def preload_audio_files(self, paths, *, retry_attempts):
+            observed = tuple(Path(path) for path in paths)
+            self.calls.append((observed, retry_attempts))
+            return {
+                str(path.resolve()): SimpleNamespace(
+                    ready=True,
+                    attempts=0,
+                    error=None,
+                )
+                for path in observed
+            }
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+
+    console.preload_xiaokang_required_clips()
+
+    assert len(runtime.calls) == 1
+    assert len(runtime.calls[0][0]) == len(runtime_tool.XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS)
+    assert len(runtime.calls[0][0]) < len(runtime_tool.XIAOKANG_RUNTIME_PRELOAD_CLIPS)
+    preloaded = {path.name for path in runtime.calls[0][0]}
+    assert "temperature_value_22.wav" in preloaded
+    assert "temperature_value_36_6.wav" in preloaded
+    output = capsys.readouterr().out
+    assert "XIAOKANG_AUDIO_REQUIRED_PRELOAD_START" in output
+    assert "XIAOKANG_AUDIO_REQUIRED_PRELOAD_DONE" in output
+
+
+def test_voice_clip_playback_uses_batch_audiohub_session(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    for filename in (
+        "outing_allow_health_good.wav",
+        "health_hr_prefix.wav",
+        "num_78.wav",
+        "unit_bpm.wav",
+        "health_spo2_98.wav",
+        "health_temperature_prefix.wav",
+        "temperature_value_36_6.wav",
+        "weather_condition_sunny.wav",
+        "weather_temperature_prefix.wav",
+        "temperature_value_22.wav",
+        "medication_reminder_before_outing.wav",
+        "outing_allow_suffix.wav",
+    ):
+        _write_pcm16_wav(tmp_path / filename, [1000, -1000] * 120)
+
+    class Runtime:
+        def __init__(self) -> None:
+            self.preloaded: list[tuple[str, ...]] = []
+            self.batches: list[tuple[tuple[str, ...], float, tuple[float, ...]]] = []
+            self.stops: list[str] = []
+            self.playback_active_during_preload: list[bool] = []
+            self.playback_active_during_play: list[bool] = []
+            self.console = None
+
+        def preload_audio_files(self, paths, *, retry_attempts):
+            self.playback_active_during_preload.append(
+                self.console.is_voice_playback_active()
+            )
+            observed = tuple(str(Path(path).resolve()) for path in paths)
+            self.preloaded.append(observed)
+            return {
+                path: SimpleNamespace(ready=True, attempts=0, error=None)
+                for path in observed
+            }
+
+        def play_audio_files(self, paths, *, timeout_seconds, inter_clip_gap_seconds):
+            self.playback_active_during_play.append(
+                self.console.is_voice_playback_active()
+            )
+            self.batches.append(
+                (
+                    tuple(Path(path).name for path in paths),
+                    timeout_seconds,
+                    tuple(inter_clip_gap_seconds),
+                )
+            )
+
+        def stop_audio_playback(self, *, reason, timeout_seconds):
+            self.stops.append(reason)
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+    runtime.console = console
+
+    clips = [
+        "outing.allow.health_good",
+        "health.hr.prefix",
+        "num.78",
+        "unit.bpm",
+        "health.spo2.98",
+        "health.temperature.prefix",
+        "temperature.value.36_6",
+        "weather.condition.sunny",
+        "weather.temperature.prefix",
+        "temperature.value.22",
+        "medication.reminder.before_outing",
+        "outing.allow.suffix",
+    ]
+    result = console.play_voice_clips(clips)
+
+    assert result["status"] == "done"
+    assert result["played"] == len(clips)
+    assert len(runtime.preloaded) == 1
+    assert len(runtime.batches) == 1
+    assert runtime.playback_active_during_preload == [False]
+    assert runtime.playback_active_during_play == [True]
+    played_names, timeout_seconds, gaps = runtime.batches[0]
+    assert played_names == (
+        "outing_allow_health_good.wav",
+        "health_hr_prefix.wav",
+        "num_78.wav",
+        "unit_bpm.wav",
+        "health_spo2_98.wav",
+        "health_temperature_prefix.wav",
+        "temperature_value_36_6.wav",
+        "weather_condition_sunny.wav",
+        "weather_temperature_prefix.wav",
+        "temperature_value_22.wav",
+        "medication_reminder_before_outing.wav",
+        "outing_allow_suffix.wav",
+    )
+    assert len(gaps) == len(clips) - 1
+    assert all(gap == runtime_tool.VOICE_PLAYBACK_INTER_CLIP_GAP_SECONDS for gap in gaps)
+    assert timeout_seconds == runtime_tool.VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS
+    assert runtime.stops == ["voice_playback_cleanup"]
+    output = capsys.readouterr().out
+    assert "[AUDIO] PLAY_BATCH_REQ" in output
+    assert "VOICE_CLIPS_PLAYED: 12/12" in output
+
+
 def test_voice_clip_playback_resolves_clip_ids_in_order(
     tmp_path, monkeypatch, capsys
 ) -> None:
@@ -521,7 +740,7 @@ def test_auto_demo_startup_does_not_block_for_operator_confirmation(
     output = capsys.readouterr().out
     assert "[GO2] Core Runtime starting" in output
     assert "[GO2] Motion control enabled" in output
-    assert "[VOICE] Xiaokang listener enabled" in output
+    assert "[VOICE] Xiaokang listener initializing" in output
     assert "[VIDEO] WebRTC video enabled" in output
 
 
