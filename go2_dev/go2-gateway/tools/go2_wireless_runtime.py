@@ -141,6 +141,10 @@ EMERGENCY_VOICE_CLIPS = {"fall.alert.sound", "fall.help.broadcast"}
 EMERGENCY_VOICE_ALARM_PAUSE_SECONDS = 0.25
 VOICE_PLAYBACK_TIMEOUT_MARGIN_SECONDS = 4.0
 VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS = 8.0
+VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS = max(
+    0.0,
+    min(2.0, float(os.environ.get("GO2_VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS", "0.3"))),
+)
 VOICE_PLAYBACK_ECHO_GUARD_SECONDS = max(
     0.0,
     min(5.0, float(os.environ.get("GO2_VOICE_PLAYBACK_ECHO_GUARD_SECONDS", "1.5"))),
@@ -1720,7 +1724,15 @@ class RuntimeConsole:
                 )
                 played += 1
                 if duration_seconds > 0.0:
-                    time.sleep(duration_seconds)
+                    watchdog_seconds = (
+                        duration_seconds + VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS
+                    )
+                    print(
+                        "[AUDIO] WATCHDOG_ARMED "
+                        f"seq={seq:03d} clip={clip_id} "
+                        f"wait={watchdog_seconds:.2f}s"
+                    )
+                    time.sleep(watchdog_seconds)
                 self._stop_voice_audio_playback(
                     reason=f"voice_clip_complete:{clip_id}"
                 )

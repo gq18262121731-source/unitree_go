@@ -494,6 +494,7 @@ class FakeAudioHub:
         self.uploads: list[str] = []
         self.played: list[str] = []
         self.play_modes: list[str] = []
+        self.play_mode_readbacks = 0
         self.pauses = 0
         self.deleted: list[str] = []
         self.uploaded_bytes: list[bytes] = []
@@ -511,11 +512,24 @@ class FakeAudioHub:
         self.uploaded_bytes.append(Path(path).read_bytes())
         self.entries.append({"CUSTOM_NAME": name, "UNIQUE_ID": unique_id})
 
-    async def play_by_uuid(self, unique_id: str) -> None:
+    async def play_by_uuid(
+        self,
+        unique_id: str,
+        *,
+        clip_id: str | None = None,
+        play_seq: int | None = None,
+    ) -> None:
         self.played.append(unique_id)
 
     async def set_play_mode(self, play_mode: str) -> None:
         self.play_modes.append(play_mode)
+
+    async def get_play_mode(self) -> dict:
+        import json
+
+        self.play_mode_readbacks += 1
+        mode = self.play_modes[-1] if self.play_modes else "unknown"
+        return {"data": {"data": json.dumps({"play_mode": mode})}}
 
     async def pause(self) -> None:
         self.pauses += 1

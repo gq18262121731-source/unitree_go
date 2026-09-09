@@ -5,6 +5,9 @@ import time
 import uuid
 import os
 import hashlib
+import inspect
+import threading
+from datetime import datetime
 from pydub import AudioSegment
 from unitree_webrtc_connect.constants import AUDIO_API
 from unitree_webrtc_connect.webrtc_driver import UnitreeWebRTCConnection
@@ -17,6 +20,7 @@ class WebRTCAudioHub:
         self.logger = logger.getChild(self.__class__.__name__) if logger else logging.getLogger(self.__class__.__name__)
         self.conn = connection
         self.data_channel = None
+        self._api1002_seq = 0
         self._setup_data_channel()
 
     def _setup_data_channel(self):
@@ -37,8 +41,20 @@ class WebRTCAudioHub:
         )
         return response
 
-    async def play_by_uuid(self, uuid):
+    async def play_by_uuid(self, uuid, *, clip_id=None, play_seq=None):
         """Play audio by UUID"""
+        self._api1002_seq += 1
+        caller = self._caller_label()
+        self.logger.info(
+            "[AUDIOHUB_PLAY_REQ] seq=%d uuid=%s clip_id=%s timestamp=%s thread=%s caller=%s runtime_seq=%s",
+            self._api1002_seq,
+            uuid,
+            "" if clip_id is None else clip_id,
+            datetime.now().astimezone().isoformat(),
+            threading.current_thread().name,
+            caller,
+            "" if play_seq is None else play_seq,
+        )
         await self.data_channel.pub_sub.publish_request_new(
             "rt/api/audiohub/request",
             {
@@ -48,6 +64,13 @@ class WebRTCAudioHub:
                 })
             }
         )
+
+    def _caller_label(self):
+        stack = inspect.stack()
+        if len(stack) < 3:
+            return "unknown"
+        frame = stack[2]
+        return f"{os.path.basename(frame.filename)}:{frame.lineno}:{frame.function}"
 
     async def pause(self):
         """Pause current audio playback"""

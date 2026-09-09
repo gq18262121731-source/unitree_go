@@ -938,13 +938,20 @@ class Go2WirelessRuntime:
                 wav_info = self._audiohub_wav_info(upload_path)
                 LOGGER.info(
                     "AUDIOHUB_WAV_PREPARED custom_name=%s channels=%s "
-                    "sample_rate=%s sample_width=%s duration=%.2fs bytes=%s",
+                    "sample_rate=%s sample_width=%s duration=%.3fs bytes=%s "
+                    "md5=%s riff_count=%s data_count=%s "
+                    "riff_offsets=%s data_offsets=%s",
                     custom_name,
                     wav_info.get("channels"),
                     wav_info.get("sample_rate"),
                     wav_info.get("sample_width"),
                     float(wav_info.get("duration_seconds") or 0.0),
                     wav_info.get("bytes"),
+                    wav_info.get("md5"),
+                    wav_info.get("riff_count"),
+                    wav_info.get("data_count"),
+                    wav_info.get("riff_offsets"),
+                    wav_info.get("data_offsets"),
                 )
                 playback_timeout = (
                     max(self.command_timeout_seconds + 1.0, 120.0)
@@ -3703,7 +3710,7 @@ class Go2WirelessRuntime:
         if audio_hub is None:
             raise RuntimeError("WebRTC AudioHub is unavailable")
         LOGGER.info(
-            "AUDIOHUB_PLAY_REQ seq=%03d custom_name=%s uuid=%s",
+            "AUDIOHUB_PLAY_PREPARED seq=%03d custom_name=%s uuid=%s",
             play_seq,
             custom_name,
             unique_id,
@@ -3722,15 +3729,24 @@ class Go2WirelessRuntime:
                 )
         set_play_mode = getattr(audio_hub, "set_play_mode", None)
         if callable(set_play_mode):
+            LOGGER.info(
+                "AUDIOHUB_PLAY_MODE_SET_REQ seq=%03d requested_mode=no_cycle",
+                play_seq,
+            )
             await set_play_mode("no_cycle")
+            LOGGER.info(
+                "AUDIOHUB_PLAY_MODE_SET_ACK seq=%03d requested_mode=no_cycle",
+                play_seq,
+            )
             get_play_mode = getattr(audio_hub, "get_play_mode", None)
             if callable(get_play_mode):
                 try:
                     readback = await get_play_mode()
                     LOGGER.info(
-                        "AUDIOHUB_PLAY_MODE seq=%03d requested=no_cycle readback=%s",
+                        "AUDIOHUB_PLAY_MODE seq=%03d requested_mode=no_cycle actual_mode=%s raw=%s",
                         play_seq,
                         self._audiohub_play_mode_label(readback),
+                        readback,
                     )
                 except Exception as exc:
                     LOGGER.warning(
@@ -3738,7 +3754,19 @@ class Go2WirelessRuntime:
                         play_seq,
                         self._exception_detail(exc),
                     )
-        await audio_hub.play_by_uuid(unique_id)
+        else:
+            LOGGER.warning(
+                "AUDIOHUB_PLAY_MODE_SET_SKIPPED seq=%03d set_play_mode=unavailable",
+                play_seq,
+            )
+        try:
+            await audio_hub.play_by_uuid(
+                unique_id,
+                clip_id=custom_name,
+                play_seq=play_seq,
+            )
+        except TypeError:
+            await audio_hub.play_by_uuid(unique_id)
         LOGGER.info("AUDIOHUB_PLAY_ACK seq=%03d uuid=%s", play_seq, unique_id)
 
     async def _stop_audio_playback_async(self, *, reason: str) -> None:
@@ -4047,7 +4075,11 @@ class Go2WirelessRuntime:
 
     @staticmethod
     def _audiohub_wav_info(path: str) -> dict[str, object]:
-        info: dict[str, object] = {"bytes": os.path.getsize(path)}
+        info: dict[str, object] = {
+            "bytes": os.path.getsize(path),
+            "md5": Go2WirelessRuntime._file_md5(path),
+            **Go2WirelessRuntime._audiohub_wav_structure(path),
+        }
         try:
             with wave.open(path, "rb") as stream:
                 rate = stream.getframerate()
@@ -4063,6 +4095,25 @@ class Go2WirelessRuntime:
                 )
         except Exception as exc:
             info["error"] = f"{type(exc).__name__}: {exc}"
+        return info
+
+    @staticmethod
+    def _audiohub_wav_structure(path: str) -> dict[str, object]:
+        with open(path, "rb") as stream:
+            data = stream.read()
+        info: dict[str, object] = {}
+        for marker in (b"RIFF", b"WAVE", b"fmt ", b"data"):
+            offsets: list[int] = []
+            start = 0
+            while True:
+                index = data.find(marker, start)
+                if index < 0:
+                    break
+                offsets.append(index)
+                start = index + 1
+            label = marker.decode("ascii").strip().lower()
+            info[f"{label}_count"] = len(offsets)
+            info[f"{label}_offsets"] = offsets[:20]
         return info
 
     @staticmethod
@@ -4163,6 +4214,14 @@ finally {
     @staticmethod
     def _file_sha256(path: str) -> str:
         digest = hashlib.sha256()
+        with open(path, "rb") as stream:
+            for block in iter(lambda: stream.read(65536), b""):
+                digest.update(block)
+        return digest.hexdigest()
+
+    @staticmethod
+    def _file_md5(path: str) -> str:
+        digest = hashlib.md5()
         with open(path, "rb") as stream:
             for block in iter(lambda: stream.read(65536), b""):
                 digest.update(block)
