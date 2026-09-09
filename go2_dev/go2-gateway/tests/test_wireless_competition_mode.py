@@ -313,10 +313,18 @@ def test_emergency_voice_playback_uses_limited_gain_and_alarm_pause(
     assert _pcm16_wav_peak(Path(str(play_events[1][1]))) <= 32700
     sleep_events = [event for event in events if event[0] == "sleep"]
     assert sleep_events == [
-        ("sleep", pytest.approx(0.01), None),
+        (
+            "sleep",
+            pytest.approx(0.01 + runtime_tool.VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS),
+            None,
+        ),
         ("sleep", pytest.approx(runtime_tool.VOICE_PLAYBACK_ECHO_GUARD_SECONDS), None),
         ("sleep", runtime_tool.EMERGENCY_VOICE_ALARM_PAUSE_SECONDS, None),
-        ("sleep", pytest.approx(0.01), None),
+        (
+            "sleep",
+            pytest.approx(0.01 + runtime_tool.VOICE_PLAYBACK_WATCHDOG_MARGIN_SECONDS),
+            None,
+        ),
         ("sleep", pytest.approx(runtime_tool.VOICE_PLAYBACK_ECHO_GUARD_SECONDS), None),
     ]
     stop_events = [event for event in events if event[0] == "stop"]
