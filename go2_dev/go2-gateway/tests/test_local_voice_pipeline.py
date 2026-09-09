@@ -242,6 +242,32 @@ def test_wake_only_mode_accepts_wake_but_ignores_business_speech() -> None:
     assert any("wake_only" in line for line in logs)
 
 
+def test_wake_only_mode_does_not_open_safety_reply_window_for_speech() -> None:
+    transport = MockTransport()
+    manager = LocalVoiceSessionManager(
+        transport,
+        wake_only=True,
+        emergency_bypass_enabled=False,
+    )
+
+    transport.publish(
+        MqttContractMessage(
+            topic=contract_topic("DOG-LJG-001", "event"),
+            payload={
+                "device_id": "DOG-LJG-001",
+                "source": "simulator",
+                "ts": "",
+                "event": "FALL_SUSPECTED",
+                "session_id": "terminal-fall-suspected",
+            },
+        )
+    )
+
+    assert manager.process_transcript("我没事") == []
+    assert manager.active_session_id is None
+    assert not any(message.topic.endswith("/speech") for message in transport.published)
+
+
 def test_duplicate_wake_word_is_wake_only_and_does_not_consume_turn() -> None:
     transport = MockTransport()
     manager = LocalVoiceSessionManager(transport)
