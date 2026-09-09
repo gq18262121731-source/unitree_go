@@ -46,7 +46,7 @@ class WebRTCAudioHub:
         self._api1002_seq += 1
         caller = self._caller_label()
         self.logger.info(
-            "[AUDIOHUB_PLAY_REQ] seq=%d uuid=%s clip_id=%s timestamp=%s thread=%s caller=%s runtime_seq=%s",
+            "[AUDIOHUB_PLAY_REQ] api_id=1002 seq=%d uuid=%s clip_id=%s timestamp=%s thread=%s caller=%s runtime_seq=%s",
             self._api1002_seq,
             uuid,
             "" if clip_id is None else clip_id,

@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import hashlib
+import inspect
 import importlib.metadata
 import json
 import logging
@@ -3759,14 +3760,23 @@ class Go2WirelessRuntime:
                 "AUDIOHUB_PLAY_MODE_SET_SKIPPED seq=%03d set_play_mode=unavailable",
                 play_seq,
             )
+        play_by_uuid = getattr(audio_hub, "play_by_uuid")
         try:
-            await audio_hub.play_by_uuid(
+            play_signature = inspect.signature(play_by_uuid)
+            supports_play_context = {
+                "clip_id",
+                "play_seq",
+            }.issubset(play_signature.parameters)
+        except (TypeError, ValueError):
+            supports_play_context = False
+        if supports_play_context:
+            await play_by_uuid(
                 unique_id,
                 clip_id=custom_name,
                 play_seq=play_seq,
             )
-        except TypeError:
-            await audio_hub.play_by_uuid(unique_id)
+        else:
+            await play_by_uuid(unique_id)
         LOGGER.info("AUDIOHUB_PLAY_ACK seq=%03d uuid=%s", play_seq, unique_id)
 
     async def _stop_audio_playback_async(self, *, reason: str) -> None:
