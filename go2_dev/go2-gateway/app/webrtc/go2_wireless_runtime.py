@@ -97,6 +97,8 @@ class HighFrequencyUnitreeDataLogFilter(logging.Filter):
             and message.startswith(self._AUDIO_HUB_PROGRESS_PREFIXES)
         ):
             return False
+        if message == "Receiving audio frame":
+            return False
         if any(marker in message for marker in self._AUDIO_HUB_PROTOCOL_MARKERS):
             return False
         if (
@@ -482,6 +484,7 @@ class Go2WirelessRuntime:
         self._sport_cmd: dict[str, int] = {}
         self._audio_hub: Any = None
         self._audio_uuid_cache: dict[str, str] = {}
+        self._audio_play_seq = 0
         # Half-duplex recording/playback must be serialized, but a background
         # AudioHub cache upload must never hold up live microphone capture.
         self._audio_io_lock = threading.Lock()
@@ -932,6 +935,17 @@ class Go2WirelessRuntime:
             with tempfile.TemporaryDirectory(prefix="go2-audio-") as temp_dir:
                 upload_path = os.path.join(temp_dir, f"{custom_name}.wav")
                 self._prepare_audiohub_wav(source, upload_path)
+                wav_info = self._audiohub_wav_info(upload_path)
+                LOGGER.info(
+                    "AUDIOHUB_WAV_PREPARED custom_name=%s channels=%s "
+                    "sample_rate=%s sample_width=%s duration=%.2fs bytes=%s",
+                    custom_name,
+                    wav_info.get("channels"),
+                    wav_info.get("sample_rate"),
+                    wav_info.get("sample_width"),
+                    float(wav_info.get("duration_seconds") or 0.0),
+                    wav_info.get("bytes"),
+                )
                 playback_timeout = (
                     max(self.command_timeout_seconds + 1.0, 120.0)
                     if timeout_seconds is None
@@ -942,6 +956,27 @@ class Go2WirelessRuntime:
                     "AudioHub playback",
                     timeout=playback_timeout,
                 )
+        return 0
+
+    def stop_audio_playback(
+        self,
+        *,
+        reason: str = "operator",
+        timeout_seconds: float | None = None,
+    ) -> int:
+        """Stop any current Go2 AudioHub playback without touching WebRTC tracks."""
+
+        playback_timeout = (
+            max(self.command_timeout_seconds + 1.0, 3.0)
+            if timeout_seconds is None
+            else max(0.5, float(timeout_seconds))
+        )
+        with self._audio_io_lock:
+            self._run_runtime_coroutine(
+                self._stop_audio_playback_async(reason=reason),
+                "AudioHub stop playback",
+                timeout=playback_timeout,
+            )
         return 0
 
     def preload_audio_file(
@@ -1971,7 +2006,11 @@ class Go2WirelessRuntime:
             if connection is None or not self._connected:
                 raise RuntimeError("WebRTC connection is unavailable")
             self.enable_audio = True
+            self._microphone_frame_probe_logged = False
         self._attach_audio_callback(connection, generation)
+        audio = getattr(connection, "audio", None)
+        if audio is not None and hasattr(audio, "switchAudioChannel"):
+            audio.switchAudioChannel(True)
 
     async def _deactivate_voice_async(self) -> None:
         with self._lock:
@@ -2024,6 +2063,8 @@ class Go2WirelessRuntime:
         with self._lock:
             already_attached = self._audio_callback_generation == generation
         if not already_attached:
+            callbacks = getattr(audio, "track_callbacks", None)
+            before_count = len(callbacks) if isinstance(callbacks, list) else None
             async def receive_audio(frame: Any) -> None:
                 async def handle_audio() -> None:
                     if self._is_current_connection(connection) and self.enable_audio:
@@ -2032,9 +2073,25 @@ class Go2WirelessRuntime:
                 await self._run_connection_task(generation, handle_audio())
 
             audio.add_track_callback(receive_audio)
+            callbacks = getattr(audio, "track_callbacks", None)
+            after_count = len(callbacks) if isinstance(callbacks, list) else None
+            LOGGER.info(
+                "GO2_AUDIO_CALLBACK_BOUND generation=%s callback_count_before=%s callback_count_after=%s",
+                generation,
+                "unknown" if before_count is None else before_count,
+                "unknown" if after_count is None else after_count,
+            )
             with self._lock:
                 if self._connection is connection:
                     self._audio_callback_generation = generation
+        else:
+            callbacks = getattr(audio, "track_callbacks", None)
+            count = len(callbacks) if isinstance(callbacks, list) else "unknown"
+            LOGGER.info(
+                "GO2_AUDIO_CALLBACK_REUSED generation=%s callback_count=%s",
+                generation,
+                count,
+            )
         with self._lock:
             if self._connection is connection and self.enable_audio:
                 self._audio_channel_available = True
@@ -3639,13 +3696,64 @@ class Go2WirelessRuntime:
     async def _play_audio_file_async(self, upload_path: str, custom_name: str) -> None:
         unique_id = await self._preload_audio_file_async(upload_path, custom_name)
         with self._lock:
+            self._audio_play_seq += 1
+            play_seq = self._audio_play_seq
+        with self._lock:
             audio_hub = self._audio_hub
         if audio_hub is None:
             raise RuntimeError("WebRTC AudioHub is unavailable")
+        LOGGER.info(
+            "AUDIOHUB_PLAY_REQ seq=%03d custom_name=%s uuid=%s",
+            play_seq,
+            custom_name,
+            unique_id,
+        )
+        pause = getattr(audio_hub, "pause", None)
+        if callable(pause):
+            try:
+                LOGGER.info("AUDIOHUB_PRE_PLAY_PAUSE_REQ seq=%03d", play_seq)
+                await pause()
+                LOGGER.info("AUDIOHUB_PRE_PLAY_PAUSE_ACK seq=%03d", play_seq)
+            except Exception as exc:
+                LOGGER.warning(
+                    "AUDIOHUB_PRE_PLAY_PAUSE_FAILED seq=%03d error=%s",
+                    play_seq,
+                    self._exception_detail(exc),
+                )
         set_play_mode = getattr(audio_hub, "set_play_mode", None)
         if callable(set_play_mode):
-            await set_play_mode("single_cycle")
+            await set_play_mode("no_cycle")
+            get_play_mode = getattr(audio_hub, "get_play_mode", None)
+            if callable(get_play_mode):
+                try:
+                    readback = await get_play_mode()
+                    LOGGER.info(
+                        "AUDIOHUB_PLAY_MODE seq=%03d requested=no_cycle readback=%s",
+                        play_seq,
+                        self._audiohub_play_mode_label(readback),
+                    )
+                except Exception as exc:
+                    LOGGER.warning(
+                        "AUDIOHUB_PLAY_MODE_READBACK_FAILED seq=%03d error=%s",
+                        play_seq,
+                        self._exception_detail(exc),
+                    )
         await audio_hub.play_by_uuid(unique_id)
+        LOGGER.info("AUDIOHUB_PLAY_ACK seq=%03d uuid=%s", play_seq, unique_id)
+
+    async def _stop_audio_playback_async(self, *, reason: str) -> None:
+        with self._lock:
+            audio_hub = self._audio_hub
+        if audio_hub is None:
+            LOGGER.info("AUDIOHUB_STOP_SKIPPED reason=%s audiohub=unavailable", reason)
+            return
+        pause = getattr(audio_hub, "pause", None)
+        if not callable(pause):
+            LOGGER.info("AUDIOHUB_STOP_SKIPPED reason=%s pause=unavailable", reason)
+            return
+        LOGGER.info("AUDIOHUB_STOP_REQ reason=%s", reason)
+        await pause()
+        LOGGER.info("AUDIOHUB_STOP_ACK reason=%s", reason)
 
     async def _preload_audio_files_async(
         self,
@@ -3898,7 +4006,64 @@ class Go2WirelessRuntime:
 
     @classmethod
     def _find_audio_uuid(cls, response: Any, custom_name: str) -> str | None:
-        return cls._audio_catalog(response).get(custom_name)
+        matches = [
+            str(entry.get("UNIQUE_ID") or "").strip()
+            for entry in cls._audio_entries(response)
+            if str(entry.get("CUSTOM_NAME") or "").strip() == custom_name
+            and str(entry.get("UNIQUE_ID") or "").strip()
+        ]
+        if not matches:
+            return None
+        selected = matches[-1]
+        if len(matches) > 1:
+            LOGGER.warning(
+                "AUDIOHUB_DUPLICATE_NAME custom_name=%s matches=%d selected_uuid=%s",
+                custom_name,
+                len(matches),
+                selected,
+            )
+        else:
+            LOGGER.info(
+                "AUDIOHUB_UUID_MATCH custom_name=%s matches=1 selected_uuid=%s",
+                custom_name,
+                selected,
+            )
+        return selected
+
+    @staticmethod
+    def _audiohub_play_mode_label(response: Any) -> str:
+        if isinstance(response, dict):
+            try:
+                data = response.get("data", {})
+                raw = data.get("data", data) if isinstance(data, dict) else data
+                payload = json.loads(raw) if isinstance(raw, str) else raw
+                if isinstance(payload, dict):
+                    for key in ("play_mode", "mode", "playMode"):
+                        if payload.get(key) is not None:
+                            return str(payload.get(key))
+            except Exception:
+                pass
+        return str(response)
+
+    @staticmethod
+    def _audiohub_wav_info(path: str) -> dict[str, object]:
+        info: dict[str, object] = {"bytes": os.path.getsize(path)}
+        try:
+            with wave.open(path, "rb") as stream:
+                rate = stream.getframerate()
+                frames = stream.getnframes()
+                info.update(
+                    {
+                        "channels": stream.getnchannels(),
+                        "sample_rate": rate,
+                        "sample_width": stream.getsampwidth(),
+                        "frames": frames,
+                        "duration_seconds": 0.0 if rate <= 0 else frames / rate,
+                    }
+                )
+        except Exception as exc:
+            info["error"] = f"{type(exc).__name__}: {exc}"
+        return info
 
     @staticmethod
     def _protocol_logs_verbose() -> bool:

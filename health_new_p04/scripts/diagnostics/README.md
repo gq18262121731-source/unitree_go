@@ -19,7 +19,8 @@ conda run -n health-diagnostics python scripts\diagnostics\probe_backend_health.
 Interpreter path for PyCharm:
 
 ```text
-C:\Users\YANG\.conda\envs\health-diagnostics\python.exe
+%USERPROFILE%\anaconda3\envs\health-diagnostics\python.exe
+%USERPROFILE%\.conda\envs\health-diagnostics\python.exe
 ```
 
 ## Most useful camera commands

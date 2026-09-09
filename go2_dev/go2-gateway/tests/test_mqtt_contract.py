@@ -69,7 +69,7 @@ def test_event_and_telemetry_messages_are_contract_stable() -> None:
     end = build_session_end_message(
         "DOG-LJG-001",
         session_id="session-001",
-        reason="timeout",
+        reason="max_turns",
         turns=3,
         ts="2026-09-06T18:12:33.412",
     )
@@ -104,7 +104,7 @@ def test_event_and_telemetry_messages_are_contract_stable() -> None:
 
     assert start.topic == "aiot/dog/DOG-LJG-001/event"
     assert start.payload["event"] == "session_start"
-    assert end.payload["reason"] == "timeout"
+    assert end.payload["reason"] == "max_turns"
     assert clip_done.payload["clips"] == ["sess.wake_ack", "chat.comfort"]
     assert clip_done.payload["played"] == 2
     assert telemetry.topic == "aiot/dog/DOG-LJG-001/telemetry"
@@ -117,6 +117,18 @@ def test_event_and_telemetry_messages_are_contract_stable() -> None:
         "clips": ["chat.greeting_morning"],
         "interrupt": True,
     }
+
+
+def test_session_end_allows_listener_paused_reason() -> None:
+    message = build_session_end_message(
+        "DOG-LJG-001",
+        session_id="voice-1",
+        reason="listener_paused",
+        turns=1,
+    )
+
+    assert message.payload["event"] == "session_end"
+    assert message.payload["reason"] == "listener_paused"
 
 
 def test_memory_bus_records_and_routes_commands() -> None:
@@ -149,6 +161,29 @@ def test_memory_bus_records_and_routes_commands() -> None:
             },
         )
     ]
+
+
+def test_memory_bus_deduplicates_same_subscription() -> None:
+    bus = MemoryMqttContractBus()
+    seen: list[str] = []
+
+    def callback(_topic, payload):
+        seen.append(str(payload["request_id"]))
+
+    topic = contract_topic("DOG-LJG-001", "cmd")
+    bus.subscribe(topic, callback)
+    bus.subscribe(topic, callback)
+
+    assert bus.subscription_count(topic) == 1
+    bus.publish(
+        build_command_message(
+            "DOG-LJG-001",
+            command="ping",
+            request_id="req-dedup",
+            payload={"nonce": "n"},
+        )
+    )
+    assert seen == ["req-dedup"]
 
 
 def test_mock_command_dispatcher_runs_b_machine_control_flow() -> None:
@@ -227,3 +262,41 @@ def test_mock_command_dispatcher_runs_b_machine_control_flow() -> None:
     pong = next(message for message in transport.published if message.payload.get("event") == "pong")
     assert clip_done.payload["played"] == 2
     assert pong.payload["nonce"] == "nonce-001"
+
+
+def test_command_dispatcher_reports_clip_error_without_raising() -> None:
+    transport = MockTransport()
+
+    def play_clips(_message):
+        raise TimeoutError("audiohub timeout")
+
+    adapter = Go2ControlAdapter(
+        start_follow=lambda _message: {"ok": True},
+        stop_follow=lambda _message: {"ok": True},
+        resume_follow=lambda _message: {"ok": True},
+        play_clips=play_clips,
+        ping=lambda message: {"nonce": message.payload.get("nonce")},
+    )
+    dispatcher = CommandDispatcher(transport, adapter)
+    dispatcher.bind("DOG-LJG-001")
+
+    transport.publish(
+        build_command_message(
+            "DOG-LJG-001",
+            command="tts_speak",
+            request_id="speech-error",
+            payload={
+                "clips": ["sess.wake_ack"],
+                "session_id": "session-001",
+            },
+        )
+    )
+
+    clip_done = next(
+        message
+        for message in transport.published
+        if message.payload.get("event") == "clip_done"
+    )
+    assert clip_done.payload["status"] == "error"
+    assert clip_done.payload["played"] == 0
+    assert clip_done.payload["clips"] == ["sess.wake_ack"]

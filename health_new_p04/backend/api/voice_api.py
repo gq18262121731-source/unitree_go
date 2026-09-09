@@ -26,6 +26,8 @@ class TTSRequest(BaseModel):
     speed: float = Field(default=1.0, ge=0.5, le=2.0)
     fmt: Literal["mp3", "wav", "pcm"] = "mp3"
     workspace: str | None = None
+    model: str | None = Field(default=None, max_length=120)
+    instruction: str | None = Field(default=None, max_length=1000)
 
 class ASRBase64Request(BaseModel):
     audio_base64: str = Field(..., min_length=100)
@@ -99,6 +101,8 @@ async def tts_synthesize(payload: TTSRequest) -> dict:
         speed=payload.speed,
         fmt=payload.fmt,
         workspace=payload.workspace,
+        model=(payload.model or "").strip() or None,
+        instruction=(payload.instruction or "").strip() or None,
     )
     audio_b64 = str(raw.get("audio_b64", "") or "")
     audio_url = str(raw.get("audio_url", "") or "")

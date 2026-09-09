@@ -1,0 +1,26 @@
+{
+  "health_query": {
+    "heart_rate": 76,
+    "spo2": 98,
+    "temperature": 36.5,
+    "blood_pressure_systolic": 125,
+    "blood_pressure_diastolic": 78,
+    "status": "good"
+  },
+  "outing_before_medication": {
+    "heart_rate": 78,
+    "spo2": 98,
+    "temperature": 36.6,
+    "blood_pressure_systolic": 126,
+    "blood_pressure_diastolic": 79,
+    "status": "good"
+  },
+  "outing_after_medication": {
+    "heart_rate": 77,
+    "spo2": 98,
+    "temperature": 36.5,
+    "blood_pressure_systolic": 125,
+    "blood_pressure_diastolic": 78,
+    "status": "good"
+  }
+}

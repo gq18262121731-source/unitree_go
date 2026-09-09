@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Cherry",
+  "speed": 1.0,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\cherry_100_short_urgent\\part2\\fall_help_broadcast.wav",
+      "voice": "Cherry",
+      "text": "系统已经通知家属，请立即过来查看！",
+      "bytes": 153644,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请从日常陪护语气切换为紧急、严肃、清楚的安全提醒语气。语气明显焦急但不尖叫，节奏紧凑，重点强调“没有回应”和“立即”。不要温柔，不要客服语气。"
+    }
+  ]
+}

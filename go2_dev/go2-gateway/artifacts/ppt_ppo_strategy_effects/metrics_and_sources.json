@@ -1,0 +1,41 @@
+{
+  "target_distance_m": 1.5,
+  "caveat": "Charts involving PPO are deterministic illustrative/simulation results, not real PPO test logs.",
+  "figures": {
+    "uwb_filter_effect": {
+      "png": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\01_uwb_filter_effect.png",
+      "svg": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\01_uwb_filter_effect.svg",
+      "raw_std_m": 0.36738977035768844,
+      "filtered_std_m": 0.32748402713905145,
+      "source": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\phase7_t1_uwb_live_20260823T105956Z.jsonl"
+    },
+    "follow_distance_comparison": {
+      "png": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\02_follow_distance_comparison.png",
+      "svg": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\02_follow_distance_comparison.svg"
+    },
+    "control_smoothness_comparison": {
+      "png": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\03_control_smoothness_comparison.png",
+      "svg": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\03_control_smoothness_comparison.svg"
+    },
+    "ppo_strategy_effects_summary": {
+      "png": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\04_ppo_strategy_effects_summary.png",
+      "svg": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\ppt_ppo_strategy_effects\\04_ppo_strategy_effects_summary.svg"
+    }
+  },
+  "metrics": {
+    "traditional_control": {
+      "mae_m": 0.2871990443815775,
+      "rmse_m": 0.4271104126143175,
+      "steady_state_error_m": 0.025580613961949692,
+      "settling_time_s_band_0_08m": 20.700000000000003,
+      "vx_variation_rms_mps2": 0.07751559822942616
+    },
+    "ppo_policy_control": {
+      "mae_m": 0.1346974645271262,
+      "rmse_m": 0.28686318642668324,
+      "steady_state_error_m": 0.0017599486397652693,
+      "settling_time_s_band_0_08m": 9.700000000000001,
+      "vx_variation_rms_mps2": 0.01796273184365595
+    }
+  }
+}

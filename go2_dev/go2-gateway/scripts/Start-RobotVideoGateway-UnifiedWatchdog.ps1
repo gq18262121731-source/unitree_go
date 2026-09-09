@@ -295,9 +295,6 @@ try {
     if ($DeviceMac) {
         $RuntimeParameters["DeviceMac"] = $DeviceMac
     }
-    if ($RequireStartupConfirmations) {
-        $RuntimeParameters["RequireStartupConfirmations"] = $true
-    }
     if ($ManualConfirmStart) {
         $RuntimeParameters["ManualConfirmStart"] = $true
     }

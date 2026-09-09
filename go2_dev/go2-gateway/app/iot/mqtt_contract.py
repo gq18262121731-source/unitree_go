@@ -25,14 +25,20 @@ MQTT_ALLOWED_EVENT_NAMES = {
     "session_end",
     "clip_done",
     "fall_detected",
+    "FALL_SUSPECTED",
+    "FALL_RESPONSE_TIMEOUT",
+    "FALL_RECOVERED",
+    "NORMAL_ACTIVITY_READING",
     "follow_lost",
     "pong",
 }
 MQTT_ALLOWED_SESSION_END_REASONS = {
     "timeout",
     "user_exit",
+    "max_turns",
     "interrupt",
     "error",
+    "listener_paused",
 }
 MQTT_ALLOWED_CLIP_STATUS = {
     "done",
@@ -179,7 +185,14 @@ class MemoryMqttContractBus:
         normalized = str(topic).strip()
         if not normalized:
             raise ValueError("topic must not be empty")
-        self._subscriptions.setdefault(normalized, []).append(callback)
+        callbacks = self._subscriptions.setdefault(normalized, [])
+        if callback not in callbacks:
+            callbacks.append(callback)
+
+    def subscription_count(self, topic: str | None = None) -> int:
+        if topic is None:
+            return sum(len(callbacks) for callbacks in self._subscriptions.values())
+        return len(self._subscriptions.get(str(topic).strip(), []))
 
 
 def build_status_message(

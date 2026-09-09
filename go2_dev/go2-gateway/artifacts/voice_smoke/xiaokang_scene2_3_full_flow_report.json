@@ -1,0 +1,125 @@
+{
+  "status": "done",
+  "output_wav": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\voice_smoke\\xiaokang_scene2_3_full_flow.wav",
+  "bytes": 5126924,
+  "duration_seconds": 106.81,
+  "format": {
+    "channels": 1,
+    "sample_rate": 24000,
+    "bits": 16
+  },
+  "segments": [
+    {
+      "name": "scene2_first_outing_assessment_medication_reminder",
+      "clips": [
+        "outing.allow.health_good",
+        "health.hr.prefix",
+        "num.78",
+        "unit.bpm",
+        "health.spo2.98",
+        "health.temperature.prefix",
+        "temperature.value.36_6",
+        "weather.condition.overcast",
+        "weather.temperature.prefix",
+        "temperature.value.17",
+        "medication.reminder.before_outing",
+        "outing.allow.suffix"
+      ],
+      "duration_seconds": 22.32
+    },
+    {
+      "name": "scene2_second_outing_reassessment_medication_question",
+      "clips": [
+        "outing.allow.health_good",
+        "health.hr.prefix",
+        "num.77",
+        "unit.bpm",
+        "health.spo2.98",
+        "health.temperature.36_5",
+        "weather.condition.overcast",
+        "weather.temperature.prefix",
+        "temperature.value.17",
+        "outing.allow.suffix",
+        "outing.medication_check"
+      ],
+      "duration_seconds": 21.84
+    },
+    {
+      "name": "scene2_start_follow_after_confirmation",
+      "clips": [
+        "outing.start"
+      ],
+      "duration_seconds": 4.56
+    },
+    {
+      "name": "scene2_stop_follow",
+      "clips": [
+        "follow.stop"
+      ],
+      "duration_seconds": 5.84
+    },
+    {
+      "name": "scene3_resume_follow",
+      "clips": [
+        "follow.resume.safe"
+      ],
+      "duration_seconds": 5.84
+    },
+    {
+      "name": "scene3_fall_confirm_first",
+      "clips": [
+        "fall.confirm"
+      ],
+      "duration_seconds": 4.64
+    },
+    {
+      "name": "scene3_fall_confirm_second",
+      "clips": [
+        "fall.confirm.second"
+      ],
+      "duration_seconds": 5.36
+    },
+    {
+      "name": "scene3_help_broadcast",
+      "clips": [
+        "fall.alert.sound",
+        "fall.help.broadcast"
+      ],
+      "duration_seconds": 12.73
+    },
+    {
+      "name": "scene3_fall_recovered",
+      "clips": [
+        "fall.recovered"
+      ],
+      "duration_seconds": 7.04
+    },
+    {
+      "name": "scene3_reading_normal_activity",
+      "clips": [
+        "fall.normal_activity",
+        "reading.ask_book"
+      ],
+      "duration_seconds": 6.16
+    },
+    {
+      "name": "scene3_resume_after_reading",
+      "clips": [
+        "follow.resume.safe"
+      ],
+      "duration_seconds": 5.84
+    },
+    {
+      "name": "scene3_final_stop",
+      "clips": [
+        "follow.stop"
+      ],
+      "duration_seconds": 4.64
+    }
+  ],
+  "playback": {
+    "attempted": true,
+    "ok": true,
+    "error": ""
+  }
+}

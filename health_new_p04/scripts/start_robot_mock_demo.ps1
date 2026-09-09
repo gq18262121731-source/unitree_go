@@ -10,10 +10,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$GatewayRoot = Get-ChildItem -LiteralPath "E:\" -Directory |
-    ForEach-Object { Join-Path $_.FullName "go2_dev\go2-gateway" } |
-    Where-Object { Test-Path -LiteralPath $_ } |
-    Select-Object -First 1
+$RepositoryRoot = Split-Path -Parent $ProjectRoot
+$GatewayRoot = Join-Path $RepositoryRoot "go2_dev\go2-gateway"
 $FrontendRoot = Join-Path $ProjectRoot "frontend\vue-dashboard"
 $ArtifactRoot = Join-Path $ProjectRoot "artifacts\robot_mock_acceptance"
 $RuntimeRoot = Join-Path $ArtifactRoot "runtime"
@@ -100,10 +98,18 @@ if (-not (Test-Path -LiteralPath (Join-Path $FrontendRoot "node_modules"))) {
     throw "Frontend node_modules is missing. Install the existing lockfile dependencies first."
 }
 
-$defaultHealthPython = Join-Path $env:USERPROFILE ".conda\envs\health\python.exe"
+$defaultHealthPythonCandidates = @(
+    (Join-Path $env:USERPROFILE ".conda\envs\health\python.exe"),
+    (Join-Path $env:USERPROFILE "anaconda3\envs\health\python.exe"),
+    (Join-Path $env:USERPROFILE "miniconda3\envs\health\python.exe"),
+    (Join-Path $env:LOCALAPPDATA "anaconda3\envs\health\python.exe")
+) | Where-Object { $_ }
+$defaultHealthPython = $defaultHealthPythonCandidates |
+    Where-Object { Test-Path -LiteralPath $_ } |
+    Select-Object -First 1
 $PythonPath = if ($PythonCommand) {
     (Get-Command $PythonCommand -ErrorAction Stop).Source
-} elseif (Test-Path -LiteralPath $defaultHealthPython) {
+} elseif ($defaultHealthPython) {
     $defaultHealthPython
 } else {
     (Get-Command python -ErrorAction Stop).Source

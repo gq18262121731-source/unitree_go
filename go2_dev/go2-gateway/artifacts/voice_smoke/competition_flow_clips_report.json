@@ -1,0 +1,38 @@
+{
+  "checked_at": "2026-09-09 03:23:52",
+  "clips": [
+    "outing.allow.health_good",
+    "health.hr.prefix",
+    "num.78",
+    "unit.bpm",
+    "weather.today.beijing",
+    "weather.overcast",
+    "weather.temp.prefix",
+    "num.17",
+    "unit.celsius",
+    "medication.reminder.before_outing",
+    "outing.allow.suffix",
+    "outing.medication_check",
+    "outing.start",
+    "follow.stop",
+    "follow.resume.safe",
+    "fall.confirm",
+    "fall.confirm.second",
+    "fall.alert.sound",
+    "fall.help.broadcast",
+    "fall.recovered",
+    "fall.normal_activity",
+    "reading.ask_book",
+    "follow.resume.safe",
+    "follow.stop"
+  ],
+  "missing": [],
+  "output_wav": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\voice_smoke\\competition_flow_clips_smoke.wav",
+  "duration_seconds": 75.36,
+  "bytes": 3617324,
+  "format": {
+    "channels": 1,
+    "sample_rate": 24000,
+    "bits": 16
+  }
+}

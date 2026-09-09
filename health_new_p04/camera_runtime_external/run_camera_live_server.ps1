@@ -12,10 +12,15 @@ param(
 )
 
 $pythonCandidates = @(
-    "C:\Users\YANG\.conda\envs\AI\python.exe",
-    "C:\Users\YANG\.conda\envs\health\python.exe"
-)
-$python = $pythonCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+    (Join-Path $env:USERPROFILE "anaconda3\envs\health\python.exe"),
+    (Join-Path $env:USERPROFILE ".conda\envs\health\python.exe"),
+    (Join-Path $env:USERPROFILE "anaconda3\envs\AI\python.exe"),
+    (Join-Path $env:USERPROFILE ".conda\envs\AI\python.exe")
+) | Where-Object { $_ }
+$python = $pythonCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $python) {
+    $python = (Get-Command python -ErrorAction SilentlyContinue).Source
+}
 if (-not $python) {
     Write-Host "No usable Python runtime was found."
     exit 2

@@ -115,6 +115,2214 @@
       "text": "您当前心率为76次每分钟，血氧为98%，状态正常。伴随模式已启动，请注意出行安全。",
       "bytes": 433964,
       "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\outing_allow_health_good.wav",
+      "voice": "Cherry",
+      "text": "今天您的身体状况良好。",
+      "bytes": 103724,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_hr_prefix.wav",
+      "voice": "Cherry",
+      "text": "目前心率是",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_prefix.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之",
+      "bytes": 99884,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_temperature_prefix.wav",
+      "voice": "Cherry",
+      "text": "体温",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_temperature_36_5.wav",
+      "voice": "Cherry",
+      "text": "体温三十六点五摄氏度。",
+      "bytes": 92204,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\unit_bpm.wav",
+      "voice": "Cherry",
+      "text": "次每分钟。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_today_beijing.wav",
+      "voice": "Cherry",
+      "text": "今天北京天气",
+      "bytes": 92204,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_temp_prefix.wav",
+      "voice": "Cherry",
+      "text": "气温",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_temperature_prefix.wav",
+      "voice": "Cherry",
+      "text": "气温",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\unit_celsius.wav",
+      "voice": "Cherry",
+      "text": "摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\medication_reminder_before_outing.wav",
+      "voice": "Cherry",
+      "text": "您今天还没有确认服药，出门前请按既定安排服药。",
+      "bytes": 226604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_sunny.wav",
+      "voice": "Cherry",
+      "text": "晴。",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_cloudy.wav",
+      "voice": "Cherry",
+      "text": "多云。",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_overcast.wav",
+      "voice": "Cherry",
+      "text": "阴。",
+      "bytes": 19244,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_rain.wav",
+      "voice": "Cherry",
+      "text": "有雨。",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_snow.wav",
+      "voice": "Cherry",
+      "text": "有雪。",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_condition_sunny.wav",
+      "voice": "Cherry",
+      "text": "今天北京晴，",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_condition_cloudy.wav",
+      "voice": "Cherry",
+      "text": "今天北京多云，",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_condition_overcast.wav",
+      "voice": "Cherry",
+      "text": "今天北京阴，",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_condition_rain.wav",
+      "voice": "Cherry",
+      "text": "今天北京有雨，",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\weather_condition_snow.wav",
+      "voice": "Cherry",
+      "text": "今天北京有雪，",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\outing_allow_suffix.wav",
+      "voice": "Cherry",
+      "text": "可以出去走走，我陪着您。",
+      "bytes": 103724,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\outing_medication_check.wav",
+      "voice": "Cherry",
+      "text": "刚才提醒您的药已经吃过了吗？如果准备好了，也可以告诉我现在出发。",
+      "bytes": 257324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\outing_start.wav",
+      "voice": "Cherry",
+      "text": "好，咱们出发吧，您慢慢走，我跟着您。",
+      "bytes": 180524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\follow_resume_safe.wav",
+      "voice": "Cherry",
+      "text": "好，咱们继续走吧。您慢一点，注意脚下，我跟着您。",
+      "bytes": 222764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\follow_stop.wav",
+      "voice": "Cherry",
+      "text": "好，我先不跟着您了。需要我的时候，再叫我一声小康就好。",
+      "bytes": 222764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\sess_wake_ack.wav",
+      "voice": "Cherry",
+      "text": "我在，请说。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\fall_confirm.wav",
+      "voice": "Cherry",
+      "text": "我看到您可能摔倒了。您现在还好吗？",
+      "bytes": 165164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\fall_confirm_second.wav",
+      "voice": "Cherry",
+      "text": "您能听到我说话吗？如果可以，请回答我。",
+      "bytes": 199724,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\fall_alert_sound.wav",
+      "voice": "alarm",
+      "text": "电子报警音，4秒。",
+      "bytes": 192078,
+      "provider": "local/mp3-trimmed-ffmpeg"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\fall_help_broadcast.wav",
+      "voice": "Mia",
+      "text": "请注意！老人摔倒后没有回应，请附近人员立即帮忙！ 已通知家属，请马上过来查看！",
+      "bytes": 454604,
+      "provider": "dashscope/qwen3-tts-instruct-flash+stitched",
+      "model": "qwen3-tts-instruct-flash",
+      "speed": 1.08,
+      "instruction": "冷静、严肃、清晰、短促的系统安全提示女声。"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\fall_recovered.wav",
+      "voice": "Cherry",
+      "text": "好的，看到您现在已经恢复了，这次情况我已经记录了。您先休息一下。",
+      "bytes": 280364,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\fall_normal_activity.wav",
+      "voice": "Cherry",
+      "text": "看起来您只是坐下来看看书，没有发生跌倒。",
+      "bytes": 180524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\reading_ask_book.wav",
+      "voice": "Cherry",
+      "text": "您在看什么书呢？",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_0.wav",
+      "voice": "Cherry",
+      "text": "零",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_1.wav",
+      "voice": "Cherry",
+      "text": "一",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_2.wav",
+      "voice": "Cherry",
+      "text": "二",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_3.wav",
+      "voice": "Cherry",
+      "text": "三",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_4.wav",
+      "voice": "Cherry",
+      "text": "四",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_5.wav",
+      "voice": "Cherry",
+      "text": "五",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_6.wav",
+      "voice": "Cherry",
+      "text": "六",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_7.wav",
+      "voice": "Cherry",
+      "text": "七",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_8.wav",
+      "voice": "Cherry",
+      "text": "八",
+      "bytes": 19244,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_9.wav",
+      "voice": "Cherry",
+      "text": "九",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_10.wav",
+      "voice": "Cherry",
+      "text": "十",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_11.wav",
+      "voice": "Cherry",
+      "text": "十一",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_12.wav",
+      "voice": "Cherry",
+      "text": "十二",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_13.wav",
+      "voice": "Cherry",
+      "text": "十三",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_14.wav",
+      "voice": "Cherry",
+      "text": "十四",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_15.wav",
+      "voice": "Cherry",
+      "text": "十五",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_16.wav",
+      "voice": "Cherry",
+      "text": "十六",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_17.wav",
+      "voice": "Cherry",
+      "text": "十七",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_18.wav",
+      "voice": "Cherry",
+      "text": "十八",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_19.wav",
+      "voice": "Cherry",
+      "text": "十九",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_20.wav",
+      "voice": "Cherry",
+      "text": "二十",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_21.wav",
+      "voice": "Cherry",
+      "text": "二十一",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_22.wav",
+      "voice": "Cherry",
+      "text": "二十二",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_23.wav",
+      "voice": "Cherry",
+      "text": "二十三",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_24.wav",
+      "voice": "Cherry",
+      "text": "二十四",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_25.wav",
+      "voice": "Cherry",
+      "text": "二十五",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_26.wav",
+      "voice": "Cherry",
+      "text": "二十六",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_27.wav",
+      "voice": "Cherry",
+      "text": "二十七",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_28.wav",
+      "voice": "Cherry",
+      "text": "二十八",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_29.wav",
+      "voice": "Cherry",
+      "text": "二十九",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_30.wav",
+      "voice": "Cherry",
+      "text": "三十",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_31.wav",
+      "voice": "Cherry",
+      "text": "三十一",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_32.wav",
+      "voice": "Cherry",
+      "text": "三十二",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_33.wav",
+      "voice": "Cherry",
+      "text": "三十三",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_34.wav",
+      "voice": "Cherry",
+      "text": "三十四",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_35.wav",
+      "voice": "Cherry",
+      "text": "三十五",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_36.wav",
+      "voice": "Cherry",
+      "text": "三十六",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_37.wav",
+      "voice": "Cherry",
+      "text": "三十七",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_38.wav",
+      "voice": "Cherry",
+      "text": "三十八",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_39.wav",
+      "voice": "Cherry",
+      "text": "三十九",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_40.wav",
+      "voice": "Cherry",
+      "text": "四十",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_41.wav",
+      "voice": "Cherry",
+      "text": "四十一",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_42.wav",
+      "voice": "Cherry",
+      "text": "四十二",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_43.wav",
+      "voice": "Cherry",
+      "text": "四十三",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_44.wav",
+      "voice": "Cherry",
+      "text": "四十四",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_45.wav",
+      "voice": "Cherry",
+      "text": "四十五",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_46.wav",
+      "voice": "Cherry",
+      "text": "四十六",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_47.wav",
+      "voice": "Cherry",
+      "text": "四十七",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_48.wav",
+      "voice": "Cherry",
+      "text": "四十八",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_49.wav",
+      "voice": "Cherry",
+      "text": "四十九",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_50.wav",
+      "voice": "Cherry",
+      "text": "五十",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_51.wav",
+      "voice": "Cherry",
+      "text": "五十一",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_52.wav",
+      "voice": "Cherry",
+      "text": "五十二",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_53.wav",
+      "voice": "Cherry",
+      "text": "五十三",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_54.wav",
+      "voice": "Cherry",
+      "text": "五十四",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_55.wav",
+      "voice": "Cherry",
+      "text": "五十五",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_56.wav",
+      "voice": "Cherry",
+      "text": "五十六",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_57.wav",
+      "voice": "Cherry",
+      "text": "五十七",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_58.wav",
+      "voice": "Cherry",
+      "text": "五十八",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_59.wav",
+      "voice": "Cherry",
+      "text": "五十九",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_60.wav",
+      "voice": "Cherry",
+      "text": "六十",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_61.wav",
+      "voice": "Cherry",
+      "text": "六十一",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_62.wav",
+      "voice": "Cherry",
+      "text": "六十二",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_63.wav",
+      "voice": "Cherry",
+      "text": "六十三",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_64.wav",
+      "voice": "Cherry",
+      "text": "六十四",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_65.wav",
+      "voice": "Cherry",
+      "text": "六十五",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_66.wav",
+      "voice": "Cherry",
+      "text": "六十六",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_67.wav",
+      "voice": "Cherry",
+      "text": "六十七",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_68.wav",
+      "voice": "Cherry",
+      "text": "六十八",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_69.wav",
+      "voice": "Cherry",
+      "text": "六十九",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_70.wav",
+      "voice": "Cherry",
+      "text": "七十",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_71.wav",
+      "voice": "Cherry",
+      "text": "七十一",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_72.wav",
+      "voice": "Cherry",
+      "text": "七十二",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_73.wav",
+      "voice": "Cherry",
+      "text": "七十三",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_74.wav",
+      "voice": "Cherry",
+      "text": "七十四",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_75.wav",
+      "voice": "Cherry",
+      "text": "七十五",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_76.wav",
+      "voice": "Cherry",
+      "text": "七十六",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_77.wav",
+      "voice": "Cherry",
+      "text": "七十七",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_78.wav",
+      "voice": "Cherry",
+      "text": "七十八",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_79.wav",
+      "voice": "Cherry",
+      "text": "七十九",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_80.wav",
+      "voice": "Cherry",
+      "text": "八十",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_81.wav",
+      "voice": "Cherry",
+      "text": "八十一",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_82.wav",
+      "voice": "Cherry",
+      "text": "八十二",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_83.wav",
+      "voice": "Cherry",
+      "text": "八十三",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_84.wav",
+      "voice": "Cherry",
+      "text": "八十四",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_85.wav",
+      "voice": "Cherry",
+      "text": "八十五",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_86.wav",
+      "voice": "Cherry",
+      "text": "八十六",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_87.wav",
+      "voice": "Cherry",
+      "text": "八十七",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_88.wav",
+      "voice": "Cherry",
+      "text": "八十八",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_89.wav",
+      "voice": "Cherry",
+      "text": "八十九",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_90.wav",
+      "voice": "Cherry",
+      "text": "九十",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_91.wav",
+      "voice": "Cherry",
+      "text": "九十一",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_92.wav",
+      "voice": "Cherry",
+      "text": "九十二",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_93.wav",
+      "voice": "Cherry",
+      "text": "九十三",
+      "bytes": 30764,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_94.wav",
+      "voice": "Cherry",
+      "text": "九十四",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_95.wav",
+      "voice": "Cherry",
+      "text": "九十五",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_96.wav",
+      "voice": "Cherry",
+      "text": "九十六",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_97.wav",
+      "voice": "Cherry",
+      "text": "九十七",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_98.wav",
+      "voice": "Cherry",
+      "text": "九十八",
+      "bytes": 26924,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_99.wav",
+      "voice": "Cherry",
+      "text": "九十九",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_100.wav",
+      "voice": "Cherry",
+      "text": "一百",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_101.wav",
+      "voice": "Cherry",
+      "text": "一百零一",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_102.wav",
+      "voice": "Cherry",
+      "text": "一百零二",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_103.wav",
+      "voice": "Cherry",
+      "text": "一百零三",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_104.wav",
+      "voice": "Cherry",
+      "text": "一百零四",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_105.wav",
+      "voice": "Cherry",
+      "text": "一百零五",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_106.wav",
+      "voice": "Cherry",
+      "text": "一百零六",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_107.wav",
+      "voice": "Cherry",
+      "text": "一百零七",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_108.wav",
+      "voice": "Cherry",
+      "text": "一百零八",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_109.wav",
+      "voice": "Cherry",
+      "text": "一百零九",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_110.wav",
+      "voice": "Cherry",
+      "text": "一百十",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_111.wav",
+      "voice": "Cherry",
+      "text": "一百十一",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_112.wav",
+      "voice": "Cherry",
+      "text": "一百十二",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_113.wav",
+      "voice": "Cherry",
+      "text": "一百十三",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_114.wav",
+      "voice": "Cherry",
+      "text": "一百十四",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_115.wav",
+      "voice": "Cherry",
+      "text": "一百十五",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_116.wav",
+      "voice": "Cherry",
+      "text": "一百十六",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_117.wav",
+      "voice": "Cherry",
+      "text": "一百十七",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_118.wav",
+      "voice": "Cherry",
+      "text": "一百十八",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_119.wav",
+      "voice": "Cherry",
+      "text": "一百十九",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_120.wav",
+      "voice": "Cherry",
+      "text": "一百二十",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_121.wav",
+      "voice": "Cherry",
+      "text": "一百二十一",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_122.wav",
+      "voice": "Cherry",
+      "text": "一百二十二",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_123.wav",
+      "voice": "Cherry",
+      "text": "一百二十三",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_124.wav",
+      "voice": "Cherry",
+      "text": "一百二十四",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_125.wav",
+      "voice": "Cherry",
+      "text": "一百二十五",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_126.wav",
+      "voice": "Cherry",
+      "text": "一百二十六",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_127.wav",
+      "voice": "Cherry",
+      "text": "一百二十七",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_128.wav",
+      "voice": "Cherry",
+      "text": "一百二十八",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_129.wav",
+      "voice": "Cherry",
+      "text": "一百二十九",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_130.wav",
+      "voice": "Cherry",
+      "text": "一百三十",
+      "bytes": 38444,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus10.wav",
+      "voice": "Cherry",
+      "text": "负十",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus9.wav",
+      "voice": "Cherry",
+      "text": "负九",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus8.wav",
+      "voice": "Cherry",
+      "text": "负八",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus7.wav",
+      "voice": "Cherry",
+      "text": "负七",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus6.wav",
+      "voice": "Cherry",
+      "text": "负六",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus5.wav",
+      "voice": "Cherry",
+      "text": "负五",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus4.wav",
+      "voice": "Cherry",
+      "text": "负四",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus3.wav",
+      "voice": "Cherry",
+      "text": "负三",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus2.wav",
+      "voice": "Cherry",
+      "text": "负二",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\num_minus1.wav",
+      "voice": "Cherry",
+      "text": "负一",
+      "bytes": 34604,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_80.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十。",
+      "bytes": 126764,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_81.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十一。",
+      "bytes": 119084,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_82.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十二。",
+      "bytes": 122924,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_83.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十三。",
+      "bytes": 115244,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_84.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十四。",
+      "bytes": 119084,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_85.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十五。",
+      "bytes": 103724,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_86.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十六。",
+      "bytes": 126764,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_87.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十七。",
+      "bytes": 115244,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_88.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十八。",
+      "bytes": 107564,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_89.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之八十九。",
+      "bytes": 103724,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_90.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十。",
+      "bytes": 126764,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_91.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十一。",
+      "bytes": 119084,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_92.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十二。",
+      "bytes": 134444,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_93.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十三。",
+      "bytes": 122924,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_94.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十四。",
+      "bytes": 107564,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_95.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十五。",
+      "bytes": 119084,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_96.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十六。",
+      "bytes": 111404,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_97.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十七。",
+      "bytes": 103724,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_98.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十八。",
+      "bytes": 122924,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_99.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之九十九。",
+      "bytes": 142124,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\health_spo2_100.wav",
+      "voice": "Cherry",
+      "text": "血氧饱和值为百分之一百。",
+      "bytes": 103724,
+      "provider": "dashscope/qwen3-tts-flash"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-10.wav",
+      "voice": "Cherry",
+      "text": "零下十摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-9.wav",
+      "voice": "Cherry",
+      "text": "零下九摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-8.wav",
+      "voice": "Cherry",
+      "text": "零下八摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-7.wav",
+      "voice": "Cherry",
+      "text": "零下七摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-6.wav",
+      "voice": "Cherry",
+      "text": "零下六摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-5.wav",
+      "voice": "Cherry",
+      "text": "零下五摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-4.wav",
+      "voice": "Cherry",
+      "text": "零下四摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-3.wav",
+      "voice": "Cherry",
+      "text": "零下三摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-2.wav",
+      "voice": "Cherry",
+      "text": "零下二摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_-1.wav",
+      "voice": "Cherry",
+      "text": "零下一摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_0.wav",
+      "voice": "Cherry",
+      "text": "零摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_1.wav",
+      "voice": "Cherry",
+      "text": "一摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_2.wav",
+      "voice": "Cherry",
+      "text": "二摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_3.wav",
+      "voice": "Cherry",
+      "text": "三摄氏度。",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_4.wav",
+      "voice": "Cherry",
+      "text": "四摄氏度。",
+      "bytes": 46124,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_5.wav",
+      "voice": "Cherry",
+      "text": "五摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_6.wav",
+      "voice": "Cherry",
+      "text": "六摄氏度。",
+      "bytes": 42284,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_7.wav",
+      "voice": "Cherry",
+      "text": "七摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_8.wav",
+      "voice": "Cherry",
+      "text": "八摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_9.wav",
+      "voice": "Cherry",
+      "text": "九摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_10.wav",
+      "voice": "Cherry",
+      "text": "十摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_11.wav",
+      "voice": "Cherry",
+      "text": "十一摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_12.wav",
+      "voice": "Cherry",
+      "text": "十二摄氏度。",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_13.wav",
+      "voice": "Cherry",
+      "text": "十三摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_14.wav",
+      "voice": "Cherry",
+      "text": "十四摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_15.wav",
+      "voice": "Cherry",
+      "text": "十五摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_16.wav",
+      "voice": "Cherry",
+      "text": "十六摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_17.wav",
+      "voice": "Cherry",
+      "text": "十七摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_18.wav",
+      "voice": "Cherry",
+      "text": "十八摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_19.wav",
+      "voice": "Cherry",
+      "text": "十九摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_20.wav",
+      "voice": "Cherry",
+      "text": "二十摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_21.wav",
+      "voice": "Cherry",
+      "text": "二十一摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_22.wav",
+      "voice": "Cherry",
+      "text": "二十二摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_23.wav",
+      "voice": "Cherry",
+      "text": "二十三摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_24.wav",
+      "voice": "Cherry",
+      "text": "二十四摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_25.wav",
+      "voice": "Cherry",
+      "text": "二十五摄氏度。",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_26.wav",
+      "voice": "Cherry",
+      "text": "二十六摄氏度。",
+      "bytes": 49964,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_27.wav",
+      "voice": "Cherry",
+      "text": "二十七摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_28.wav",
+      "voice": "Cherry",
+      "text": "二十八摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_29.wav",
+      "voice": "Cherry",
+      "text": "二十九摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_30.wav",
+      "voice": "Cherry",
+      "text": "三十摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_31.wav",
+      "voice": "Cherry",
+      "text": "三十一摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_32.wav",
+      "voice": "Cherry",
+      "text": "三十二摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_33.wav",
+      "voice": "Cherry",
+      "text": "三十三摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_34.wav",
+      "voice": "Cherry",
+      "text": "三十四摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35.wav",
+      "voice": "Cherry",
+      "text": "三十五摄氏度。",
+      "bytes": 53804,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36.wav",
+      "voice": "Cherry",
+      "text": "三十六摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37.wav",
+      "voice": "Cherry",
+      "text": "三十七摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38.wav",
+      "voice": "Cherry",
+      "text": "三十八摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39.wav",
+      "voice": "Cherry",
+      "text": "三十九摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40.wav",
+      "voice": "Cherry",
+      "text": "四十摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41.wav",
+      "voice": "Cherry",
+      "text": "四十一摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_42.wav",
+      "voice": "Cherry",
+      "text": "四十二摄氏度。",
+      "bytes": 57644,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_43.wav",
+      "voice": "Cherry",
+      "text": "四十三摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_44.wav",
+      "voice": "Cherry",
+      "text": "四十四摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_45.wav",
+      "voice": "Cherry",
+      "text": "四十五摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_1.wav",
+      "voice": "Cherry",
+      "text": "三十五点一摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_2.wav",
+      "voice": "Cherry",
+      "text": "三十五点二摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_3.wav",
+      "voice": "Cherry",
+      "text": "三十五点三摄氏度。",
+      "bytes": 88364,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_4.wav",
+      "voice": "Cherry",
+      "text": "三十五点四摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_5.wav",
+      "voice": "Cherry",
+      "text": "三十五点五摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_6.wav",
+      "voice": "Cherry",
+      "text": "三十五点六摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_7.wav",
+      "voice": "Cherry",
+      "text": "三十五点七摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_8.wav",
+      "voice": "Cherry",
+      "text": "三十五点八摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_35_9.wav",
+      "voice": "Cherry",
+      "text": "三十五点九摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_1.wav",
+      "voice": "Cherry",
+      "text": "三十六点一摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_2.wav",
+      "voice": "Cherry",
+      "text": "三十六点二摄氏度。",
+      "bytes": 92204,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_3.wav",
+      "voice": "Cherry",
+      "text": "三十六点三摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_4.wav",
+      "voice": "Cherry",
+      "text": "三十六点四摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_5.wav",
+      "voice": "Cherry",
+      "text": "三十六点五摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_6.wav",
+      "voice": "Cherry",
+      "text": "三十六点六摄氏度。",
+      "bytes": 115244,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_7.wav",
+      "voice": "Cherry",
+      "text": "三十六点七摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_8.wav",
+      "voice": "Cherry",
+      "text": "三十六点八摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_36_9.wav",
+      "voice": "Cherry",
+      "text": "三十六点九摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_1.wav",
+      "voice": "Cherry",
+      "text": "三十七点一摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_2.wav",
+      "voice": "Cherry",
+      "text": "三十七点二摄氏度。",
+      "bytes": 88364,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_3.wav",
+      "voice": "Cherry",
+      "text": "三十七点三摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_4.wav",
+      "voice": "Cherry",
+      "text": "三十七点四摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_5.wav",
+      "voice": "Cherry",
+      "text": "三十七点五摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_6.wav",
+      "voice": "Cherry",
+      "text": "三十七点六摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_7.wav",
+      "voice": "Cherry",
+      "text": "三十七点七摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_8.wav",
+      "voice": "Cherry",
+      "text": "三十七点八摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_37_9.wav",
+      "voice": "Cherry",
+      "text": "三十七点九摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_1.wav",
+      "voice": "Cherry",
+      "text": "三十八点一摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_2.wav",
+      "voice": "Cherry",
+      "text": "三十八点二摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_3.wav",
+      "voice": "Cherry",
+      "text": "三十八点三摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_4.wav",
+      "voice": "Cherry",
+      "text": "三十八点四摄氏度。",
+      "bytes": 88364,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_5.wav",
+      "voice": "Cherry",
+      "text": "三十八点五摄氏度。",
+      "bytes": 61484,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_6.wav",
+      "voice": "Cherry",
+      "text": "三十八点六摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_7.wav",
+      "voice": "Cherry",
+      "text": "三十八点七摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_8.wav",
+      "voice": "Cherry",
+      "text": "三十八点八摄氏度。",
+      "bytes": 88364,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_38_9.wav",
+      "voice": "Cherry",
+      "text": "三十八点九摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_1.wav",
+      "voice": "Cherry",
+      "text": "三十九点一摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_2.wav",
+      "voice": "Cherry",
+      "text": "三十九点二摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_3.wav",
+      "voice": "Cherry",
+      "text": "三十九点三摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_4.wav",
+      "voice": "Cherry",
+      "text": "三十九点四摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_5.wav",
+      "voice": "Cherry",
+      "text": "三十九点五摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_6.wav",
+      "voice": "Cherry",
+      "text": "三十九点六摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_7.wav",
+      "voice": "Cherry",
+      "text": "三十九点七摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_8.wav",
+      "voice": "Cherry",
+      "text": "三十九点八摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_39_9.wav",
+      "voice": "Cherry",
+      "text": "三十九点九摄氏度。",
+      "bytes": 96044,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_1.wav",
+      "voice": "Cherry",
+      "text": "四十点一摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_2.wav",
+      "voice": "Cherry",
+      "text": "四十点二摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_3.wav",
+      "voice": "Cherry",
+      "text": "四十点三摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_4.wav",
+      "voice": "Cherry",
+      "text": "四十点四摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_5.wav",
+      "voice": "Cherry",
+      "text": "四十点五摄氏度。",
+      "bytes": 65324,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_6.wav",
+      "voice": "Cherry",
+      "text": "四十点六摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_7.wav",
+      "voice": "Cherry",
+      "text": "四十点七摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_8.wav",
+      "voice": "Cherry",
+      "text": "四十点八摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_40_9.wav",
+      "voice": "Cherry",
+      "text": "四十点九摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_1.wav",
+      "voice": "Cherry",
+      "text": "四十一点一摄氏度。",
+      "bytes": 84524,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_2.wav",
+      "voice": "Cherry",
+      "text": "四十一点二摄氏度。",
+      "bytes": 73004,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_3.wav",
+      "voice": "Cherry",
+      "text": "四十一点三摄氏度。",
+      "bytes": 88364,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_4.wav",
+      "voice": "Cherry",
+      "text": "四十一点四摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_5.wav",
+      "voice": "Cherry",
+      "text": "四十一点五摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_6.wav",
+      "voice": "Cherry",
+      "text": "四十一点六摄氏度。",
+      "bytes": 69164,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_7.wav",
+      "voice": "Cherry",
+      "text": "四十一点七摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_8.wav",
+      "voice": "Cherry",
+      "text": "四十一点八摄氏度。",
+      "bytes": 80684,
+      "provider": "existing/local-file"
+    },
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current\\temperature_value_41_9.wav",
+      "voice": "Cherry",
+      "text": "四十一点九摄氏度。",
+      "bytes": 76844,
+      "provider": "existing/local-file"
     }
   ]
 }

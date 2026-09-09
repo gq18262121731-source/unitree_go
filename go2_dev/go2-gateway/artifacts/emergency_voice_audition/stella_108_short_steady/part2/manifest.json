@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Stella",
+  "speed": 1.08,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\stella_108_short_steady\\part2\\fall_help_broadcast.wav",
+      "voice": "Stella",
+      "text": "已通知家属，请马上过来查看！",
+      "bytes": 134444,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请使用严肃、稳重、紧迫、短促的公共安全广播语气。吐字清楚有力，节奏更紧凑，重点强调“没有回应”和“立即”。不要温柔，不要客服语气，不要表演，不要拖长尾音。"
+    }
+  ]
+}

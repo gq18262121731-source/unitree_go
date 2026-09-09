@@ -1,5 +1,5 @@
 param(
-    [string]$PythonExe = "C:\Users\YANG\.conda\envs\health-diagnostics\python.exe",
+    [string]$PythonExe = "",
     [string]$BaseUrl = "http://127.0.0.1:8000",
     [int]$Timeout = 30,
     [int]$StreamDuration = 12,
@@ -9,6 +9,19 @@ param(
 
 $ErrorActionPreference = "Continue"
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+
+if (-not $PythonExe) {
+    $pythonCandidates = @(
+        (Join-Path $env:USERPROFILE "anaconda3\envs\health-diagnostics\python.exe"),
+        (Join-Path $env:USERPROFILE ".conda\envs\health-diagnostics\python.exe"),
+        (Join-Path $env:USERPROFILE "anaconda3\envs\health\python.exe"),
+        (Join-Path $env:USERPROFILE ".conda\envs\health\python.exe")
+    ) | Where-Object { $_ }
+    $PythonExe = $pythonCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    if (-not $PythonExe) {
+        $PythonExe = (Get-Command python -ErrorAction SilentlyContinue).Source
+    }
+}
 
 function Invoke-Diagnostic {
     param(
@@ -36,7 +49,7 @@ Write-Host "Python:    $PythonExe"
 Write-Host "Base URL:  $BaseUrl"
 Write-Host ""
 
-if (-not (Test-Path $PythonExe)) {
+if (-not $PythonExe -or -not (Test-Path -LiteralPath $PythonExe)) {
     Write-Host "Python interpreter not found: $PythonExe" -ForegroundColor Red
     exit 2
 }

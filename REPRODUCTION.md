@@ -2,7 +2,7 @@
 
 版本：2026-09-05
 
-复刻基线：Git 标签 `reproduction-local-state-2026-09-05`
+复刻基线：Git 标签 `reproduction-local-state-2026-09-05-ip254`
 
 仓库：<https://github.com/gq18262121731-source/unitree_go>
 
@@ -106,7 +106,7 @@ docker version
 git lfs install
 git clone https://github.com/gq18262121731-source/unitree_go.git
 Set-Location .\unitree_go
-git checkout reproduction-local-state-2026-09-05
+git checkout reproduction-local-state-2026-09-05-ip254
 git lfs pull
 git lfs checkout
 ```
@@ -117,7 +117,7 @@ git lfs checkout
 git lfs install
 git clone https://github.com/gq18262121731-source/unitree_go.git
 cd unitree_go
-git checkout reproduction-local-state-2026-09-05
+git checkout reproduction-local-state-2026-09-05-ip254
 git lfs pull
 git lfs checkout
 ```
@@ -134,7 +134,7 @@ git lfs ls-files
 
 预期：
 
-- `git describe --tags --exact-match` 返回 `reproduction-local-state-2026-09-05`；
+- `git describe --tags --exact-match` 返回 `reproduction-local-state-2026-09-05-ip254`；
 - `git rev-parse HEAD` 的结果已经记录到复刻验收记录；
 - `git status --short` 没有输出；
 - `git lfs fsck` 返回成功；
@@ -717,7 +717,7 @@ git lfs pull
 回到本文复刻基线：
 
 ```powershell
-git checkout reproduction-local-state-2026-09-05
+git checkout reproduction-local-state-2026-09-05-ip254
 git lfs pull
 ```
 

@@ -1,0 +1,226 @@
+[
+  {
+    "voice": "Cherry",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Cherry",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Serena",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Serena",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Chelsie",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Chelsie",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Bellona",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Bellona",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Elias",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Elias",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Stella",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Stella",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Maia",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Maia",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Katerina",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Katerina",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Katerina' is not supported."
+  },
+  {
+    "voice": "Katerina",
+    "model": "qwen3-tts-flash",
+    "ok": true,
+    "returned": "Katerina",
+    "provider": "dashscope/qwen3-tts-flash",
+    "error": null
+  },
+  {
+    "voice": "Momo",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Momo",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Vivian",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Vivian",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Bella",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Bella",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Jennifer",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Jennifer",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Jennifer' is not supported."
+  },
+  {
+    "voice": "Jennifer",
+    "model": "qwen3-tts-flash",
+    "ok": true,
+    "returned": "Jennifer",
+    "provider": "dashscope/qwen3-tts-flash",
+    "error": null
+  },
+  {
+    "voice": "Mia",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Mia",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Bunny",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Bunny",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Nini",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Nini",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Seren",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": true,
+    "returned": "Seren",
+    "provider": "dashscope/qwen3-tts-instruct-flash",
+    "error": null
+  },
+  {
+    "voice": "Sonrisa",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Sonrisa",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Sonrisa' is not supported."
+  },
+  {
+    "voice": "Sonrisa",
+    "model": "qwen3-tts-flash",
+    "ok": true,
+    "returned": "Sonrisa",
+    "provider": "dashscope/qwen3-tts-flash",
+    "error": null
+  },
+  {
+    "voice": "Sohee",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Sohee",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Sohee' is not supported."
+  },
+  {
+    "voice": "Sohee",
+    "model": "qwen3-tts-flash",
+    "ok": true,
+    "returned": "Sohee",
+    "provider": "dashscope/qwen3-tts-flash",
+    "error": null
+  },
+  {
+    "voice": "Ono Anna",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Ono Anna",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Ono Anna' is not supported."
+  },
+  {
+    "voice": "Ono Anna",
+    "model": "qwen3-tts-flash",
+    "ok": true,
+    "returned": "Ono Anna",
+    "provider": "dashscope/qwen3-tts-flash",
+    "error": null
+  },
+  {
+    "voice": "Anna",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Anna",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Anna' is not supported."
+  },
+  {
+    "voice": "Anna",
+    "model": "qwen3-tts-flash",
+    "ok": false,
+    "returned": "Anna",
+    "provider": null,
+    "error": "Invalid voice specified, the requested voice does not exist or is not licensed for use—please select a supported voice."
+  },
+  {
+    "voice": "Sunny",
+    "model": "qwen3-tts-instruct-flash",
+    "ok": false,
+    "returned": "Sunny",
+    "provider": null,
+    "error": "<400> InternalError.Algo.InvalidParameter: Voice 'Sunny' is not supported."
+  },
+  {
+    "voice": "Sunny",
+    "model": "qwen3-tts-flash",
+    "ok": true,
+    "returned": "Sunny",
+    "provider": "dashscope/qwen3-tts-flash",
+    "error": null
+  }
+]

@@ -11,6 +11,7 @@ import threading
 import time
 import webbrowser
 import wave
+from array import array
 from pathlib import Path
 from typing import Any, Callable
 
@@ -18,6 +19,23 @@ from typing import Any, Callable
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+
+def _load_project_env_defaults(path: Path) -> None:
+    if not path.is_file():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key:
+            os.environ.setdefault(key, value)
+
+
+_load_project_env_defaults(ROOT / ".env")
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,6 +57,14 @@ from app.motion.manual_control import (
 )
 from app.motion.contracts import ExternalRiskEvent, ExternalRiskEventType
 from app.services.robot_service import RobotService
+from app.iot import (
+    CommandDispatcher,
+    CommandMessage,
+    Go2ControlAdapter,
+    MqttContractMessage,
+    MessageTransport,
+    contract_topic,
+)
 from app.voice.local_voice import (
     ConsoleMockTransport,
     FunASRLocalASRService,
@@ -48,6 +74,14 @@ from app.voice.local_voice import (
     WindowsWaveInMicrophoneSource,
 )
 from app.voice.clip_composer import clip_id_to_filename
+from app.voice.interaction_flow import InteractionFlowController
+from app.voice.xiaokang_agent import (
+    ClipAssembler,
+    LocalFirstXiaokangAgent,
+    OpenMeteoWeatherProvider,
+    build_default_health_provider,
+    build_default_medication_provider,
+)
 from app.webrtc.go2_wireless_runtime import (
     ExpectedAioiceBindNoiseFilter,
     Go2WirelessRuntime,
@@ -103,6 +137,16 @@ VOICE_PRESET_DIR = Path(
         str(ROOT / "data" / "voice" / "presets" / "current"),
     )
 ).resolve()
+EMERGENCY_VOICE_CLIPS = {"fall.alert.sound", "fall.help.broadcast"}
+EMERGENCY_VOICE_ALARM_PAUSE_SECONDS = 0.25
+VOICE_PLAYBACK_TIMEOUT_MARGIN_SECONDS = 4.0
+VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS = 8.0
+VOICE_PLAYBACK_ECHO_GUARD_SECONDS = max(
+    0.0,
+    min(5.0, float(os.environ.get("GO2_VOICE_PLAYBACK_ECHO_GUARD_SECONDS", "1.5"))),
+)
+EMERGENCY_VOICE_TIMEOUT_MARGIN_SECONDS = 6.0
+EMERGENCY_VOICE_TIMEOUT_MIN_SECONDS = 15.0
 VOICE_INTENT_CAPTURE_SECONDS = max(
     1.5,
     min(10.0, float(os.environ.get("GO2_VOICE_CAPTURE_SECONDS", "8.0"))),
@@ -150,6 +194,39 @@ CONFIRM_COMPANION_START = "WIRELESS_COMPANION_START_APPROVED"
 CONFIRM_FOLLOW_NO_LIDAR = "UWB_ONLY_NO_LIDAR_OPEN_AREA"
 CONFIRM_REMOTE_STOP = "REMOTE_STOP_READY"
 CONFIRM_MIC_READONLY = "WEBRTC_MIC_READONLY_GATE"
+ONSITE_HOTKEYS = {
+    ";": ("F1", "START"),
+    "<": ("F2", "STOP"),
+    "?": ("F5", "FALL_SUSPECTED"),
+    "@": ("F6", "FALL_RECOVERED"),
+    "A": ("F7", "READING"),
+    "C": ("F9", "RESET_DEMO"),
+    "D": ("F10", "TOGGLE_VOICE_LISTENER"),
+    "\x86": ("F12", "SAFETY_STOP"),
+}
+ONSITE_CTRL_HOTKEYS = {
+    "b": ("Ctrl+F5", "PLAY_FALL_CONFIRM"),
+    "c": ("Ctrl+F6", "PLAY_FALL_CONFIRM_SECOND"),
+    "d": ("Ctrl+F7", "PLAY_FALL_HELP"),
+}
+
+
+def _console_hotkey_command(scan_code: str) -> tuple[str, str] | None:
+    """Return (label, command) for Windows console F-key scan codes."""
+
+    return ONSITE_HOTKEYS.get(scan_code) or ONSITE_CTRL_HOTKEYS.get(scan_code)
+
+
+def _windows_hotkeys_available() -> bool:
+    if os.name != "nt":
+        return False
+    if not sys.stdin.isatty() or not sys.stdout.isatty():
+        return False
+    try:
+        import msvcrt  # noqa: F401
+    except Exception:
+        return False
+    return True
 
 
 def _default_local_asr_backend() -> str:
@@ -171,6 +248,70 @@ def discover_lan_ipv4(robot_ip: str) -> str | None:
         return None
     finally:
         sock.close()
+
+
+def _emergency_volume_gain() -> float:
+    try:
+        value = float(os.environ.get("GO2_EMERGENCY_VOLUME_GAIN", "1.6"))
+    except ValueError:
+        return 1.6
+    return max(1.0, min(3.0, value))
+
+
+def _prepare_emergency_voice_file(source: Path, *, gain: float) -> Path:
+    if gain <= 1.001:
+        return source
+    try:
+        stat = source.stat()
+    except OSError:
+        return source
+    cache_dir = VOICE_PRESET_DIR / ".emergency_cache"
+    cache_name = (
+        f"{source.stem}_emergency_g{str(round(gain, 2)).replace('.', '_')}_"
+        f"{stat.st_mtime_ns}_{stat.st_size}.wav"
+    )
+    target = cache_dir / cache_name
+    if target.is_file():
+        return target
+    try:
+        return _write_limited_gain_pcm16_wav(source, target, gain=gain)
+    except Exception as exc:
+        LOGGER.warning(
+            "EMERGENCY_VOICE_GAIN_SKIPPED path=%s reason=%s: %s",
+            source,
+            type(exc).__name__,
+            exc,
+        )
+        return source
+
+
+def _write_limited_gain_pcm16_wav(source: Path, target: Path, *, gain: float) -> Path:
+    with wave.open(str(source), "rb") as stream:
+        params = stream.getparams()
+        frames = stream.readframes(stream.getnframes())
+    if params.sampwidth != 2 or params.comptype != "NONE":
+        return source
+    samples = array("h")
+    samples.frombytes(frames)
+    if sys.byteorder != "little":
+        samples.byteswap()
+    if not samples:
+        return source
+    peak = max(abs(sample) for sample in samples)
+    limit = 32700
+    effective_gain = min(float(gain), limit / peak) if peak else float(gain)
+    if effective_gain <= 1.001:
+        return source
+    for index, sample in enumerate(samples):
+        boosted = int(round(sample * effective_gain))
+        samples[index] = max(-32768, min(32767, boosted))
+    if sys.byteorder != "little":
+        samples.byteswap()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with wave.open(str(target), "wb") as stream:
+        stream.setparams(params)
+        stream.writeframes(samples.tobytes())
+    return target
 
 
 class RuntimeConsole:
@@ -232,6 +373,149 @@ class RuntimeConsole:
         self._emergency_voice_cancel = threading.Event()
         self._voice_layer_lock = threading.Lock()
         self._voice_preload_attempted = False
+        self.control_adapter: Go2ControlAdapter | None = None
+        self._interaction_event_transport: MessageTransport | None = None
+        self._interaction_event_topic_prefix = load_settings().mqtt_topic_prefix
+        self._voice_session_manager: LocalVoiceSessionManager | None = None
+        self._interaction_flow_controller: InteractionFlowController | None = None
+        self._voice_playback_lock = threading.Lock()
+        self._voice_playback_active = False
+        self._voice_playback_signature: tuple[str, ...] | None = None
+        self._voice_playback_seq = 0
+
+    def set_control_adapter(self, adapter: Go2ControlAdapter) -> None:
+        self.control_adapter = adapter
+
+    def set_voice_session_manager(self, manager: LocalVoiceSessionManager) -> None:
+        self._voice_session_manager = manager
+
+    def set_interaction_flow_controller(
+        self,
+        controller: InteractionFlowController,
+    ) -> None:
+        self._interaction_flow_controller = controller
+
+    def set_interaction_event_transport(
+        self,
+        transport: MessageTransport,
+        *,
+        topic_prefix: str,
+    ) -> None:
+        self._interaction_event_transport = transport
+        self._interaction_event_topic_prefix = str(topic_prefix or "").strip()
+
+    def publish_interaction_event(self, event: str) -> None:
+        transport = self._interaction_event_transport
+        if transport is None:
+            print("INTERACTION_EVENT_REJECTED: voice transport is not active")
+            return
+        device_id = self.service.settings.robot_id
+        transport.publish(
+            MqttContractMessage(
+                topic=contract_topic(
+                    device_id,
+                    "event",
+                    topic_prefix=self._interaction_event_topic_prefix,
+                ),
+                payload={
+                    "device_id": device_id,
+                    "source": "simulator",
+                    "ts": "",
+                    "event": event,
+                    "session_id": f"terminal-{event.lower()}",
+                },
+            )
+        )
+        print(f"INTERACTION_EVENT: {event}")
+
+    def _read_command(self, prompt: str) -> str:
+        if not _windows_hotkeys_available():
+            return input(prompt)
+        import msvcrt
+
+        buffer: list[str] = []
+        print(prompt, end="", flush=True)
+        while True:
+            ch = msvcrt.getwch()
+            if ch in ("\x00", "\xe0"):
+                mapped = _console_hotkey_command(msvcrt.getwch())
+                if mapped is None:
+                    continue
+                label, command = mapped
+                print(f"\r\n[HOTKEY] {label} -> {command}", flush=True)
+                return command
+            if ch == "\x03":
+                raise KeyboardInterrupt
+            if ch in ("\r", "\n"):
+                print()
+                return "".join(buffer)
+            if ch == "\b":
+                if buffer:
+                    buffer.pop()
+                    print("\b \b", end="", flush=True)
+                continue
+            if ch and ch >= " ":
+                buffer.append(ch)
+                print(ch, end="", flush=True)
+
+    def _safety_stop_motion_only(self) -> dict[str, object]:
+        self.stop_motion()
+        with self._state_lock:
+            self._follow_status = {
+                "state": "IDLE",
+                "motion": "STOPPED",
+                "reason": "onsite_safety_stop_motion_only",
+                "autoRecovery": "DISABLED",
+            }
+        self.lifecycle.stop(reason="onsite_safety_stop_motion_only")
+        print("SAFETY_STOP_MOTION_ONLY: WebRTC video/audio and voice services remain active")
+        return self.companion_status()
+
+    def _play_fall_voice_fallback(self, clips: list[str]) -> None:
+        result = self.play_voice_clips(clips)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+
+    def toggle_voice_listener(self) -> bool:
+        manager = self._voice_session_manager
+        if manager is None:
+            print("[VOICE] LISTENER UNAVAILABLE")
+            return False
+        will_enable = not manager.listener_enabled
+        if not will_enable:
+            flow = self._interaction_flow_controller
+            if flow is not None:
+                flow.clear_pending_reply()
+        enabled, _messages = manager.toggle_listener()
+        return enabled
+
+    def _run_control_command(
+        self,
+        command: str,
+        *,
+        request_id: str,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        control_adapter = getattr(self, "control_adapter", None)
+        if control_adapter is None:
+            if command == "start_follow":
+                return self.start_companion(before_start=self._play_start_announcement)
+            if command == "stop_follow":
+                return self.stop_companion()
+            if command == "resume_follow":
+                return self.resume_companion()
+            raise ValueError(f"unsupported terminal control command: {command}")
+        control_adapter.handle(
+            CommandMessage(
+                device_id=self.service.settings.robot_id,
+                command=command,
+                request_id=request_id,
+                payload=dict(payload or {}),
+            )
+        )
+        companion_status = getattr(self, "companion_status", None)
+        if callable(companion_status):
+            return dict(companion_status())
+        return {}
 
     def run(self, *, auto_demo: str | None = None) -> int:
         status = self.runtime.status()
@@ -261,10 +545,21 @@ class RuntimeConsole:
         )
         print(f"Motion Demo    : {auto_demo or 'manual'}")
         print(
+            "Hotkeys      : F1=start/resume | F2=stop motion | "
+            "F5=fall | F6=recovered | F7=reading | F9=reset | "
+            "F10=voice on/off | F12=safety stop motion"
+        )
+        print(
+            "Voice rescue : Ctrl+F5=fall prompt | Ctrl+F6=second prompt | "
+            "Ctrl+F7=alert/help broadcast"
+        )
+        print(
             "Commands     : START | STOP | RESUME | VOICE_CONTROL | VOICE_OFF | "
             "VOICE_INTENT_GATE | MANUAL | WALK_FOLLOW | NO_RESPONSE | RESET_DEMO | "
             "UWB_GATE | MIC_GATE | FOLLOW_3MIN | GATE | POSE_GATE | "
-            "AUDIO_GATE | START_DEMO | STATUS | EXIT"
+            "AUDIO_GATE | START_DEMO | FALL_SUSPECTED | FALL_TIMEOUT | "
+            "FALL_RECOVERED | READING | TOGGLE_VOICE_LISTENER | SAFETY_STOP | "
+            "STATUS | EXIT"
         )
         print("=" * 57)
         if auto_demo == "phone_demo":
@@ -272,7 +567,7 @@ class RuntimeConsole:
             self._start_motion("phone_demo", self._phone_demo)
         while True:
             try:
-                command = input("wireless> ").strip().upper()
+                command = self._read_command("wireless> ").strip().upper()
             except (EOFError, KeyboardInterrupt):
                 self._request_runtime_shutdown()
                 self.stop_motion()
@@ -333,10 +628,19 @@ class RuntimeConsole:
                 self.disable_voice_layer()
                 print("VOICE_LAYER=STANDBY")
             elif command == "STOP":
-                self.stop_companion()
+                self._run_control_command(
+                    "stop_follow",
+                    request_id="terminal-stop",
+                    payload={},
+                )
             elif command == "RESUME":
                 try:
-                    print(json.dumps(self.resume_companion(), ensure_ascii=False, indent=2))
+                    resumed = self._run_control_command(
+                        "resume_follow",
+                        request_id="terminal-resume",
+                        payload={},
+                    )
+                    print(json.dumps(resumed, ensure_ascii=False, indent=2))
                 except WirelessCompanionControlError as exc:
                     print(f"RESUME_REJECTED: {exc.code}: {exc.message}")
             elif command == "NO_RESPONSE":
@@ -346,10 +650,28 @@ class RuntimeConsole:
                     print(f"NO_RESPONSE_REJECTED: {exc.code}: {exc.message}")
             elif command == "RESET_DEMO":
                 print(json.dumps(self.reset_demo(), ensure_ascii=False, indent=2))
+            elif command == "TOGGLE_VOICE_LISTENER":
+                self.toggle_voice_listener()
             elif command == "MANUAL":
                 self._manual_console()
             elif command == "WALK_FOLLOW":
                 self._walk_follow()
+            elif command == "FALL_SUSPECTED":
+                self.publish_interaction_event("FALL_SUSPECTED")
+            elif command == "FALL_TIMEOUT":
+                self.publish_interaction_event("FALL_RESPONSE_TIMEOUT")
+            elif command == "FALL_RECOVERED":
+                self.publish_interaction_event("FALL_RECOVERED")
+            elif command == "READING":
+                self.publish_interaction_event("NORMAL_ACTIVITY_READING")
+            elif command == "SAFETY_STOP":
+                print(json.dumps(self._safety_stop_motion_only(), ensure_ascii=False, indent=2))
+            elif command == "PLAY_FALL_CONFIRM":
+                self._play_fall_voice_fallback(["fall.confirm"])
+            elif command == "PLAY_FALL_CONFIRM_SECOND":
+                self._play_fall_voice_fallback(["fall.confirm.second"])
+            elif command == "PLAY_FALL_HELP":
+                self._play_fall_voice_fallback(["fall.alert.sound", "fall.help.broadcast"])
             elif command == "START":
                 if self._motion_thread and self._motion_thread.is_alive():
                     print("START_REJECTED:CONTROL_BUSY:MOTION_BUSY")
@@ -363,8 +685,10 @@ class RuntimeConsole:
                         )
                         continue
                 try:
-                    started = self.start_companion(
-                        before_start=self._play_start_announcement
+                    started = self._run_control_command(
+                        "start_follow",
+                        request_id="terminal-start",
+                        payload={"announce_before_start": True},
                     )
                     print("START accepted -> FOLLOWING")
                     print(json.dumps(started, ensure_ascii=False, indent=2))
@@ -897,6 +1221,12 @@ class RuntimeConsole:
         self._wait_for_motion_stop()
         if self.manual_controller.active:
             self.manual_controller.release(reason="demo_reset")
+        flow = self._interaction_flow_controller
+        if flow is not None:
+            flow.reset_demo()
+        manager = self._voice_session_manager
+        if manager is not None:
+            manager.set_listener_enabled(True)
         result = self.lifecycle.reset_demo()
         with self._state_lock:
             self._follow_status = {
@@ -1255,15 +1585,21 @@ class RuntimeConsole:
     def _voice_clip_paths(self, clips: list[str] | tuple[str, ...]) -> tuple[list[Path], list[str]]:
         paths: list[Path] = []
         missing: list[str] = []
+        aliases = {
+            "sess.wake_ack": "WAKE_READY.wav",
+        }
         for clip in clips:
             clip_id = str(clip or "").strip()
             if not clip_id:
                 continue
-            try:
-                path = VOICE_PRESET_DIR / clip_id_to_filename(clip_id)
-            except Exception:
-                missing.append(clip_id)
-                continue
+            if clip_id in aliases:
+                path = VOICE_PRESET_DIR / aliases[clip_id]
+            else:
+                try:
+                    path = VOICE_PRESET_DIR / clip_id_to_filename(clip_id)
+                except Exception:
+                    missing.append(clip_id)
+                    continue
             if path.is_file():
                 paths.append(path)
             else:
@@ -1294,7 +1630,41 @@ class RuntimeConsole:
             "missing_clips": failed,
         }
 
-    def play_voice_clips(self, clips: list[str] | tuple[str, ...]) -> dict[str, object]:
+    def _ensure_voice_playback_guard(self) -> None:
+        if not hasattr(self, "_voice_playback_lock"):
+            self._voice_playback_lock = threading.Lock()
+            self._voice_playback_active = False
+            self._voice_playback_signature = None
+            self._voice_playback_seq = 0
+
+    def _next_voice_playback_seq(self) -> int:
+        self._ensure_voice_playback_guard()
+        with self._voice_playback_lock:
+            self._voice_playback_seq += 1
+            return self._voice_playback_seq
+
+    def _stop_voice_audio_playback(self, *, reason: str) -> None:
+        stop_audio_playback = getattr(self.runtime, "stop_audio_playback", None)
+        if not callable(stop_audio_playback):
+            return
+        try:
+            stop_audio_playback(reason=reason, timeout_seconds=3.0)
+            print(f"[AUDIO] STOP_REQ reason={reason}")
+        except Exception as exc:
+            print(
+                "[AUDIO] STOP_FAILED "
+                f"reason={reason} error={type(exc).__name__}: {exc}"
+            )
+
+    def play_voice_clips(
+        self,
+        clips: list[str] | tuple[str, ...],
+        *,
+        request_id: str | None = None,
+        session_id: str | None = None,
+        source: str = "runtime",
+    ) -> dict[str, object]:
+        self._ensure_voice_playback_guard()
         normalized = [str(item).strip() for item in clips if str(item).strip()]
         paths, missing = self._voice_clip_paths(tuple(normalized))
         if missing:
@@ -1305,17 +1675,110 @@ class RuntimeConsole:
                 "status": "missing",
                 "missing_clips": missing,
             }
+        signature = tuple(normalized)
+        with self._voice_playback_lock:
+            if self._voice_playback_active:
+                print(
+                    "[AUDIO] duplicate playback dropped "
+                    f"clips={list(signature)} active_clips={list(self._voice_playback_signature or ())}"
+                )
+                return {
+                    "clips": normalized,
+                    "played": 0,
+                    "status": "error",
+                    "missing_clips": [],
+                    "reason": "playback_active",
+                }
+            self._voice_playback_active = True
+            self._voice_playback_signature = signature
         played = 0
-        for path in paths:
-            self.runtime.play_audio_file(path, timeout_seconds=3.0)
-            played += 1
-        print(f"VOICE_CLIPS_PLAYED: {played}/{len(normalized)}")
-        return {
-            "clips": normalized,
-            "played": played,
-            "status": "done",
-            "missing_clips": [],
-        }
+        current_clip_id = ""
+        try:
+            for index, (clip_id, path) in enumerate(zip(normalized, paths)):
+                current_clip_id = clip_id
+                emergency = clip_id in EMERGENCY_VOICE_CLIPS
+                playback_path = (
+                    _prepare_emergency_voice_file(path, gain=_emergency_volume_gain())
+                    if emergency
+                    else path
+                )
+                duration_seconds = self._voice_clip_duration_seconds(playback_path)
+                timeout_seconds = self._voice_clip_timeout_seconds(playback_path, emergency=emergency)
+                seq = self._next_voice_playback_seq()
+                print(
+                    "[AUDIO] PLAY_REQ "
+                    f"seq={seq:03d} clip={clip_id} "
+                    f"session_id={str(session_id or '')} "
+                    f"request_id={str(request_id or '')} "
+                    f"source={str(source or '')} "
+                    f"duration={duration_seconds:.2f}s timeout={timeout_seconds:.1f}s "
+                    f"path={playback_path.name}"
+                )
+                self.runtime.play_audio_file(
+                    playback_path,
+                    timeout_seconds=timeout_seconds,
+                )
+                played += 1
+                if duration_seconds > 0.0:
+                    time.sleep(duration_seconds)
+                self._stop_voice_audio_playback(
+                    reason=f"voice_clip_complete:{clip_id}"
+                )
+                if duration_seconds > 0.0 and VOICE_PLAYBACK_ECHO_GUARD_SECONDS > 0.0:
+                    time.sleep(VOICE_PLAYBACK_ECHO_GUARD_SECONDS)
+                if (
+                    clip_id == "fall.alert.sound"
+                    and index + 1 < len(normalized)
+                    and normalized[index + 1] == "fall.help.broadcast"
+                ):
+                    time.sleep(EMERGENCY_VOICE_ALARM_PAUSE_SECONDS)
+            print(f"VOICE_CLIPS_PLAYED: {played}/{len(normalized)}")
+            return {
+                "clips": normalized,
+                "played": played,
+                "status": "done",
+                "missing_clips": [],
+            }
+        except Exception as exc:
+            print(
+                "VOICE_CLIPS_PLAYBACK_FAILED: "
+                f"clip={current_clip_id} "
+                f"played={played}/{len(normalized)} "
+                f"error={type(exc).__name__}: {exc}"
+            )
+            return {
+                "clips": normalized,
+                "played": played,
+                "status": "error",
+                "missing_clips": [],
+                "error": f"{type(exc).__name__}: {exc}",
+            }
+        finally:
+            self._stop_voice_audio_playback(reason="voice_playback_cleanup")
+            with self._voice_playback_lock:
+                if self._voice_playback_signature == signature:
+                    self._voice_playback_active = False
+                    self._voice_playback_signature = None
+
+    @staticmethod
+    def _voice_clip_timeout_seconds(path: Path, *, emergency: bool = False) -> float:
+        duration = RuntimeConsole._voice_clip_duration_seconds(path)
+        if emergency:
+            return max(
+                EMERGENCY_VOICE_TIMEOUT_MIN_SECONDS,
+                duration + EMERGENCY_VOICE_TIMEOUT_MARGIN_SECONDS,
+            )
+        return max(
+            VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS,
+            duration + VOICE_PLAYBACK_TIMEOUT_MARGIN_SECONDS,
+        )
+
+    @staticmethod
+    def _voice_clip_duration_seconds(path: Path) -> float:
+        try:
+            return RuntimeConsole._wav_duration_seconds(path)
+        except Exception:
+            return 0.0
 
     def preload_voice_control_presets(self) -> None:
         filenames = {
@@ -2451,7 +2914,10 @@ def _confirm_startup(
     *,
     auto_demo: str | None = None,
     skip_operator_prompts: bool = False,
+    voice_enabled: bool = True,
+    video_enabled: bool = True,
 ) -> None:
+    del auto_demo, skip_operator_prompts
     lifecycle = Path(settings.companion_state_path)
     if not lifecycle.is_absolute():
         lifecycle = ROOT / lifecycle
@@ -2462,24 +2928,15 @@ def _confirm_startup(
         raise RuntimeError(f"cannot verify Companion IDLE: {exc}") from exc
     if companion_state != "IDLE":
         raise RuntimeError(f"COMPANION_NOT_CONFIRMED_IDLE: observed={companion_state}")
-    if skip_operator_prompts:
-        print(
-            "STARTUP_CONFIRMATIONS: skipped by launcher; "
-            "Companion IDLE check passed, runtime safety interlocks remain enabled"
-        )
-    else:
-        for expected in (CONFIRM_WRITER, CONFIRM_APP_CLOSED, CONFIRM_AREA):
-            if input(f"Type {expected}: ").strip() != expected:
-                raise RuntimeError(f"confirmation failed; expected exact text {expected}")
-    if auto_demo == "phone_demo":
-        if input(f"Type {CONFIRM_COMPETITION}: ").strip() != CONFIRM_COMPETITION:
-            raise RuntimeError(
-                f"confirmation failed; expected exact text {CONFIRM_COMPETITION}"
-            )
-        if input(f"Type {CONFIRM_POSE_AUDIO}: ").strip() != CONFIRM_POSE_AUDIO:
-            raise RuntimeError(
-                f"confirmation failed; expected exact text {CONFIRM_POSE_AUDIO}"
-            )
+    motion_enabled = bool(
+        getattr(settings, "control_enabled", True)
+        and not getattr(settings, "read_only_mode", False)
+    )
+    print("[GO2] Core Runtime starting")
+    print(f"[GO2] Motion control {'enabled' if motion_enabled else 'disabled'}")
+    print(f"[VOICE] Xiaokang listener {'enabled' if voice_enabled else 'disabled'}")
+    print(f"[VIDEO] WebRTC video {'enabled' if video_enabled else 'disabled'}")
+    print("[GO2] Companion IDLE check passed; runtime safety interlocks remain enabled")
 
 
 def _print_audio_devices(devices: list[object]) -> None:
@@ -2515,6 +2972,13 @@ def main(argv: list[str] | None = None) -> int:
         "--weather-city", default=os.environ.get("GO2_WEATHER_CITY", "北京")
     )
     parser.add_argument(
+        "--xiaokang-auto-follow",
+        action="store_true",
+        default=str(os.environ.get("XIAOKANG_AUTO_FOLLOW", "0")).strip().lower()
+        in {"1", "true", "yes", "on"},
+        help="start Go2 follow after outing reply clip_done; default is off",
+    )
+    parser.add_argument(
         "--device-mac", default=os.environ.get("HEALTH_NEW_DEVICE_MAC", "")
     )
     parser.add_argument(
@@ -2524,8 +2988,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--audio-source",
         choices=("webrtc", "go2", "local"),
-        default="webrtc",
-        help="select Go2 WebRTC audio, or local Windows microphone test mode",
+        default=os.environ.get("GO2_AUDIO_SOURCE", "go2"),
+        help="select Go2 microphone ASR, WebRTC video-only mode, or local Windows microphone test mode",
+    )
+    parser.add_argument(
+        "--no-voice",
+        action="store_true",
+        default=str(os.environ.get("GO2_NO_VOICE", "0")).strip().lower()
+        in {"1", "true", "yes", "on"},
+        help="disable the background Go2 voice listener",
     )
     parser.add_argument(
         "--asr-backend",
@@ -2573,8 +3044,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--session-timeout",
         type=float,
-        default=15.0,
+        default=float(os.environ.get("GO2_VOICE_SESSION_TIMEOUT_SECONDS", "10")),
         help="local voice session idle timeout in seconds",
+    )
+    parser.add_argument(
+        "--voice-max-turns",
+        type=int,
+        default=int(os.environ.get("GO2_VOICE_MAX_TURNS", "2")),
+        help="maximum speech turns after wake before returning to wake guard",
+    )
+    parser.add_argument(
+        "--voice-debug",
+        action="store_true",
+        default=str(os.environ.get("GO2_VOICE_DEBUG", "0")).strip().lower()
+        in {"1", "true", "yes", "on"},
+        help="print ASR partial/VAD/ignored-transcript diagnostics",
     )
     parser.add_argument(
         "--capture-seconds",
@@ -2605,11 +3089,14 @@ def main(argv: list[str] | None = None) -> int:
         "--skip-startup-confirmations",
         action="store_true",
         help=(
-            "skip the three repetitive operator text prompts; the Companion IDLE "
-            "check and runtime motion safety interlocks remain active"
+            "deprecated no-op retained for old launchers; startup operator text "
+            "prompts were removed, while the Companion IDLE check and runtime "
+            "motion safety interlocks remain active"
         ),
     )
     args = parser.parse_args(argv)
+    if args.no_voice and args.audio_source != "local":
+        args.audio_source = "webrtc"
     if not 1 <= args.port <= 65535:
         parser.error("--port must be in [1, 65535]")
 
@@ -2634,8 +3121,10 @@ def main(argv: list[str] | None = None) -> int:
             topic_prefix=load_settings().mqtt_topic_prefix,
             microphone_device_index=args.mic_device,
             session_timeout_seconds=args.session_timeout,
+            max_turns=args.voice_max_turns,
             capture_seconds=args.capture_seconds,
             vad_trailing_silence_seconds=args.vad_trailing_silence_seconds,
+            voice_debug=args.voice_debug,
         )
         try:
             pipeline.run_forever()
@@ -2683,6 +3172,8 @@ def main(argv: list[str] | None = None) -> int:
             settings,
             auto_demo=args.auto_demo,
             skip_operator_prompts=args.skip_startup_confirmations,
+            voice_enabled=not args.no_voice,
+            video_enabled=True,
         )
     except RuntimeError as exc:
         print(f"WIRELESS_RUNTIME_REJECTED: {exc}", file=sys.stderr)
@@ -2776,21 +3267,6 @@ def main(argv: list[str] | None = None) -> int:
         )
         return asr_service, tts_service, agent_client
 
-    go2_bridge: Go2ASRAudioBridge | None = None
-    if args.audio_source == "go2":
-        go2_bridge = Go2ASRAudioBridge(
-            asr_service=create_asr_service(),
-            session_manager=LocalVoiceSessionManager(
-                ConsoleMockTransport(),
-                device_id=args.device_id,
-                topic_prefix=load_settings().mqtt_topic_prefix,
-                # The Go2 microphone path currently accepts only the normal
-                # wake-word/session flow. Emergency bypass is a later phase.
-                emergency_bypass_enabled=False,
-            ),
-            printer=print,
-        )
-
     console = RuntimeConsole(
         runtime,
         service,
@@ -2804,6 +3280,125 @@ def main(argv: list[str] | None = None) -> int:
         voice_services_factory=create_voice_services,
         manual_confirm_start=args.manual_confirm_start,
     )
+    playback_active = threading.Event()
+
+    def voice_clip_available(clip_id: str) -> bool:
+        alias = {
+            "sess.wake_ack": "WAKE_READY.wav",
+        }
+        filename = alias.get(str(clip_id or "").strip())
+        if filename is None:
+            try:
+                filename = clip_id_to_filename(clip_id)
+            except Exception:
+                return False
+        return (VOICE_PRESET_DIR / filename).is_file()
+
+    def play_xiaokang_clips(message: CommandMessage) -> dict[str, Any]:
+        playback_active.set()
+        try:
+            return console.play_voice_clips(
+                [str(item) for item in list(message.payload.get("clips") or [])],
+                request_id=message.request_id,
+                session_id=str(message.payload.get("session_id") or ""),
+                source=message.source,
+            )
+        except Exception as exc:
+            clips = [str(item) for item in list(message.payload.get("clips") or [])]
+            print(
+                "VOICE_CLIPS_PLAYBACK_FAILED: "
+                f"clips={clips} error={type(exc).__name__}: {exc}"
+            )
+            return {
+                "clips": clips,
+                "played": 0,
+                "status": "error",
+                "missing_clips": [],
+                "error": f"{type(exc).__name__}: {exc}",
+            }
+        finally:
+            time.sleep(0.4)
+            playback_active.clear()
+            if go2_bridge is not None:
+                go2_bridge.clear_pending_audio()
+
+    def start_follow_from_adapter(message: CommandMessage) -> dict[str, Any]:
+        if bool(message.payload.get("skip_start_announcement", False)):
+            return console.start_companion()
+        if bool(message.payload.get("announce_before_start", False)):
+            return console.start_companion(before_start=console._play_start_announcement)
+        return console.start_companion()
+
+    control_adapter = Go2ControlAdapter(
+        start_follow=start_follow_from_adapter,
+        stop_follow=lambda _message: console.stop_companion(),
+        resume_follow=lambda _message: console.resume_companion(),
+        play_clips=play_xiaokang_clips,
+        ping=lambda message: {
+            "nonce": message.payload.get("nonce") or message.request_id,
+            "battery": None,
+            "follow_mode": console.companion_status().get("state") == "FOLLOWING",
+        },
+    )
+    console.set_control_adapter(control_adapter)
+    go2_bridge: Go2ASRAudioBridge | None = None
+    if args.audio_source == "go2":
+        voice_transport = ConsoleMockTransport()
+        CommandDispatcher(
+            voice_transport,
+            control_adapter,
+            topic_prefix=settings.mqtt_topic_prefix,
+        ).bind(args.device_id)
+        interaction_flow = InteractionFlowController(
+            health_provider=build_default_health_provider(ROOT),
+            weather_provider=OpenMeteoWeatherProvider(
+                city=args.weather_city,
+                latitude=float(os.environ.get("XIAOKANG_WEATHER_LAT", "39.9042")),
+                longitude=float(os.environ.get("XIAOKANG_WEATHER_LON", "116.4074")),
+                api_url=os.environ.get(
+                    "XIAOKANG_WEATHER_API_URL",
+                    "https://api.open-meteo.com/v1/forecast",
+                ),
+                timeout_seconds=float(os.environ.get("XIAOKANG_WEATHER_TIMEOUT", "3")),
+            ),
+            medication_provider=build_default_medication_provider(),
+            clip_assembler=ClipAssembler(
+                is_clip_available=voice_clip_available,
+                printer=print,
+            ),
+            auto_follow=args.xiaokang_auto_follow,
+        )
+        voice_session_manager = LocalVoiceSessionManager(
+            voice_transport,
+            device_id=args.device_id,
+            topic_prefix=settings.mqtt_topic_prefix,
+            session_timeout_seconds=args.session_timeout,
+            max_turns=args.voice_max_turns,
+            # The Go2 microphone path currently accepts only the normal
+            # wake-word/session flow. Emergency bypass is a later phase.
+            emergency_bypass_enabled=False,
+            voice_debug=args.voice_debug,
+        )
+        LocalFirstXiaokangAgent(
+            voice_transport,
+            args.device_id,
+            interaction_flow,
+            topic_prefix=settings.mqtt_topic_prefix,
+            printer=print,
+        ).bind()
+        console.set_interaction_flow_controller(interaction_flow)
+        console.set_voice_session_manager(voice_session_manager)
+        console.set_interaction_event_transport(
+            voice_transport,
+            topic_prefix=settings.mqtt_topic_prefix,
+        )
+        go2_bridge = Go2ASRAudioBridge(
+            asr_service=create_asr_service(),
+            session_manager=voice_session_manager,
+            printer=print,
+            is_playback_active=playback_active.is_set,
+            voice_debug=args.voice_debug,
+        )
     server = uvicorn.Server(
         uvicorn.Config(
             create_video_bridge(
@@ -2834,6 +3429,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         time.sleep(1.0)
         if go2_bridge is not None:
+            go2_bridge.warmup()
             runtime.register_microphone_pcm_consumer(go2_bridge.push_pcm)
             go2_bridge.start()
             try:

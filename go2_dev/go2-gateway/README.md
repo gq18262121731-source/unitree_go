@@ -19,11 +19,15 @@ Implemented in this stage:
 - Control lock, watchdog, shutdown stop, and stale-state protection.
 - Pytest coverage for the safety-critical paths.
 - Single-instance Companion Lifecycle API for supervised UWB/LiDAR following.
+- Go2 WebRTC voice intake for the built-in microphone, local FunASR
+  `paraformer-zh-streaming` ASR, Xiaokang wake/session handling, and fixed
+  clip playback for the current competition dialogue flow.
 
 Not implemented in this stage: autonomous SLAM navigation, generic follow tasks,
-auto charge, real speech recognition, LLM agents, special actions, flips, jumps,
-handstand, low-level motor or joint control. V1 companion following is available
-only through the supervised lifecycle endpoints described below.
+auto charge, cloud/real MQTT voice orchestration, dynamic runtime TTS, LLM agents
+that directly control robot motion, special actions, flips, jumps, handstand,
+low-level motor or joint control. V1 companion following is available only
+through the supervised lifecycle endpoints and wireless runtime described below.
 
 ## Architecture Boundaries
 

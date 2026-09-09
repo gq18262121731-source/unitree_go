@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Maia",
+  "speed": 1.08,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\mandarin_female_all\\maia\\part2\\fall_help_broadcast.wav",
+      "voice": "Maia",
+      "text": "已通知家属，请马上过来查看！",
+      "bytes": 126764,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请使用冷静、严肃、清晰、短促的系统安全提示女声。像设备告警后的公共安全提示，节奏紧凑，重点强调“没有回应”和“立即”。不要温柔，不要客服语气，不要表演，不要拖长尾音。"
+    }
+  ]
+}

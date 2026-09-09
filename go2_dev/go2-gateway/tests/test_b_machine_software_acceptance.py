@@ -10,8 +10,10 @@ from app.iot import (
     CommandDispatcher,
     CommandMessage,
     Go2ControlAdapter,
+    MqttContractMessage,
     MockAMachine,
     MockTransport,
+    contract_topic,
 )
 from app.voice import (
     ClipManifest,
@@ -86,6 +88,60 @@ def test_b_machine_control_decisions_are_stateful_and_idempotent() -> None:
     assert adapter.state is BMachineState.FOLLOWING
 
 
+def test_control_adapter_does_not_mark_following_when_real_start_fails() -> None:
+    calls: list[tuple[str, dict]] = []
+    adapter = _adapter(calls=calls)
+    adapter.start_follow = lambda message: {"ok": False, "reason": "uwb_not_ready"}
+
+    adapter.handle(
+        CommandMessage(
+            device_id="DOG-LJG-001",
+            command="start_follow",
+            request_id="start-fail",
+            payload={},
+        )
+    )
+
+    assert adapter.state is BMachineState.IDLE
+    assert adapter.state_machine.last_reason == "start_follow_failed"
+
+
+def test_control_adapter_stop_is_idempotent_when_idle() -> None:
+    calls: list[tuple[str, dict]] = []
+    adapter = _adapter(calls=calls)
+
+    adapter.handle(
+        CommandMessage(
+            device_id="DOG-LJG-001",
+            command="stop_follow",
+            request_id="stop-idle",
+            payload={},
+        )
+    )
+
+    assert calls == []
+    assert adapter.state is BMachineState.IDLE
+
+
+def test_control_adapter_keeps_following_when_real_stop_fails() -> None:
+    calls: list[tuple[str, dict]] = []
+    adapter = _adapter(calls=calls)
+    adapter.state_machine.set_state(BMachineState.FOLLOWING, reason="test")
+    adapter.stop_follow = lambda message: {"ok": False, "reason": "stop_timeout"}
+
+    adapter.handle(
+        CommandMessage(
+            device_id="DOG-LJG-001",
+            command="stop_follow",
+            request_id="stop-fail",
+            payload={},
+        )
+    )
+
+    assert adapter.state is BMachineState.FOLLOWING
+    assert adapter.state_machine.last_reason == "stop_follow_failed"
+
+
 def test_clip_manifest_resolves_ready_clips_and_reports_missing() -> None:
     manifest = ClipManifest(
         {
@@ -158,12 +214,31 @@ def test_asr_bridge_drops_pcm_while_playback_is_active() -> None:
         session_manager=manager,
         printer=logs.append,
         is_playback_active=lambda: True,
+        voice_debug=True,
     )
 
     bridge.push_pcm(np.ones(1600, dtype=np.int16).tobytes(), 16000, 1)
 
     assert bridge._queue.qsize() == 0
-    assert logs == ["[ASR] dropped_pcm_frame: playback_active"]
+    assert logs == ["[ASR] playback_muted dropped=1 frames"]
+
+
+def test_asr_bridge_drops_final_while_playback_is_active() -> None:
+    transport = MockTransport()
+    manager = LocalVoiceSessionManager(transport, emergency_bypass_enabled=False)
+    logs: list[str] = []
+    bridge = Go2ASRAudioBridge(
+        asr_service=object(),  # type: ignore[arg-type]
+        session_manager=manager,
+        printer=logs.append,
+        is_playback_active=lambda: True,
+        voice_debug=True,
+    )
+
+    bridge._publish_final("小康")
+
+    assert transport.published == []
+    assert logs == ["[ASR] final_dropped: playback_active (小康)"]
 
 
 def test_funasr_stream_finish_clears_cache_for_next_utterance() -> None:
@@ -186,6 +261,56 @@ def test_funasr_stream_finish_clears_cache_for_next_utterance() -> None:
     assert session.finish() == "小康，我想出去走走"
     assert session._cache == {}
     assert session.finish() == ""
+
+
+def test_funasr_streaming_session_merges_incremental_chunk_text() -> None:
+    class Service:
+        chunk_size = (0, 1, 0)
+        encoder_chunk_look_back = 4
+        decoder_chunk_look_back = 1
+
+        def _load_model(self):
+            chunks = iter(["小康", "我想", "出去走走"])
+
+            class Model:
+                def generate(self, **_kwargs):
+                    return [{"text": next(chunks)}]
+
+            return Model()
+
+    session = FunASRStreamingSession(Service())  # type: ignore[arg-type]
+    pcm = np.ones(960, dtype=np.int16).tobytes()
+
+    session.feed_pcm(pcm, sample_rate=16000, channels=1)
+    session.feed_pcm(pcm, sample_rate=16000, channels=1)
+    session.feed_pcm(pcm, sample_rate=16000, channels=1)
+
+    assert session.finish() == "小康我想出去走走"
+
+
+def test_funasr_streaming_session_accepts_cumulative_chunk_text() -> None:
+    class Service:
+        chunk_size = (0, 1, 0)
+        encoder_chunk_look_back = 4
+        decoder_chunk_look_back = 1
+
+        def _load_model(self):
+            chunks = iter(["小康", "小康我想", "小康我想出去走走"])
+
+            class Model:
+                def generate(self, **_kwargs):
+                    return [{"text": next(chunks)}]
+
+            return Model()
+
+    session = FunASRStreamingSession(Service())  # type: ignore[arg-type]
+    pcm = np.ones(960, dtype=np.int16).tobytes()
+
+    session.feed_pcm(pcm, sample_rate=16000, channels=1)
+    session.feed_pcm(pcm, sample_rate=16000, channels=1)
+    session.feed_pcm(pcm, sample_rate=16000, channels=1)
+
+    assert session.finish() == "小康我想出去走走"
 
 
 def test_session_timeout_requires_wake_word_again() -> None:
@@ -212,6 +337,41 @@ def test_session_timeout_requires_wake_word_again() -> None:
     manager.process_transcript("小康，我想出去")
     assert transport.published[-1].payload["text"] == "我想出去"
     assert transport.published[-1].payload["turn"] == 1
+
+
+def test_safety_event_reply_window_allows_response_without_wake_word() -> None:
+    transport = MockTransport()
+    now = [0.0]
+    manager = LocalVoiceSessionManager(
+        transport,
+        session_timeout_seconds=8.0,
+        emergency_bypass_enabled=False,
+        monotonic_clock=lambda: now[0],
+    )
+
+    assert manager.process_transcript("我没事") == []
+    transport.publish(
+        MqttContractMessage(
+            topic=contract_topic("DOG-LJG-001", "event"),
+            payload={
+                "device_id": "DOG-LJG-001",
+                "source": "simulator",
+                "ts": "",
+                "event": "FALL_SUSPECTED",
+                "session_id": "fall-1",
+            },
+        )
+    )
+    messages = manager.process_transcript("我没事")
+
+    assert messages
+    assert messages[-1].payload["text"] == "我没事"
+    assert messages[-1].payload.get("wake_word") is None
+    assert messages[-1].payload["is_wake_turn"] is False
+
+    manager.expire_if_idle()
+    now[0] = 9.0
+    assert manager.process_transcript("我没事") == []
 
 
 def test_mock_a_machine_runs_speech_tts_clip_done_start_follow_loop() -> None:

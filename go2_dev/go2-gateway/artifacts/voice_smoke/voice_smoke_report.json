@@ -1,0 +1,68 @@
+{
+  "preset_dir": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\data\\voice\\presets\\current",
+  "defined_dynamic_clips": 156,
+  "existing_wav_files": 169,
+  "missing_dynamic_clips_raw": [
+    {
+      "clip_id": "medication.reminder.before_outing",
+      "filename": "medication_reminder_before_outing.wav",
+      "text": "您今天还没有确认服药，出门前请按既定安排服药。"
+    }
+  ],
+  "missing_dynamic_clips_effective": [
+    {
+      "clip_id": "medication.reminder.before_outing",
+      "filename": "medication_reminder_before_outing.wav",
+      "text": "您今天还没有确认服药，出门前请按既定安排服药。"
+    }
+  ],
+  "weather": {
+    "city": "北京",
+    "condition": "overcast",
+    "temperature": 17,
+    "feels_like": 17,
+    "precipitation": false,
+    "error": null
+  },
+  "decision": {
+    "intent": "outing_request",
+    "allowed": true,
+    "health_status": "good",
+    "heart_rate": 76,
+    "weather": "overcast",
+    "temperature": 17,
+    "medication_reminder": true,
+    "action": null,
+    "clips": [
+      "outing.allow.health_good",
+      "health.hr.prefix",
+      "num.76",
+      "unit.bpm",
+      "weather.today.beijing",
+      "weather.overcast",
+      "weather.temp.prefix",
+      "num.17",
+      "unit.celsius",
+      "outing.allow.suffix"
+    ],
+    "reply": "可以出去走走，我陪着您。"
+  },
+  "assembler_logs": [
+    "[CLIP] optional_missing medication.reminder.before_outing"
+  ],
+  "clips": [
+    "outing.allow.health_good",
+    "health.hr.prefix",
+    "num.76",
+    "unit.bpm",
+    "weather.today.beijing",
+    "weather.overcast",
+    "weather.temp.prefix",
+    "num.17",
+    "unit.celsius",
+    "outing.allow.suffix"
+  ],
+  "missing_for_sentence": [],
+  "output_wav": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\voice_smoke\\beijing_outing_clips_smoke.wav",
+  "output_bytes": 633644
+}

@@ -25,10 +25,30 @@ class VoiceService:
         "longyingtian": "Serena",
     }
     _QWEN_TTS_BUILTIN_VOICES = {
+        "bellona": "Bellona",
         "cherry": "Cherry",
         "serena": "Serena",
         "ethan": "Ethan",
         "chelsie": "Chelsie",
+        "neil": "Neil",
+        "elias": "Elias",
+        "stella": "Stella",
+        "jada": "Jada",
+        "maia": "Maia",
+        "katerina": "Katerina",
+        "momo": "Momo",
+        "vivian": "Vivian",
+        "bella": "Bella",
+        "jennifer": "Jennifer",
+        "mia": "Mia",
+        "bunny": "Bunny",
+        "nini": "Nini",
+        "seren": "Seren",
+        "sonrisa": "Sonrisa",
+        "sohee": "Sohee",
+        "ono anna": "Ono Anna",
+        "anna": "Anna",
+        "sunny": "Sunny",
     }
 
     def __init__(self, settings: Settings, device_service: Any | None = None) -> None:
@@ -492,6 +512,8 @@ class VoiceService:
         speed: float = 1.0,
         fmt: Literal["mp3", "wav", "pcm"] = "mp3",
         workspace: str | None = None,
+        model: str | None = None,
+        instruction: str | None = None,
     ) -> dict[str, object]:
         """Call DashScope TTS and return audio data."""
         if not self._configured:
@@ -500,7 +522,7 @@ class VoiceService:
         if not text.strip():
             return {"ok": False, "audio_b64": "", "error": "empty text"}
 
-        model_id = self._settings.qwen_tts_model_id.strip().lower()
+        model_id = (model or self._settings.qwen_tts_model_id).strip().lower()
         try:
             import dashscope
 
@@ -514,9 +536,11 @@ class VoiceService:
                     text=text,
                     voice=target_voice,
                     language_type="Chinese",
+                    prompt=instruction or None,
                     parameters={
                         "format": fmt,
                         "sample_rate": 16000,
+                        "speech_rate": speed,
                     },
                     stream=False,
                 )
@@ -534,6 +558,7 @@ class VoiceService:
                             "fmt": fmt,
                             "provider": f"dashscope/{model_id}",
                             "voice": target_voice,
+                            "model": model_id,
                         }
                     if audio_url:
                         return {
@@ -543,6 +568,7 @@ class VoiceService:
                             "fmt": fmt,
                             "provider": f"dashscope/{model_id}",
                             "voice": target_voice,
+                            "model": model_id,
                         }
                     return {
                         "ok": False,

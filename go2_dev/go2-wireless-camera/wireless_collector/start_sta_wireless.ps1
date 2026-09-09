@@ -3,7 +3,7 @@ param(
     [switch]$Foreground,
     [ValidateSet("127.0.0.1", "0.0.0.0")]
     [string]$ListenHost = "127.0.0.1",
-    [string]$RobotIp = "192.168.8.252"
+    [string]$RobotIp = "192.168.8.254"
 )
 
 $ErrorActionPreference = "Stop"

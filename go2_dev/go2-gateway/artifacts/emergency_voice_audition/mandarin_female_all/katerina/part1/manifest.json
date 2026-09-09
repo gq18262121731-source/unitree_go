@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-flash",
+  "voice": "Katerina",
+  "speed": 1.08,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\mandarin_female_all\\katerina\\part1\\fall_help_broadcast.wav",
+      "voice": "Katerina",
+      "text": "请注意！老人摔倒后没有回应，请附近人员立即帮忙！",
+      "bytes": 261164,
+      "provider": "dashscope/qwen3-tts-flash",
+      "model": "qwen3-tts-flash",
+      "instruction": null
+    }
+  ]
+}

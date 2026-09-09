@@ -1,0 +1,15 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-flash",
+  "voice": "Cherry",
+  "speed": 1.0,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\tts_smoke_cherry\\WAKE_READY.wav",
+      "voice": "Cherry",
+      "text": "我在，请说。",
+      "bytes": 53804,
+      "provider": "dashscope/qwen3-tts-flash"
+    }
+  ]
+}

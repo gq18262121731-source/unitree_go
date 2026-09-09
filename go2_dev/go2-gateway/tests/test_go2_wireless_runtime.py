@@ -364,10 +364,12 @@ class FakeAudioFrame:
 class FakeAudio:
     def __init__(self) -> None:
         self.callback = None
+        self.track_callbacks = []
         self.switches = []
 
     def add_track_callback(self, callback) -> None:
         self.callback = callback
+        self.track_callbacks.append(callback)
 
     def switchAudioChannel(self, enabled: bool) -> None:
         self.switches.append(enabled)
@@ -492,6 +494,7 @@ class FakeAudioHub:
         self.uploads: list[str] = []
         self.played: list[str] = []
         self.play_modes: list[str] = []
+        self.pauses = 0
         self.deleted: list[str] = []
         self.uploaded_bytes: list[bytes] = []
 
@@ -513,6 +516,9 @@ class FakeAudioHub:
 
     async def set_play_mode(self, play_mode: str) -> None:
         self.play_modes.append(play_mode)
+
+    async def pause(self) -> None:
+        self.pauses += 1
 
     async def delete_record(self, unique_id: str) -> None:
         self.deleted.append(unique_id)
@@ -1917,7 +1923,12 @@ def test_base_video_runtime_activates_and_deactivates_optional_layers() -> None:
         voice = runtime.activate_voice()
         assert voice["layers"]["voice"] == "active"
         assert connection.audio.callback is not None
+        assert len(connection.audio.track_callbacks) == 1
+        assert connection.audio.switches[-1] is True
+        runtime.activate_voice()
+        assert len(connection.audio.track_callbacks) == 1
         runtime.deactivate_voice()
+        assert connection.audio.switches[-1] is False
         assert runtime.status()["layers"]["voice"] == "standby"
 
         runtime.request_shutdown()
@@ -1972,6 +1983,12 @@ def test_formal_launcher_uses_current_robot_and_lan_video_defaults() -> None:
     assert '$env:GO2_WEBRTC_DISCONNECT_GRACE_SECONDS = "3"' in launcher
     assert "[switch]$ManualConfirmStart" in launcher
     assert '$Arguments += "--manual-confirm-start"' in launcher
+    assert '$Arguments += "--skip-startup-confirmations"' not in launcher
+    assert '$RuntimeParameters["RequireStartupConfirmations"]' not in (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "Start-RobotVideoGateway-UnifiedWatchdog.ps1"
+    ).read_text(encoding="utf-8")
 
 
 def test_runtime_tool_filters_only_expected_aioice_bind_noise() -> None:
@@ -2205,10 +2222,32 @@ def test_pose_and_audio_share_the_existing_connection(tmp_path, monkeypatch) -> 
             "z": 0.0,
         }
         assert len(audio_hub.uploads) == 2
-        assert audio_hub.play_modes == ["single_cycle", "single_cycle"]
+        assert audio_hub.play_modes == ["no_cycle", "no_cycle"]
         assert audio_hub.played == ["uuid-1", "uuid-2"]
+        assert audio_hub.pauses == 2
     finally:
         runtime.close()
+
+
+def test_stop_audio_playback_pauses_existing_audiohub() -> None:
+    connection = FakeConnection()
+    audio_hub = FakeAudioHub()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video=False,
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+        audio_hub_factory=lambda _connection: audio_hub,
+    )
+    runtime.start()
+    try:
+        runtime._audio_hub = audio_hub
+        assert runtime.stop_audio_playback(reason="test") == 0
+        assert audio_hub.pauses == 1
+    finally:
+        runtime.close(send_stop=False)
 
 
 def test_audio_preload_uploads_without_playing(tmp_path) -> None:

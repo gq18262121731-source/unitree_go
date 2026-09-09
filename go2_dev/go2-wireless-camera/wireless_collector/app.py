@@ -199,7 +199,7 @@ app.add_middleware(
 def dashboard() -> str:
     return (
         "<h1>Independent client retired</h1>"
-        "<p>Use E:\\笨笨狗\\go2_dev\\go2-gateway\\scripts\\"
+        "<p>Use E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\scripts\\"
         "Start-Go2WirelessRuntime.ps1.</p>"
     )
 

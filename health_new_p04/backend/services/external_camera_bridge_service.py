@@ -616,9 +616,11 @@ class ExternalCameraBridgeService:
         local_runtime = self._project_root / "camera_runtime_external"
         if (local_runtime / "camera_runtime_main.py").exists():
             return local_runtime
-        external_runtime = Path(r"D:\Program\camear_new")
-        if (external_runtime / "camera_runtime_main.py").exists():
-            return external_runtime
+        external_runtime_root = os.getenv("EXTERNAL_CAMERA_RUNTIME_ROOT", "").strip()
+        if external_runtime_root:
+            external_runtime = Path(external_runtime_root).expanduser()
+            if (external_runtime / "camera_runtime_main.py").exists():
+                return external_runtime
         return local_runtime
 
     def _normalize_viewer_config(self, raw: dict[str, Any]) -> None:
@@ -704,8 +706,12 @@ class ExternalCameraBridgeService:
         }
 
     def _resolve_python_executable(self) -> str:
+        home = Path.home()
         for candidate in (
-            Path(r"C:\Users\YANG\.conda\envs\health\python.exe"),
+            home / "anaconda3" / "envs" / "health" / "python.exe",
+            home / ".conda" / "envs" / "health" / "python.exe",
+            home / "anaconda3" / "envs" / "AI" / "python.exe",
+            home / ".conda" / "envs" / "AI" / "python.exe",
         ):
             if candidate.exists():
                 return str(candidate)

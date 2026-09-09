@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-flash",
+  "voice": "Sonrisa",
+  "speed": 1.08,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\mandarin_female_all\\sonrisa\\part2\\fall_help_broadcast.wav",
+      "voice": "Sonrisa",
+      "text": "已通知家属，请马上过来查看！",
+      "bytes": 169004,
+      "provider": "dashscope/qwen3-tts-flash",
+      "model": "qwen3-tts-flash",
+      "instruction": null
+    }
+  ]
+}

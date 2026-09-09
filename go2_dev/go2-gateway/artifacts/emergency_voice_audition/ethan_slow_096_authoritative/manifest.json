@@ -1,0 +1,15 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-flash",
+  "voice": "Ethan",
+  "speed": 0.96,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\ethan_slow_096_authoritative\\fall_help_broadcast.wav",
+      "voice": "Ethan",
+      "text": "请注意！这里有人需要帮助！老人可能摔倒了，现在没有回应。已经通知老人的家属。请附近的人马上过来查看！请马上过来帮忙查看！",
+      "bytes": 468524,
+      "provider": "dashscope/qwen3-tts-flash"
+    }
+  ]
+}

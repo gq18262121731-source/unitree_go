@@ -16,6 +16,9 @@ param(
     [string]$WeatherCity = "",
     [string]$DeviceMac = "",
     [string]$VoiceSessionId = "go2-wireless",
+    # Deprecated: startup confirmation prompts were removed. Runtime safety
+    # interlocks, START/STOP checks, and manual debug confirmations remain in
+    # the Python runtime.
     [switch]$RequireStartupConfirmations,
     [switch]$ManualConfirmStart,
     [switch]$NoOpenBrowser
@@ -113,9 +116,6 @@ try {
     }
     if ($WeatherCity) {
         $Arguments += @("--weather-city", $WeatherCity)
-    }
-    if (-not $RequireStartupConfirmations) {
-        $Arguments += "--skip-startup-confirmations"
     }
     if ($ManualConfirmStart) {
         $Arguments += "--manual-confirm-start"

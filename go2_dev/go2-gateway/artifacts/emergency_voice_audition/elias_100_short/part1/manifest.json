@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Elias",
+  "speed": 1.0,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\elias_100_short\\part1\\fall_help_broadcast.wav",
+      "voice": "Elias",
+      "text": "请注意！这里有老人摔倒后没有回应，请附近人员立即过来帮忙！",
+      "bytes": 364844,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请使用严肃、紧迫、短促、有指令感的公共安全广播语气。吐字精准清晰，节奏紧凑。不要温柔，不要客服语气，不要表演，不要情绪夸张，不要拖长尾音。"
+    }
+  ]
+}

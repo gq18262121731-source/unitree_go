@@ -1,0 +1,60 @@
+{
+  "checked_at": "2026-09-09 01:54:46",
+  "defined_dynamic_clips": 156,
+  "existing_wav_files": 172,
+  "missing_dynamic_clips": [],
+  "wav_formats": {
+    "1ch/24000Hz/16bit": 172
+  },
+  "manifest_file_entries": 172,
+  "weather_api": {
+    "city": "北京",
+    "condition": "overcast",
+    "temperature": 17,
+    "feels_like": 17,
+    "precipitation": false,
+    "error": null
+  },
+  "decision": {
+    "intent": "outing_request",
+    "allowed": true,
+    "health_status": "good",
+    "heart_rate": 76,
+    "weather": "overcast",
+    "temperature": 17,
+    "medication_reminder": true,
+    "action": null,
+    "clips": [
+      "outing.allow.health_good",
+      "health.hr.prefix",
+      "num.76",
+      "unit.bpm",
+      "weather.today.beijing",
+      "weather.overcast",
+      "weather.temp.prefix",
+      "num.17",
+      "unit.celsius",
+      "medication.reminder.before_outing",
+      "outing.allow.suffix"
+    ],
+    "reply": "可以出去走走，我陪着您。"
+  },
+  "assembler_logs": [],
+  "clips": [
+    "outing.allow.health_good",
+    "health.hr.prefix",
+    "num.76",
+    "unit.bpm",
+    "weather.today.beijing",
+    "weather.overcast",
+    "weather.temp.prefix",
+    "num.17",
+    "unit.celsius",
+    "medication.reminder.before_outing",
+    "outing.allow.suffix"
+  ],
+  "missing_for_sentence": [],
+  "output_wav": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\voice_smoke\\beijing_outing_clips_with_medication_smoke.wav",
+  "output_duration_seconds": 17.92,
+  "output_bytes": 860204
+}

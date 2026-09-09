@@ -1,13 +1,23 @@
 param(
     [string]$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path,
     [string]$EnvName = "health-diagnostics",
-    [string]$PythonExe = "C:\Users\YANG\.conda\envs\health-diagnostics\python.exe",
+    [string]$PythonExe = "",
     [string]$PyCharmExe = "D:\PyCharm\PyCharm Community Edition 2023.3.4\bin\pycharm64.exe",
     [switch]$OpenPyCharm,
     [switch]$RunSmoke
 )
 
 $ErrorActionPreference = "Stop"
+
+if (-not $PythonExe) {
+    $pythonCandidates = @(
+        (Join-Path $env:USERPROFILE "anaconda3\envs\$EnvName\python.exe"),
+        (Join-Path $env:USERPROFILE ".conda\envs\$EnvName\python.exe"),
+        (Join-Path $env:USERPROFILE "anaconda3\envs\health\python.exe"),
+        (Join-Path $env:USERPROFILE ".conda\envs\health\python.exe")
+    ) | Where-Object { $_ }
+    $PythonExe = $pythonCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+}
 
 function Write-Step {
     param([string]$Message)

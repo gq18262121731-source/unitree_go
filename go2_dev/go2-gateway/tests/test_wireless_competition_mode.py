@@ -4,23 +4,24 @@ import math
 from pathlib import Path
 import threading
 import time
+import wave
 from types import SimpleNamespace
 
 import pytest
 
-from app.companion.competition_lifecycle import LifecycleReadiness
+from app.companion.competition_lifecycle import CompetitionLifecycle, LifecycleReadiness
 from app.companion.models import CompanionState
 from app.motion.scripted_motion import MotionActionResult
+from app.iot import Go2ControlAdapter, MockTransport, contract_topic
 from app.webrtc.follow_target_forwarder import FollowTargetState
 from tools.go2_wireless_runtime import (
     CONFIRM_APP_CLOSED,
     CONFIRM_AREA,
-    CONFIRM_COMPETITION,
-    CONFIRM_POSE_AUDIO,
     CONFIRM_WRITER,
     RuntimeConsole,
     WALK_FOLLOW_PRESET,
     WALK_FOLLOW_TEXT,
+    _console_hotkey_command,
     _confirm_startup,
     _wait_for_video,
     discover_lan_ipv4,
@@ -40,6 +41,28 @@ class FakeSocket:
 
     def close(self) -> None:
         self.closed = True
+
+
+def _write_pcm16_wav(path: Path, samples: list[int]) -> None:
+    with wave.open(str(path), "wb") as stream:
+        stream.setnchannels(1)
+        stream.setsampwidth(2)
+        stream.setframerate(24000)
+        stream.writeframes(
+            b"".join(int(sample).to_bytes(2, "little", signed=True) for sample in samples)
+        )
+
+
+def _pcm16_wav_peak(path: Path) -> int:
+    with wave.open(str(path), "rb") as stream:
+        data = stream.readframes(stream.getnframes())
+    if not data:
+        return 0
+    samples = [
+        int.from_bytes(data[index : index + 2], "little", signed=True)
+        for index in range(0, len(data), 2)
+    ]
+    return max(abs(sample) for sample in samples)
 
 
 def test_lan_video_address_uses_route_to_robot(monkeypatch) -> None:
@@ -207,12 +230,91 @@ def test_voice_clip_playback_resolves_clip_ids_in_order(
         "missing_clips": [],
     }
     assert runtime.played == [
-        ("outing_allow_health_good.wav", 3.0),
-        ("health_hr_prefix.wav", 3.0),
-        ("num_76.wav", 3.0),
-        ("unit_bpm.wav", 3.0),
+        ("outing_allow_health_good.wav", runtime_tool.VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS),
+        ("health_hr_prefix.wav", runtime_tool.VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS),
+        ("num_76.wav", runtime_tool.VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS),
+        ("unit_bpm.wav", runtime_tool.VOICE_PLAYBACK_TIMEOUT_MIN_SECONDS),
     ]
     assert "VOICE_CLIPS_PLAYED: 4/4" in capsys.readouterr().out
+
+
+def test_voice_clip_playback_timeout_scales_with_wav_duration(
+    tmp_path, monkeypatch
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    _write_pcm16_wav(tmp_path / "WAKE_READY.wav", [1000, -1000] * 120000)
+    timeouts: list[float] = []
+
+    class Runtime:
+        def play_audio_file(self, _path, *, timeout_seconds):
+            timeouts.append(timeout_seconds)
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    monkeypatch.setattr(runtime_tool.time, "sleep", lambda _seconds: None)
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+
+    result = console.play_voice_clips(["sess.wake_ack"])
+
+    assert result["status"] == "done"
+    assert timeouts == [
+        pytest.approx(10.0 + runtime_tool.VOICE_PLAYBACK_TIMEOUT_MARGIN_SECONDS)
+    ]
+
+
+def test_emergency_voice_playback_uses_limited_gain_and_alarm_pause(
+    tmp_path, monkeypatch
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    _write_pcm16_wav(tmp_path / "fall_alert_sound.wav", [1000, -1000] * 120)
+    _write_pcm16_wav(tmp_path / "fall_help_broadcast.wav", [1200, -1200] * 120)
+    events: list[tuple[str, str | float, float | None]] = []
+
+    class Runtime:
+        def play_audio_file(self, path, *, timeout_seconds):
+            events.append(("play", str(Path(path)), timeout_seconds))
+
+        def stop_audio_playback(self, *, reason, timeout_seconds):
+            events.append(("stop", reason, timeout_seconds))
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    monkeypatch.setattr(
+        runtime_tool.time,
+        "sleep",
+        lambda seconds: events.append(("sleep", seconds, None)),
+    )
+    runtime = Runtime()
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = runtime
+
+    result = console.play_voice_clips(["fall.alert.sound", "fall.help.broadcast"])
+
+    assert result["status"] == "done"
+    play_events = [event for event in events if event[0] == "play"]
+    assert len(play_events) == 2
+    assert play_events[0][2] == runtime_tool.EMERGENCY_VOICE_TIMEOUT_MIN_SECONDS
+    assert play_events[1][2] == runtime_tool.EMERGENCY_VOICE_TIMEOUT_MIN_SECONDS
+    assert Path(str(play_events[0][1])).parent.name == ".emergency_cache"
+    assert Path(str(play_events[1][1])).parent.name == ".emergency_cache"
+    assert _pcm16_wav_peak(Path(str(play_events[0][1]))) > 1000
+    assert _pcm16_wav_peak(Path(str(play_events[1][1]))) > 1200
+    assert _pcm16_wav_peak(Path(str(play_events[1][1]))) <= 32700
+    sleep_events = [event for event in events if event[0] == "sleep"]
+    assert sleep_events == [
+        ("sleep", pytest.approx(0.01), None),
+        ("sleep", pytest.approx(runtime_tool.VOICE_PLAYBACK_ECHO_GUARD_SECONDS), None),
+        ("sleep", runtime_tool.EMERGENCY_VOICE_ALARM_PAUSE_SECONDS, None),
+        ("sleep", pytest.approx(0.01), None),
+        ("sleep", pytest.approx(runtime_tool.VOICE_PLAYBACK_ECHO_GUARD_SECONDS), None),
+    ]
+    stop_events = [event for event in events if event[0] == "stop"]
+    assert stop_events == [
+        ("stop", "voice_clip_complete:fall.alert.sound", 3.0),
+        ("stop", "voice_clip_complete:fall.help.broadcast", 3.0),
+        ("stop", "voice_playback_cleanup", 3.0),
+    ]
 
 
 def test_voice_clip_playback_refuses_partial_sentence_when_clip_missing(
@@ -241,6 +343,55 @@ def test_voice_clip_playback_refuses_partial_sentence_when_clip_missing(
     assert result["missing_clips"] == ["num.76"]
     assert runtime.played == []
     assert "VOICE_CLIPS_MISSING: num.76" in capsys.readouterr().out
+
+
+def test_voice_clip_playback_failure_returns_error_result(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    _write_pcm16_wav(tmp_path / "WAKE_READY.wav", [1000, -1000] * 120)
+
+    class Runtime:
+        def play_audio_file(self, _path, *, timeout_seconds):
+            raise TimeoutError("audiohub timeout")
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+
+    result = console.play_voice_clips(["sess.wake_ack"])
+
+    assert result["status"] == "error"
+    assert result["played"] == 0
+    assert result["clips"] == ["sess.wake_ack"]
+    assert "TimeoutError: audiohub timeout" in result["error"]
+    assert "VOICE_CLIPS_PLAYBACK_FAILED: clip=sess.wake_ack" in capsys.readouterr().out
+
+
+def test_voice_clip_playback_reentry_is_dropped(tmp_path, monkeypatch, capsys) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    _write_pcm16_wav(tmp_path / "WAKE_READY.wav", [1000, -1000] * 120)
+
+    class Runtime:
+        def play_audio_file(self, _path, *, timeout_seconds):
+            raise AssertionError("duplicate playback must not be queued")
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+    console._voice_playback_lock = threading.Lock()
+    console._voice_playback_active = True
+    console._voice_playback_signature = ("sess.wake_ack",)
+    console._voice_playback_seq = 1
+
+    result = console.play_voice_clips(["sess.wake_ack"])
+
+    assert result["status"] == "error"
+    assert result["reason"] == "playback_active"
+    assert result["played"] == 0
+    assert "[AUDIO] duplicate playback dropped" in capsys.readouterr().out
 
 
 def test_walk_follow_plays_fixed_preset_then_enters_existing_manual(
@@ -332,28 +483,40 @@ def test_start_announcement_uses_existing_preset_and_waits_for_playback(
     ]
 
 
-def test_auto_demo_requires_competition_confirmation(tmp_path, monkeypatch) -> None:
+def test_auto_demo_startup_does_not_block_for_operator_confirmation(
+    tmp_path, monkeypatch, capsys
+) -> None:
     lifecycle = tmp_path / "companion.json"
     lifecycle.write_text('{"state":"IDLE"}', encoding="utf-8")
-    settings = SimpleNamespace(companion_state_path=str(lifecycle))
-    answers = iter(
-        [
-            CONFIRM_WRITER,
-            CONFIRM_APP_CLOSED,
-            CONFIRM_AREA,
-            CONFIRM_COMPETITION,
-            CONFIRM_POSE_AUDIO,
-        ]
+    settings = SimpleNamespace(
+        companion_state_path=str(lifecycle),
+        control_enabled=True,
+        read_only_mode=False,
     )
-    monkeypatch.setattr("builtins.input", lambda _prompt: next(answers))
 
+    def unexpected_input(_prompt: str) -> str:
+        raise AssertionError("startup prompt must not be shown")
+
+    monkeypatch.setattr("builtins.input", unexpected_input)
     _confirm_startup(settings, auto_demo="phone_demo")
 
+    output = capsys.readouterr().out
+    assert "[GO2] Core Runtime starting" in output
+    assert "[GO2] Motion control enabled" in output
+    assert "[VOICE] Xiaokang listener enabled" in output
+    assert "[VIDEO] WebRTC video enabled" in output
 
-def test_launcher_can_skip_repetitive_operator_prompts(tmp_path, monkeypatch) -> None:
+
+def test_startup_confirmation_skip_flag_is_non_blocking_noop(
+    tmp_path, monkeypatch
+) -> None:
     lifecycle = tmp_path / "companion.json"
     lifecycle.write_text('{"state":"IDLE"}', encoding="utf-8")
-    settings = SimpleNamespace(companion_state_path=str(lifecycle))
+    settings = SimpleNamespace(
+        companion_state_path=str(lifecycle),
+        control_enabled=True,
+        read_only_mode=False,
+    )
 
     def unexpected_input(_prompt: str) -> str:
         raise AssertionError("startup prompt must not be shown")
@@ -442,6 +605,30 @@ def test_console_start_plays_announcement_before_starting_follow(
     assert events == ["announcement", "start"]
 
 
+def test_console_start_and_stop_use_bound_control_adapter(monkeypatch) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    calls: list[tuple[str, dict]] = []
+
+    adapter = Go2ControlAdapter(
+        start_follow=lambda message: calls.append(("start", dict(message.payload))) or {"ok": True},
+        stop_follow=lambda message: calls.append(("stop", dict(message.payload))) or {"ok": True},
+        resume_follow=lambda message: {"ok": True},
+        play_clips=lambda message: {"clips": [], "played": 0, "status": "done"},
+        ping=lambda message: {"nonce": message.request_id},
+    )
+    console.service = SimpleNamespace(settings=SimpleNamespace(robot_id="DOG-LJG-001"))
+    console.companion_status = lambda: {"state": "FOLLOWING", "runtime_active": True}
+    console.set_control_adapter(adapter)
+    commands = iter(("START", "STOP", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert calls == [
+        ("start", {"announce_before_start": True, "duration_minutes": 3, "runtime_command": "FOLLOW_3MIN", "follow_profile": "FOLLOW_3MIN"}),
+        ("stop", {}),
+    ]
+
+
 def test_console_start_debug_switch_restores_single_confirmation(
     monkeypatch, capsys
 ) -> None:
@@ -489,6 +676,111 @@ def test_console_start_reports_lifecycle_rejection_reason_without_prompt(
     )
 
 
+def test_onsite_hotkey_scan_codes_stay_small_and_memorable() -> None:
+    assert _console_hotkey_command(";") == ("F1", "START")
+    assert _console_hotkey_command("<") == ("F2", "STOP")
+    assert _console_hotkey_command("?") == ("F5", "FALL_SUSPECTED")
+    assert _console_hotkey_command("@") == ("F6", "FALL_RECOVERED")
+    assert _console_hotkey_command("A") == ("F7", "READING")
+    assert _console_hotkey_command("C") == ("F9", "RESET_DEMO")
+    assert _console_hotkey_command("D") == ("F10", "TOGGLE_VOICE_LISTENER")
+    assert _console_hotkey_command("\x86") == ("F12", "SAFETY_STOP")
+    assert _console_hotkey_command("b") == ("Ctrl+F5", "PLAY_FALL_CONFIRM")
+    assert _console_hotkey_command("c") == ("Ctrl+F6", "PLAY_FALL_CONFIRM_SECOND")
+    assert _console_hotkey_command("d") == ("Ctrl+F7", "PLAY_FALL_HELP")
+
+
+def test_onsite_safety_stop_does_not_shutdown_video_or_voice_runtime(capsys) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    shutdown_calls: list[bool] = []
+    stop_calls: list[bool] = []
+    console.runtime = SimpleNamespace(
+        request_shutdown=lambda: shutdown_calls.append(True),
+        status=lambda: {"uwb": {}},
+    )
+    console.stop_motion = lambda: stop_calls.append(True)
+    console.lifecycle = CompetitionLifecycle()
+    console._state_lock = threading.RLock()
+    console._motion_thread = None
+    console._motion_name = None
+    console._follow_status = {
+        "state": "FOLLOWING",
+        "motion": "MOVING",
+        "autoRecovery": "ENABLED_FOR_UWB_AND_SPORT_STALE",
+    }
+    console._lifecycle_notifications = []
+    console.follow_target_source = None
+    console.service = SimpleNamespace(settings=SimpleNamespace(max_vx=0.3, max_wz=0.8))
+
+    status = console._safety_stop_motion_only()
+
+    assert stop_calls == [True]
+    assert shutdown_calls == []
+    assert status["state"] == "IDLE"
+    assert status["motion"]["vx"] == 0.0
+    assert status["motion"]["wz"] == 0.0
+    assert "WebRTC video/audio and voice services remain active" in capsys.readouterr().out
+
+
+def test_ctrl_fall_voice_hotkeys_only_play_fallback_clips(capsys) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    played: list[list[str]] = []
+    console.play_voice_clips = (
+        lambda clips: played.append(list(clips))
+        or {"clips": list(clips), "played": len(clips), "status": "done"}
+    )
+
+    console._play_fall_voice_fallback(["fall.confirm"])
+    console._play_fall_voice_fallback(["fall.confirm.second"])
+    console._play_fall_voice_fallback(["fall.alert.sound", "fall.help.broadcast"])
+
+    assert played == [
+        ["fall.confirm"],
+        ["fall.confirm.second"],
+        ["fall.alert.sound", "fall.help.broadcast"],
+    ]
+    assert '"status": "done"' in capsys.readouterr().out
+
+
+def test_f10_toggles_voice_business_listener_without_runtime_shutdown() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    shutdown_calls: list[bool] = []
+    console.runtime = SimpleNamespace(request_shutdown=lambda: shutdown_calls.append(True))
+
+    class Manager:
+        listener_enabled = True
+
+        def __init__(self) -> None:
+            self.toggled = 0
+
+        def toggle_listener(self):
+            self.listener_enabled = not self.listener_enabled
+            self.toggled += 1
+            return self.listener_enabled, []
+
+    class Flow:
+        def __init__(self) -> None:
+            self.cleared = 0
+
+        def clear_pending_reply(self) -> None:
+            self.cleared += 1
+
+    manager = Manager()
+    flow = Flow()
+    console._voice_session_manager = manager
+    console._interaction_flow_controller = flow
+
+    assert console.toggle_voice_listener() is False
+    assert manager.toggled == 1
+    assert flow.cleared == 1
+    assert shutdown_calls == []
+
+    assert console.toggle_voice_listener() is True
+    assert manager.toggled == 2
+    assert flow.cleared == 1
+    assert shutdown_calls == []
+
+
 def test_console_walk_follow_command_dispatches_without_changing_manual(
     monkeypatch,
 ) -> None:
@@ -501,6 +793,25 @@ def test_console_walk_follow_command_dispatches_without_changing_manual(
     assert console.run() == 0
     assert calls == ["walk_follow"]
     assert console.shutdown_calls == [True]
+
+
+def test_console_can_publish_internal_safety_event_without_stopping_voice(
+    monkeypatch,
+) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    transport = MockTransport()
+    console.service = SimpleNamespace(settings=SimpleNamespace(robot_id="DOG-LJG-001"))
+    console.set_interaction_event_transport(transport, topic_prefix="aiot")
+    commands = iter(("FALL_SUSPECTED", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+
+    assert any(
+        message.topic == contract_topic("DOG-LJG-001", "event")
+        and message.payload.get("event") == "FALL_SUSPECTED"
+        for message in transport.published
+    )
 
 
 class FakeRuntime:

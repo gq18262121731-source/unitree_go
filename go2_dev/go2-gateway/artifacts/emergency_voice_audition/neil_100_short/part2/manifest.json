@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Neil",
+  "speed": 1.0,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\neil_100_short\\part2\\fall_help_broadcast.wav",
+      "voice": "Neil",
+      "text": "系统已经通知家属，请立即过来查看！",
+      "bytes": 130604,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请使用严肃、紧迫、短促、有指令感的公共安全广播语气。吐字精准清晰，节奏紧凑。不要表演，不要情绪夸张，不要新闻播音腔拖长尾音。"
+    }
+  ]
+}

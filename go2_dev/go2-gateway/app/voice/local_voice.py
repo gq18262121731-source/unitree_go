@@ -12,8 +12,10 @@ import time
 import uuid
 import wave
 from array import array
+from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
 import sys
@@ -22,6 +24,7 @@ from app.iot.mqtt_contract import (
     build_session_end_message,
     build_session_start_message,
     build_speech_message,
+    contract_topic,
 )
 from app.iot.protocol_layer import BMachineStateMachine, CommandMessage, MessageTransport, MockTransport
 from app.webrtc.voice_intent import HealthNewASRService, WakeWordMatcher
@@ -30,7 +33,8 @@ from app.webrtc.voice_intent import HealthNewASRService, WakeWordMatcher
 SOURCE_NAME = "go2"
 DEFAULT_DEVICE_ID = os.environ.get("GO2_DEVICE_ID", "DOG-LJG-001")
 DEFAULT_TOPIC_PREFIX = os.environ.get("GO2_MQTT_TOPIC_PREFIX", "aiot")
-DEFAULT_SESSION_TIMEOUT_SECONDS = 15.0
+DEFAULT_SESSION_TIMEOUT_SECONDS = 10.0
+DEFAULT_SESSION_MAX_TURNS = 2
 DEFAULT_CAPTURE_SECONDS = 15.0
 DEFAULT_TRAILING_SILENCE_SECONDS = 0.3
 DEFAULT_SAMPLE_RATE = 16000
@@ -80,6 +84,14 @@ WIM_DATA = 0x03C0
 CALLBACK_FUNCTION = 0x00030000
 
 
+class VoiceState(str, Enum):
+    WAKE_GUARD = "WAKE_GUARD"
+    ACTIVE_LISTENING = "ACTIVE_LISTENING"
+    THINKING = "THINKING"
+    SPEAKING = "SPEAKING"
+    PAUSED = "PAUSED"
+
+
 def _now_iso() -> str:
     return datetime.now().isoformat(timespec="milliseconds")
 
@@ -104,6 +116,25 @@ def _is_emergency_text(text: str) -> tuple[bool, str | None]:
 def _is_user_exit_text(text: str) -> bool:
     normalized = _normalize_text(text)
     return any(phrase in normalized for phrase in USER_EXIT_PHRASES)
+
+
+def _merge_streaming_text(accumulated: str, chunk_text: str) -> str:
+    """Merge FunASR streaming chunk text while tolerating cumulative output."""
+
+    chunk_text = str(chunk_text or "").strip()
+    if not chunk_text:
+        return accumulated
+    if not accumulated:
+        return chunk_text
+    if chunk_text == accumulated or accumulated.endswith(chunk_text):
+        return accumulated
+    if chunk_text.startswith(accumulated):
+        return chunk_text
+    max_overlap = min(len(accumulated), len(chunk_text))
+    for size in range(max_overlap, 0, -1):
+        if accumulated[-size:] == chunk_text[:size]:
+            return accumulated + chunk_text[size:]
+    return accumulated + chunk_text
 
 
 @dataclass(frozen=True)
@@ -185,9 +216,19 @@ def _pcm16_mono_16k_from_pcm(
     else:
         mono = samples.astype(np.float32)
     if sample_rate != DEFAULT_SAMPLE_RATE:
-        target_count = max(1, int(round(mono.size * DEFAULT_SAMPLE_RATE / sample_rate)))
-        positions = np.linspace(0.0, max(0, mono.size - 1), target_count)
-        mono = np.interp(positions, np.arange(mono.size), mono)
+        divisor = math.gcd(int(sample_rate), DEFAULT_SAMPLE_RATE)
+        up = DEFAULT_SAMPLE_RATE // divisor
+        down = int(sample_rate) // divisor
+        try:
+            from scipy.signal import resample_poly
+
+            mono = resample_poly(mono, up, down)
+        except Exception:
+            target_count = max(
+                1, int(round(mono.size * DEFAULT_SAMPLE_RATE / sample_rate))
+            )
+            positions = np.linspace(0.0, max(0, mono.size - 1), target_count)
+            mono = np.interp(positions, np.arange(mono.size), mono)
     return np.clip(np.round(mono), -32768, 32767).astype(np.int16)
 
 
@@ -199,7 +240,7 @@ class FunASRStreamingSession:
         self._chunk_stride = max(1, int(self._chunk_size[1] * 960))
         self._cache: dict[str, Any] = {}
         self._buffer = []
-        self._latest_text = ""
+        self._utterance_text = ""
 
     def feed_pcm(self, pcm: bytes, *, sample_rate: int, channels: int) -> str:
         import numpy as np
@@ -208,7 +249,7 @@ class FunASRStreamingSession:
             pcm, sample_rate=sample_rate, channels=channels
         )
         if normalized.size == 0:
-            return self._latest_text
+            return self._utterance_text
         if self._buffer:
             self._buffer.append(normalized)
             pending = np.concatenate(self._buffer)
@@ -216,27 +257,27 @@ class FunASRStreamingSession:
             pending = normalized
         self._buffer = [pending]
         emitted = self._run_chunks(is_final=False)
-        return emitted or self._latest_text
+        return emitted or self._utterance_text
 
     def finish(self) -> str:
         emitted = self._run_chunks(is_final=True)
-        final = emitted or self._latest_text
+        final = emitted or self._utterance_text
         self.reset()
         return final
 
     def reset(self) -> None:
         self._cache = {}
         self._buffer = []
-        self._latest_text = ""
+        self._utterance_text = ""
 
     def _run_chunks(self, *, is_final: bool) -> str:
         import numpy as np
 
         if not self._buffer:
-            return self._latest_text
+            return self._utterance_text
         pending = self._buffer[0]
         if pending.size == 0:
-            return self._latest_text
+            return self._utterance_text
         emitted = ""
         while pending.size >= self._chunk_stride or is_final:
             if pending.size == 0:
@@ -259,8 +300,10 @@ class FunASRStreamingSession:
             if result:
                 text = str(result[0].get("text") or "").strip()
                 if text:
-                    self._latest_text = text
-                    emitted = text
+                    self._utterance_text = _merge_streaming_text(
+                        self._utterance_text, text
+                    )
+                    emitted = self._utterance_text
             if is_final:
                 if pending.size == 0:
                     break
@@ -308,9 +351,29 @@ class FunASRLocalASRService:
             device=self.device,
             ncpu=self.ncpu,
             disable_update=True,
+            disable_pbar=True,
             trust_remote_code=False,
         )
         return self._model
+
+    def warmup(self) -> None:
+        """Load the local ASR model before live audio starts arriving."""
+        model = self._load_model()
+        generate = getattr(model, "generate", None)
+        if not callable(generate):
+            return
+        import numpy as np
+
+        cache: dict[str, Any] = {}
+        silence = np.zeros(max(1, int(self.chunk_size[1] * 960)), dtype=np.float32)
+        generate(
+            input=silence,
+            cache=cache,
+            is_final=True,
+            chunk_size=list(self.chunk_size),
+            encoder_chunk_look_back=self.encoder_chunk_look_back,
+            decoder_chunk_look_back=self.decoder_chunk_look_back,
+        )
 
     def transcribe(self, wav_path: str | Path) -> str:
         model = self._load_model()
@@ -338,7 +401,7 @@ class FunASRLocalASRService:
         chunk_stride = max(1, int(chunk_size[1] * 960))
         total_chunks = max(1, (len(audio) - 1) // chunk_stride + 1)
         cache: dict[str, Any] = {}
-        latest_text = ""
+        utterance_text = ""
         for index in range(total_chunks):
             chunk = audio[index * chunk_stride : (index + 1) * chunk_stride]
             if chunk.size == 0:
@@ -354,8 +417,8 @@ class FunASRLocalASRService:
             if result:
                 text = str(result[0].get("text") or "").strip()
                 if text:
-                    latest_text = text
-        return latest_text
+                    utterance_text = _merge_streaming_text(utterance_text, text)
+        return utterance_text
 
 
 class Go2ASRAudioBridge:
@@ -366,31 +429,86 @@ class Go2ASRAudioBridge:
         session_manager: LocalVoiceSessionManager,
         printer: Callable[[str], None] = print,
         vad_min_capture_seconds: float = 0.8,
-        vad_trailing_silence_seconds: float = 0.35,
+        vad_trailing_silence_seconds: float | None = None,
+        vad_preroll_seconds: float = 0.25,
         queue_size: int = 200,
         is_playback_active: Callable[[], bool] | None = None,
+        debug_audio_dir: str | Path | None = None,
+        debug_audio_seconds: float | None = None,
+        voice_debug: bool | None = None,
     ) -> None:
         self.asr_service = asr_service
         self.session_manager = session_manager
         self._printer = printer
+        if voice_debug is None:
+            voice_debug = (
+                str(os.environ.get("GO2_VOICE_DEBUG", "0")).strip().lower()
+                in {"1", "true", "yes", "on"}
+            )
+        self._voice_debug = bool(voice_debug)
         self.vad_min_capture_seconds = max(0.2, float(vad_min_capture_seconds))
+        if vad_trailing_silence_seconds is None:
+            vad_trailing_silence_seconds = float(
+                os.environ.get("GO2_ASR_VAD_TRAILING_SILENCE_SECONDS", "0.9")
+                or 0.9
+            )
         self.vad_trailing_silence_seconds = max(
             0.2, float(vad_trailing_silence_seconds)
+        )
+        self.vad_preroll_seconds = max(0.0, float(vad_preroll_seconds))
+        self._vad_event_log_enabled = (
+            self._voice_debug
+            or str(os.environ.get("GO2_ASR_VAD_LOG", "0")).strip().lower()
+            in {"1", "true", "yes", "on"}
         )
         self._queue: "queue.Queue[tuple[bytes, int, int] | None]" = queue.Queue(
             maxsize=max(1, int(queue_size))
         )
         self._is_playback_active = is_playback_active or (lambda: False)
         self._last_final_text = ""
+        if debug_audio_seconds is None:
+            debug_audio_seconds = float(os.environ.get("GO2_ASR_DEBUG_AUDIO_SECONDS", "0") or 0)
+        if debug_audio_dir is None:
+            debug_audio_dir = os.environ.get(
+                "GO2_ASR_DEBUG_AUDIO_DIR",
+                str(Path("data") / "diagnostics" / "go2_asr"),
+            )
+        self._debug_audio_seconds = max(0.0, float(debug_audio_seconds))
+        self._debug_audio_dir = Path(debug_audio_dir)
+        self._debug_audio_prefix = ""
+        self._debug_raw_writer: wave.Wave_write | None = None
+        self._debug_normalized_writer: wave.Wave_write | None = None
+        self._debug_raw_path: Path | None = None
+        self._debug_normalized_path: Path | None = None
+        self._debug_raw_samples_written = 0
+        self._debug_normalized_samples_written = 0
+        self._debug_raw_sample_rate = 0
+        self._debug_raw_channels = 0
+        self._debug_audio_complete = False
         self._stop = threading.Event()
+        self._reset_stream = threading.Event()
         self._thread = threading.Thread(target=self._run, name="go2-asr-bridge", daemon=True)
         self._thread_started = False
+        self._drop_lock = threading.Lock()
+        self._drop_counts: dict[str, int] = {}
+        self._last_drop_log_at = 0.0
+        self._drop_log_interval_seconds = 1.0
 
     def start(self) -> None:
         if self._thread_started:
             return
         self._thread_started = True
         self._thread.start()
+
+    def is_alive(self) -> bool:
+        return self._thread_started and self._thread.is_alive()
+
+    def warmup(self) -> None:
+        self._printer("[ASR] warmup_start")
+        warmup = getattr(self.asr_service, "warmup", None)
+        if callable(warmup):
+            warmup()
+        self._printer("[ASR] warmup_ready")
 
     def stop(self) -> None:
         self._stop.set()
@@ -400,28 +518,183 @@ class Go2ASRAudioBridge:
             pass
         if self._thread_started:
             self._thread.join(timeout=2.0)
+        self._flush_drop_summary(force=True)
+
+    def clear_pending_audio(self) -> int:
+        self._reset_stream.set()
+        drained = 0
+        while True:
+            try:
+                item = self._queue.get_nowait()
+            except queue.Empty:
+                break
+            if item is None:
+                try:
+                    self._queue.put_nowait(None)
+                except queue.Full:
+                    pass
+                break
+            drained += 1
+        if drained:
+            self._printer(f"[ASR] cleared_stale_pcm_frames: {drained}")
+        return drained
 
     def push_pcm(self, pcm: bytes, sample_rate: int, channels: int) -> None:
         if self._stop.is_set() or not pcm:
             return
         if self._is_playback_active():
-            self._printer("[ASR] dropped_pcm_frame: playback_active")
+            self._record_drop("playback_active")
             return
         try:
             self._queue.put_nowait((bytes(pcm), int(sample_rate), int(channels)))
         except queue.Full:
-            self._printer("[ASR] dropped_pcm_frame: queue_full")
+            self._record_drop("queue_full")
 
     def _publish_final(self, final: str) -> None:
         normalized = str(final or "").strip()
         if not normalized:
             return
+        if self._is_playback_active():
+            self._debug(f"[ASR] final_dropped: playback_active ({normalized})")
+            return
         if _normalize_text(normalized) == _normalize_text(self._last_final_text):
-            self._printer(f"[ASR] duplicate_final_ignored: {normalized}")
+            self._debug(f"[ASR] duplicate_final_ignored: {normalized}")
             return
         self._last_final_text = normalized
-        self._printer(f"[ASR] {normalized}")
-        self.session_manager.process_transcript(normalized)
+        self._debug(f"[ASR] {normalized}")
+        try:
+            self.session_manager.process_transcript(normalized)
+        except Exception as exc:
+            self._printer(
+                "[ASR] final_publish_failed: "
+                f"{type(exc).__name__}: {exc}"
+            )
+
+    def _record_drop(self, reason: str) -> None:
+        with self._drop_lock:
+            self._drop_counts[reason] = self._drop_counts.get(reason, 0) + 1
+            now = time.monotonic()
+            if now - self._last_drop_log_at >= self._drop_log_interval_seconds:
+                self._flush_drop_summary_locked(now=now)
+
+    def _flush_drop_summary(self, *, force: bool = False) -> None:
+        with self._drop_lock:
+            now = time.monotonic()
+            if force or now - self._last_drop_log_at >= self._drop_log_interval_seconds:
+                self._flush_drop_summary_locked(now=now)
+
+    def _flush_drop_summary_locked(self, *, now: float) -> None:
+        for reason, count in list(self._drop_counts.items()):
+            if count <= 0:
+                continue
+            if reason == "playback_active":
+                self._printer(f"[ASR] playback_muted dropped={count} frames")
+            elif reason == "queue_full":
+                self._printer(f"[ASR] queue_full dropped={count} frames")
+            else:
+                self._printer(f"[ASR] dropped_pcm_frame reason={reason} dropped={count} frames")
+            self._drop_counts[reason] = 0
+        self._last_drop_log_at = now
+
+    def _debug(self, message: str) -> None:
+        if self._voice_debug:
+            self._printer(message)
+
+    def _log_vad_event(self, message: str) -> None:
+        if self._vad_event_log_enabled:
+            self._printer(message)
+
+    def _write_debug_audio(
+        self,
+        *,
+        raw_pcm: bytes,
+        raw_sample_rate: int,
+        raw_channels: int,
+        normalized_pcm: bytes,
+    ) -> None:
+        if self._debug_audio_seconds <= 0:
+            return
+        if self._debug_audio_complete:
+            return
+        if not raw_pcm and not normalized_pcm:
+            return
+        try:
+            if self._debug_raw_writer is None or self._debug_normalized_writer is None:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                self._debug_audio_dir.mkdir(parents=True, exist_ok=True)
+                self._debug_audio_prefix = timestamp
+                self._debug_raw_sample_rate = int(raw_sample_rate)
+                self._debug_raw_channels = int(raw_channels)
+                raw_path = self._debug_audio_dir / f"go2_raw_{timestamp}.wav"
+                normalized_path = self._debug_audio_dir / f"go2_16k_mono_{timestamp}.wav"
+                self._debug_raw_path = raw_path
+                self._debug_normalized_path = normalized_path
+                self._debug_raw_writer = wave.open(str(raw_path), "wb")
+                self._debug_raw_writer.setnchannels(self._debug_raw_channels)
+                self._debug_raw_writer.setsampwidth(2)
+                self._debug_raw_writer.setframerate(self._debug_raw_sample_rate)
+                self._debug_normalized_writer = wave.open(str(normalized_path), "wb")
+                self._debug_normalized_writer.setnchannels(1)
+                self._debug_normalized_writer.setsampwidth(2)
+                self._debug_normalized_writer.setframerate(DEFAULT_SAMPLE_RATE)
+                self._printer(
+                    "[ASR_AUDIO_DEBUG] recording "
+                    f"raw={raw_path} normalized={normalized_path} "
+                    f"seconds={self._debug_audio_seconds:g}"
+                )
+            if (
+                self._debug_raw_writer is not None
+                and raw_sample_rate == self._debug_raw_sample_rate
+                and raw_channels == self._debug_raw_channels
+            ):
+                raw_limit = int(self._debug_audio_seconds * self._debug_raw_sample_rate)
+                raw_samples = len(raw_pcm) // 2 // max(1, raw_channels)
+                raw_remaining = max(0, raw_limit - self._debug_raw_samples_written)
+                raw_take = min(raw_samples, raw_remaining)
+                if raw_take > 0:
+                    self._debug_raw_writer.writeframes(
+                        raw_pcm[: raw_take * max(1, raw_channels) * 2]
+                    )
+                    self._debug_raw_samples_written += raw_take
+            if self._debug_normalized_writer is not None:
+                normalized_limit = int(self._debug_audio_seconds * DEFAULT_SAMPLE_RATE)
+                normalized_samples = len(normalized_pcm) // 2
+                normalized_remaining = max(
+                    0, normalized_limit - self._debug_normalized_samples_written
+                )
+                normalized_take = min(normalized_samples, normalized_remaining)
+                if normalized_take > 0:
+                    self._debug_normalized_writer.writeframes(
+                        normalized_pcm[: normalized_take * 2]
+                    )
+                    self._debug_normalized_samples_written += normalized_take
+            raw_limit = int(self._debug_audio_seconds * max(1, self._debug_raw_sample_rate))
+            normalized_limit = int(self._debug_audio_seconds * DEFAULT_SAMPLE_RATE)
+            if (
+                self._debug_raw_samples_written >= raw_limit
+                and self._debug_normalized_samples_written >= normalized_limit
+            ):
+                raw_path = self._debug_raw_path
+                normalized_path = self._debug_normalized_path
+                self._close_debug_audio()
+                self._debug_audio_complete = True
+                self._printer(
+                    "[ASR_AUDIO_DEBUG] ready "
+                    f"raw={raw_path} normalized={normalized_path}"
+                )
+        except Exception as exc:
+            self._printer(f"[ASR_AUDIO_DEBUG] failed: {exc}")
+            self._close_debug_audio()
+
+    def _close_debug_audio(self) -> None:
+        for writer in (self._debug_raw_writer, self._debug_normalized_writer):
+            if writer is not None:
+                try:
+                    writer.close()
+                except Exception:
+                    pass
+        self._debug_raw_writer = None
+        self._debug_normalized_writer = None
 
     def _run(self) -> None:
         import numpy as np
@@ -432,98 +705,204 @@ class Go2ASRAudioBridge:
         channels = 0
         sample_count = 0
         voice_sample_count = 0
+        utterance_sample_count = 0
         trailing_silence_samples = 0
         min_capture_samples = 0
         silence_samples_limit = 0
+        preroll_samples_limit = 0
+        preroll_sample_count = 0
+        preroll_frames: deque[Any] = deque()
         noise_rms: list[float] = []
         noise_peak: list[int] = []
         last_transcript = ""
+        normalizer_probe_logged = False
+        silence_reported_ms = 0
 
         def reset_session() -> None:
             nonlocal current_stream, speech_detected, sample_rate, channels
             nonlocal sample_count, voice_sample_count, trailing_silence_samples
-            nonlocal min_capture_samples, silence_samples_limit, noise_rms, noise_peak
-            nonlocal last_transcript
+            nonlocal utterance_sample_count, min_capture_samples, silence_samples_limit
+            nonlocal preroll_samples_limit, preroll_sample_count, preroll_frames
+            nonlocal noise_rms, noise_peak, last_transcript, silence_reported_ms
             current_stream = None
             speech_detected = False
             sample_rate = 0
             channels = 0
             sample_count = 0
             voice_sample_count = 0
+            utterance_sample_count = 0
             trailing_silence_samples = 0
             min_capture_samples = 0
             silence_samples_limit = 0
+            preroll_samples_limit = 0
+            preroll_sample_count = 0
+            preroll_frames = deque()
             noise_rms = []
             noise_peak = []
             last_transcript = ""
+            silence_reported_ms = 0
 
-        while not self._stop.is_set():
-            item = self._queue.get()
-            if item is None:
-                break
-            pcm, frame_rate, frame_channels = item
-            normalized = _pcm16_mono_16k_from_pcm(
-                pcm, sample_rate=frame_rate, channels=frame_channels
-            )
-            if normalized.size == 0:
-                self.session_manager.expire_if_timed_out()
-                continue
-            if sample_rate == 0:
-                sample_rate = DEFAULT_SAMPLE_RATE
-                channels = 1
-                min_capture_samples = int(sample_rate * self.vad_min_capture_seconds)
-                silence_samples_limit = int(
-                    sample_rate * self.vad_trailing_silence_seconds
+        try:
+            while not self._stop.is_set():
+                if self._reset_stream.is_set():
+                    self._reset_stream.clear()
+                    reset_session()
+                    self._debug("[ASR] streaming_state_reset")
+                item = self._queue.get()
+                if item is None:
+                    break
+                if self._reset_stream.is_set():
+                    self._reset_stream.clear()
+                    reset_session()
+                    self._debug("[ASR] streaming_state_reset")
+                pcm, frame_rate, frame_channels = item
+                normalized = _pcm16_mono_16k_from_pcm(
+                    pcm, sample_rate=frame_rate, channels=frame_channels
                 )
-                current_stream = FunASRStreamingSession(self.asr_service)
+                if normalized.size == 0:
+                    self.session_manager.expire_if_timed_out()
+                    continue
+                self._write_debug_audio(
+                    raw_pcm=pcm,
+                    raw_sample_rate=frame_rate,
+                    raw_channels=frame_channels,
+                    normalized_pcm=normalized.tobytes(),
+                )
+                if sample_rate == 0:
+                    sample_rate = DEFAULT_SAMPLE_RATE
+                    channels = 1
+                    min_capture_samples = int(sample_rate * self.vad_min_capture_seconds)
+                    silence_samples_limit = int(
+                        sample_rate * self.vad_trailing_silence_seconds
+                    )
+                    preroll_samples_limit = int(sample_rate * self.vad_preroll_seconds)
+                    if not normalizer_probe_logged:
+                        normalizer_probe_logged = True
+                        self._debug(
+                            "[ASR_AUDIO] normalized "
+                            f"source_sample_rate={frame_rate} source_channels={frame_channels} "
+                            f"sample_rate={sample_rate} channels={channels} "
+                            f"chunk_samples={normalized.size}"
+                        )
 
-            frame_peak = int(np.max(np.abs(normalized.astype(np.int32)))) if normalized.size else 0
-            frame_rms = (
-                float(np.sqrt(np.mean(normalized.astype(np.float64) ** 2)))
-                if normalized.size
-                else 0.0
-            )
-            sample_count += int(normalized.size)
-            if not speech_detected and sample_count <= int(sample_rate * 0.4):
-                noise_rms.append(frame_rms)
-                noise_peak.append(frame_peak)
-                self.session_manager.expire_if_timed_out()
-                continue
-            if noise_rms:
-                rms_threshold = max(650.0, (sum(noise_rms) / len(noise_rms)) * 1.55)
-                peak_threshold = max(1800.0, (sum(noise_peak) / len(noise_peak)) * 1.5)
-            else:
-                rms_threshold = 650.0
-                peak_threshold = 1800.0
-            voiced = frame_rms >= rms_threshold or frame_peak >= peak_threshold
-            if voiced:
-                speech_detected = True
-                voice_sample_count = sample_count
-                trailing_silence_samples = 0
-            elif speech_detected:
-                trailing_silence_samples += int(normalized.size)
-            if current_stream is None:
-                continue
-            partial = current_stream.feed_pcm(
-                normalized.tobytes(), sample_rate=sample_rate, channels=1
-            )
-            if partial and partial != last_transcript:
-                last_transcript = partial
-                self._printer(f"[ASR_PARTIAL] {partial}")
-            if (
-                speech_detected
-                and sample_count >= min_capture_samples
-                and trailing_silence_samples >= silence_samples_limit
-            ):
+                frame_peak = int(np.max(np.abs(normalized.astype(np.int32)))) if normalized.size else 0
+                frame_rms = (
+                    float(np.sqrt(np.mean(normalized.astype(np.float64) ** 2)))
+                    if normalized.size
+                    else 0.0
+                )
+                sample_count += int(normalized.size)
+                if noise_rms:
+                    rms_threshold = max(650.0, (sum(noise_rms) / len(noise_rms)) * 1.55)
+                    peak_threshold = max(1800.0, (sum(noise_peak) / len(noise_peak)) * 1.5)
+                else:
+                    rms_threshold = 650.0
+                    peak_threshold = 1800.0
+                voiced = frame_rms >= rms_threshold or frame_peak >= peak_threshold
+                calibrating = (
+                    not speech_detected and sample_count <= int(sample_rate * 0.4)
+                )
+                if calibrating and not voiced:
+                    noise_rms.append(frame_rms)
+                    noise_peak.append(frame_peak)
+                    if preroll_samples_limit > 0:
+                        preroll_frames.append(normalized.copy())
+                        preroll_sample_count += int(normalized.size)
+                        while (
+                            preroll_sample_count > preroll_samples_limit
+                            and preroll_frames
+                        ):
+                            dropped = preroll_frames.popleft()
+                            preroll_sample_count -= int(dropped.size)
+                    self.session_manager.expire_if_timed_out()
+                    continue
+                if voiced and not speech_detected:
+                    speech_detected = True
+                    voice_sample_count = sample_count
+                    trailing_silence_samples = 0
+                    silence_reported_ms = 0
+                    self._log_vad_event(
+                        "[VAD] speech_start "
+                        f"rms={frame_rms:.1f} peak={frame_peak} "
+                        f"rms_threshold={rms_threshold:.1f} "
+                        f"peak_threshold={peak_threshold:.1f}"
+                    )
+                    current_stream = FunASRStreamingSession(self.asr_service)
+                    for preroll in preroll_frames:
+                        partial = current_stream.feed_pcm(
+                            preroll.tobytes(), sample_rate=sample_rate, channels=channels
+                        )
+                        utterance_sample_count += int(preroll.size)
+                        if partial and partial != last_transcript:
+                            last_transcript = partial
+                            self._debug(f"[ASR_PARTIAL] {partial}")
+                    preroll_frames.clear()
+                    preroll_sample_count = 0
+                elif voiced:
+                    voice_sample_count = sample_count
+                    trailing_silence_samples = 0
+                    silence_reported_ms = 0
+                elif speech_detected:
+                    trailing_silence_samples += int(normalized.size)
+                    silence_ms = int(
+                        round(trailing_silence_samples * 1000 / sample_rate)
+                    )
+                    if (
+                        silence_ms < int(self.vad_trailing_silence_seconds * 1000)
+                        and silence_ms >= silence_reported_ms + 200
+                    ):
+                        silence_reported_ms = silence_ms
+                        self._log_vad_event(f"[VAD] short_silence {silence_ms}ms")
+                else:
+                    if preroll_samples_limit > 0:
+                        preroll_frames.append(normalized.copy())
+                        preroll_sample_count += int(normalized.size)
+                        while (
+                            preroll_sample_count > preroll_samples_limit
+                            and preroll_frames
+                        ):
+                            dropped = preroll_frames.popleft()
+                            preroll_sample_count -= int(dropped.size)
+                    self.session_manager.expire_if_timed_out()
+                    continue
+                if current_stream is None:
+                    continue
+                partial = current_stream.feed_pcm(
+                    normalized.tobytes(), sample_rate=sample_rate, channels=1
+                )
+                utterance_sample_count += int(normalized.size)
+                if partial and partial != last_transcript:
+                    last_transcript = partial
+                    self._debug(f"[ASR_PARTIAL] {partial}")
+                if (
+                    speech_detected
+                    and utterance_sample_count >= min_capture_samples
+                    and trailing_silence_samples >= silence_samples_limit
+                ):
+                    silence_ms = int(
+                        round(trailing_silence_samples * 1000 / sample_rate)
+                    )
+                    utterance_ms = int(
+                        round(utterance_sample_count * 1000 / sample_rate)
+                    )
+                    self._log_vad_event(
+                        "[UTTERANCE] finalize "
+                        f"silence_ms={silence_ms} utterance_ms={utterance_ms}"
+                    )
+                    final = current_stream.finish() or last_transcript
+                    self._publish_final(final)
+                    reset_session()
+                    continue
+                if not speech_detected:
+                    self.session_manager.expire_if_timed_out()
+            if current_stream is not None:
                 final = current_stream.finish() or last_transcript
                 self._publish_final(final)
-                reset_session()
-                continue
-            if not speech_detected:
-                self.session_manager.expire_if_timed_out()
-        if current_stream is not None:
-            final = current_stream.finish() or last_transcript
-            self._publish_final(final)
+        except Exception as exc:
+            self._printer(f"[ASR] bridge worker crashed: {type(exc).__name__}: {exc}")
+        finally:
+            self._flush_drop_summary(force=True)
+            self._close_debug_audio()
 
 
 class WindowsWaveInMicrophoneSource:
@@ -956,6 +1335,12 @@ class ClipManifest:
             "weather.temp.prefix": {"resource_id": "mock://weather.temp.prefix", "status": "ready"},
             "unit.bpm": {"resource_id": "mock://unit.bpm", "status": "ready"},
             "unit.celsius": {"resource_id": "mock://unit.celsius", "status": "ready"},
+            "medication.reminder.before_outing": {
+                "resource_id": "mock://medication.reminder.before_outing",
+                "status": "ready",
+            },
+            "follow.stop": {"resource_id": "mock://follow.stop", "status": "ready"},
+            "sess.wake_ack": {"resource_id": "mock://sess.wake_ack", "status": "ready"},
         }
         for value in range(0, 131):
             entries[f"num.{value}"] = {
@@ -983,6 +1368,10 @@ class ClipManifest:
                     "status": str(item.get("status") or "ready"),
                     "path": str(item.get("path") or ""),
                 }
+            if "stop.companion" in entries and "follow.stop" not in entries:
+                entries["follow.stop"] = entries["stop.companion"]
+            if "wake.ready" in entries and "sess.wake_ack" not in entries:
+                entries["sess.wake_ack"] = entries["wake.ready"]
             return cls(entries)
         if isinstance(payload, dict):
             return cls(payload)
@@ -1126,7 +1515,9 @@ class LocalVoiceSessionManager:
         topic_prefix: str = DEFAULT_TOPIC_PREFIX,
         source: str = SOURCE_NAME,
         session_timeout_seconds: float = DEFAULT_SESSION_TIMEOUT_SECONDS,
+        max_turns: int = DEFAULT_SESSION_MAX_TURNS,
         emergency_bypass_enabled: bool = True,
+        voice_debug: bool | None = None,
         printer: Callable[[str], None] = print,
         monotonic_clock: Callable[[], float] = time.monotonic,
         state_machine: BMachineStateMachine | None = None,
@@ -1136,16 +1527,63 @@ class LocalVoiceSessionManager:
         self.topic_prefix = str(topic_prefix or DEFAULT_TOPIC_PREFIX).strip()
         self.source = str(source or SOURCE_NAME).strip()
         self.session_timeout_seconds = max(1.0, float(session_timeout_seconds))
+        self.max_turns = max(1, int(max_turns))
         self._emergency_bypass_enabled = bool(emergency_bypass_enabled)
+        if voice_debug is None:
+            voice_debug = (
+                str(os.environ.get("GO2_VOICE_DEBUG", "0")).strip().lower()
+                in {"1", "true", "yes", "on"}
+            )
+        self._voice_debug = bool(voice_debug)
         self._printer = printer
         self._clock = monotonic_clock
         self._state_machine = state_machine
         self._session: SessionState | None = None
         self._last_activity_monotonic: float | None = None
+        self._reply_without_wake_until: float | None = None
+        self._listener_enabled = True
+        self.voice_state = VoiceState.WAKE_GUARD
+        try:
+            self.transport.subscribe(
+                contract_topic(self.device_id, "event", topic_prefix=self.topic_prefix),
+                self._on_interaction_event,
+            )
+        except Exception:
+            pass
 
     @property
     def active_session_id(self) -> str | None:
         return None if self._session is None else self._session.session_id
+
+    @property
+    def listener_enabled(self) -> bool:
+        return self._listener_enabled
+
+    def set_listener_enabled(self, enabled: bool) -> list[Any]:
+        desired = bool(enabled)
+        if desired == self._listener_enabled:
+            self._printer(
+                "[VOICE] LISTENER ACTIVE - waiting for Xiaokang"
+                if desired
+                else "[VOICE] LISTENER PAUSED"
+            )
+            return []
+        if desired:
+            self._listener_enabled = True
+            self.voice_state = VoiceState.WAKE_GUARD
+            self._reply_without_wake_until = None
+            self._printer("[VOICE] LISTENER ACTIVE - waiting for Xiaokang")
+            return []
+        self._listener_enabled = False
+        self._reply_without_wake_until = None
+        ended = self._end_session("listener_paused")
+        self.voice_state = VoiceState.PAUSED
+        self._printer("[VOICE] LISTENER PAUSED")
+        return ended
+
+    def toggle_listener(self) -> tuple[bool, list[Any]]:
+        messages = self.set_listener_enabled(not self._listener_enabled)
+        return self._listener_enabled, messages
 
     def process_transcript(
         self,
@@ -1155,6 +1593,9 @@ class LocalVoiceSessionManager:
     ) -> list[Any]:
         normalized = str(transcript or "").strip()
         if not normalized:
+            return []
+        if not self._listener_enabled:
+            self._debug(f"[VOICE] ignored: listener_paused ({normalized})")
             return []
         self.expire_if_timed_out()
         if self._emergency_bypass_enabled:
@@ -1180,14 +1621,23 @@ class LocalVoiceSessionManager:
             self._state_machine.on_wake()
 
         if self._session is None:
+            if self._reply_without_wake_active():
+                self._start_session(None)
+                return self._publish_speech(
+                    normalized,
+                    bypass_wake=False,
+                    wake_word=None,
+                    asr_confidence=asr_confidence,
+                    is_wake_turn=False,
+                )
             if _is_filler_text(normalized):
-                self._printer(f"[VOICE] ignored: filler_or_short ({normalized})")
+                self._debug(f"[VOICE] ignored: filler_or_short ({normalized})")
                 return []
-            self._printer(f"[VOICE] ignored: no_wake_word ({normalized})")
+            self._debug(f"[VOICE] ignored: no_wake_word ({normalized})")
             return []
 
         if wake_word is not None and stripped == "":
-            self._printer(f"[WAKE] matched: {wake_word}")
+            self._printer(f"[VOICE] wake: {wake_word}")
             return []
 
         if _is_user_exit_text(stripped or normalized):
@@ -1201,7 +1651,7 @@ class LocalVoiceSessionManager:
 
         is_wake_turn = created_session and wake_word is not None
         if wake_word is not None:
-            self._printer(f"[WAKE] matched: {wake_word}")
+            self._printer(f"[VOICE] wake: {wake_word}")
 
         return self._publish_speech(
             text,
@@ -1227,7 +1677,8 @@ class LocalVoiceSessionManager:
     def _start_session(self, wake_word: str | None) -> None:
         self._session = SessionState(session_id=uuid.uuid4().hex, wake_word=wake_word)
         self._last_activity_monotonic = self._clock()
-        self._printer(f"[SESSION] started: {self._session.session_id}")
+        self.voice_state = VoiceState.ACTIVE_LISTENING
+        self._debug(f"[SESSION] started: {self._session.session_id}")
         message = build_session_start_message(
             self.device_id,
             session_id=self._session.session_id,
@@ -1239,6 +1690,10 @@ class LocalVoiceSessionManager:
 
     def _publish(self, message) -> None:
         self.transport.publish(message)
+
+    def _debug(self, message: str) -> None:
+        if self._voice_debug:
+            self._printer(message)
 
     def _publish_speech(
         self,
@@ -1269,13 +1724,18 @@ class LocalVoiceSessionManager:
             source=self.source,
             topic_prefix=self.topic_prefix,
         )
-        self._printer(
-            f"[SPEECH] turn={self._session.turn} text={text} bypass_wake={str(bypass_wake).lower()}"
+        self._printer(f"[VOICE] user: {text}")
+        self._debug(
+            f"[SPEECH] turn={self._session.turn} text={text} "
+            f"bypass_wake={str(bypass_wake).lower()}"
         )
         if self._state_machine is not None:
             self._state_machine.on_speech_submitted()
         self._publish(speech)
-        return [speech]
+        messages = [speech]
+        if not emergency and self._session is not None and self._session.turn >= self.max_turns:
+            messages.extend(self._end_session("max_turns"))
+        return messages
 
     def _end_session(self, reason: str) -> list[Any]:
         if self._session is None:
@@ -1283,6 +1743,7 @@ class LocalVoiceSessionManager:
         session = self._session
         self._session = None
         self._last_activity_monotonic = None
+        self.voice_state = VoiceState.WAKE_GUARD
         message = build_session_end_message(
             self.device_id,
             session_id=session.session_id,
@@ -1291,9 +1752,25 @@ class LocalVoiceSessionManager:
             source=self.source,
             topic_prefix=self.topic_prefix,
         )
-        self._printer(f"[SESSION] ended: {session.session_id}")
+        self._printer(f"[VOICE] session_end: {reason}")
+        self._debug(f"[SESSION] ended: {session.session_id}")
         self._publish(message)
         return [message]
+
+    def _on_interaction_event(self, _topic: str, payload: dict[str, Any]) -> None:
+        event = str(payload.get("event") or "").strip().upper()
+        if event in {"FALL_SUSPECTED", "NORMAL_ACTIVITY_READING"}:
+            self._reply_without_wake_until = self._clock() + self.session_timeout_seconds
+        elif event in {"FALL_RECOVERED", "SESSION_END"}:
+            self._reply_without_wake_until = None
+
+    def _reply_without_wake_active(self) -> bool:
+        if self._reply_without_wake_until is None:
+            return False
+        if self._clock() <= self._reply_without_wake_until:
+            return True
+        self._reply_without_wake_until = None
+        return False
 
 
 class LocalVoicePipeline:
@@ -1306,9 +1783,11 @@ class LocalVoicePipeline:
         device_id: str = DEFAULT_DEVICE_ID,
         topic_prefix: str = DEFAULT_TOPIC_PREFIX,
         session_timeout_seconds: float = DEFAULT_SESSION_TIMEOUT_SECONDS,
+        max_turns: int = DEFAULT_SESSION_MAX_TURNS,
         microphone_device_index: int | None = None,
         capture_seconds: float = DEFAULT_CAPTURE_SECONDS,
         vad_trailing_silence_seconds: float = DEFAULT_TRAILING_SILENCE_SECONDS,
+        voice_debug: bool | None = None,
         printer: Callable[[str], None] = print,
     ) -> None:
         self.microphone = microphone
@@ -1317,6 +1796,7 @@ class LocalVoicePipeline:
         self.device_id = str(device_id or DEFAULT_DEVICE_ID).strip()
         self.topic_prefix = str(topic_prefix or DEFAULT_TOPIC_PREFIX).strip()
         self.session_timeout_seconds = max(1.0, float(session_timeout_seconds))
+        self.max_turns = max(1, int(max_turns))
         self.microphone_device_index = microphone_device_index
         self.capture_seconds = max(1.0, float(capture_seconds))
         self.vad_trailing_silence_seconds = max(
@@ -1328,6 +1808,8 @@ class LocalVoicePipeline:
             device_id=self.device_id,
             topic_prefix=self.topic_prefix,
             session_timeout_seconds=self.session_timeout_seconds,
+            max_turns=self.max_turns,
+            voice_debug=voice_debug,
             printer=printer,
         )
 
@@ -1385,8 +1867,10 @@ class LocalVoicePipeline:
         topic_prefix: str = DEFAULT_TOPIC_PREFIX,
         microphone_device_index: int | None = None,
         session_timeout_seconds: float = DEFAULT_SESSION_TIMEOUT_SECONDS,
+        max_turns: int = DEFAULT_SESSION_MAX_TURNS,
         capture_seconds: float = DEFAULT_CAPTURE_SECONDS,
         vad_trailing_silence_seconds: float = DEFAULT_TRAILING_SILENCE_SECONDS,
+        voice_debug: bool | None = None,
         asr_backend: str = "remote",
         funasr_model: str = "paraformer-zh-streaming",
         funasr_hub: str = "ms",
@@ -1411,7 +1895,9 @@ class LocalVoicePipeline:
             topic_prefix=topic_prefix,
             microphone_device_index=microphone_device_index,
             session_timeout_seconds=session_timeout_seconds,
+            max_turns=max_turns,
             capture_seconds=capture_seconds,
             vad_trailing_silence_seconds=vad_trailing_silence_seconds,
+            voice_debug=voice_debug,
             printer=printer,
         )

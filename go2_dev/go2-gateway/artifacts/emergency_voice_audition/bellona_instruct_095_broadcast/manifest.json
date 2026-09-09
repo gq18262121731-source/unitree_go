@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Bellona",
+  "speed": 0.95,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\bellona_instruct_095_broadcast\\fall_help_broadcast.wav",
+      "voice": "Bellona",
+      "text": "紧急提示！这里有老人可能摔倒，目前没有回应。已经通知老人的家属，请附近人员立即过来查看！请附近人员立即过来帮忙查看！",
+      "bytes": 618284,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请使用正式、洪亮、清晰、有压迫感的公共安全广播语气。表达严肃焦急但不要失控，语速略慢，适合在现场扩音播放。"
+    }
+  ]
+}

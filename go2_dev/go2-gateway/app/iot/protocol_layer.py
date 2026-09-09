@@ -378,9 +378,14 @@ class Go2ControlAdapter:
             self.state_machine.on_playback_started()
             try:
                 clip_result = self.play_clips(message)
-            except Exception:
-                self.state_machine.set_state(BMachineState.ERROR, reason="playback_error")
-                raise
+            except Exception as exc:
+                clip_result = {
+                    "clips": list(message.payload.get("clips") or []),
+                    "played": 0,
+                    "status": "error",
+                    "missing_clips": [],
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
             finally:
                 if self.state_machine.state is BMachineState.SPEAKING:
                     self.state_machine.on_playback_finished(previous_state)
@@ -394,6 +399,7 @@ class Go2ControlAdapter:
                     "played": int(clip_result.get("played") or 0),
                     "status": str(clip_result.get("status") or "done"),
                     "missing_clips": list(clip_result.get("missing_clips") or []),
+                    "error": str(clip_result.get("error") or ""),
                 },
                 ts=message.ts,
                 source=message.source,
@@ -426,17 +432,26 @@ class Go2ControlAdapter:
             return {"ok": True, "action": "noop", "reason": "already_following"}
         if self.state_machine.state is BMachineState.PAUSED:
             result = self.resume_follow(self._with_follow_defaults(message, action="RESUME"))
-            self.state_machine.set_state(BMachineState.FOLLOWING, reason="resume_from_start_follow")
+            if self._control_result_ok(result):
+                self.state_machine.set_state(BMachineState.FOLLOWING, reason="resume_from_start_follow")
+            else:
+                self.state_machine.set_state(BMachineState.PAUSED, reason="resume_from_start_follow_failed")
             return result
         result = self.start_follow(self._with_follow_defaults(message, action="FOLLOW_3MIN"))
-        self.state_machine.set_state(BMachineState.FOLLOWING, reason="start_follow")
+        if self._control_result_ok(result):
+            self.state_machine.set_state(BMachineState.FOLLOWING, reason="start_follow")
+        else:
+            self.state_machine.set_state(BMachineState.IDLE, reason="start_follow_failed")
         return result
 
     def _handle_stop_follow(self, message: CommandMessage) -> dict[str, Any]:
         if self.state_machine.state is BMachineState.IDLE:
             return {"ok": True, "action": "noop", "reason": "already_idle"}
         result = self.stop_follow(message)
-        self.state_machine.set_state(BMachineState.IDLE, reason="stop_follow")
+        if self._control_result_ok(result):
+            self.state_machine.set_state(BMachineState.IDLE, reason="stop_follow")
+        else:
+            self.state_machine.set_state(self.state_machine.state, reason="stop_follow_failed")
         return result
 
     def _handle_resume_follow(self, message: CommandMessage) -> dict[str, Any]:
@@ -445,8 +460,21 @@ class Go2ControlAdapter:
         if self.state_machine.state is not BMachineState.PAUSED:
             return {"ok": False, "action": "reject", "reason": "resume_requires_paused"}
         result = self.resume_follow(self._with_follow_defaults(message, action="RESUME"))
-        self.state_machine.set_state(BMachineState.FOLLOWING, reason="resume_follow")
+        if self._control_result_ok(result):
+            self.state_machine.set_state(BMachineState.FOLLOWING, reason="resume_follow")
+        else:
+            self.state_machine.set_state(BMachineState.PAUSED, reason="resume_follow_failed")
         return result
+
+    @staticmethod
+    def _control_result_ok(result: dict[str, Any] | None) -> bool:
+        if result is None:
+            return True
+        if result.get("ok") is False:
+            return False
+        if str(result.get("action") or "").strip().lower() == "reject":
+            return False
+        return True
 
     def _with_follow_defaults(
         self,
@@ -504,9 +532,29 @@ class CommandDispatcher:
     def _on_command(self, topic: str, payload: dict[str, Any]) -> None:
         command = CommandMessage.from_payload(payload)
         self.last_command = command
-        self.last_outcome = self.adapter.handle(command)
+        self.last_outcome = [
+            self._with_bound_topic_prefix(message)
+            for message in self.adapter.handle(command)
+        ]
         for message in self.last_outcome:
             self.transport.publish(message)
+
+    def _with_bound_topic_prefix(
+        self,
+        message: MqttContractMessage,
+    ) -> MqttContractMessage:
+        channel = str(message.topic or "").rstrip("/").split("/")[-1]
+        if channel not in {"cmd", "speech", "event", "telemetry", "status"}:
+            return message
+        device_id = str(message.payload.get("device_id") or "").strip()
+        if not device_id:
+            return message
+        return MqttContractMessage(
+            topic=contract_topic(device_id, channel, topic_prefix=self.topic_prefix),
+            payload=dict(message.payload),
+            qos=message.qos,
+            retain=message.retain,
+        )
 
 
 def build_command_dispatcher(

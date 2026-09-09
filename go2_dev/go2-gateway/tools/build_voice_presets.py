@@ -19,7 +19,32 @@ from app.voice.clip_composer import clip_id_to_filename, dynamic_clip_phrases
 
 
 AUDITION_TEXT = "好的，我陪您出去走走。"
-BUILTIN_VOICES = ("Cherry", "Serena", "Ethan", "Chelsie")
+BUILTIN_VOICES = (
+    "Cherry",
+    "Serena",
+    "Ethan",
+    "Chelsie",
+    "Bellona",
+    "Neil",
+    "Elias",
+    "Stella",
+    "Jada",
+    "Maia",
+    "Katerina",
+    "Momo",
+    "Vivian",
+    "Bella",
+    "Jennifer",
+    "Mia",
+    "Bunny",
+    "Nini",
+    "Seren",
+    "Sonrisa",
+    "Sohee",
+    "Ono Anna",
+    "Anna",
+    "Sunny",
+)
 PRESET_PHRASES = {
     "WAKE_READY": "我在，请说。",
     "START_ACK": "好的，李四。",
@@ -53,8 +78,16 @@ def _post_json(url: str, payload: dict[str, object]) -> dict[str, object]:
         headers={"Content-Type": "application/json; charset=utf-8"},
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=90) as response:
-        return json.loads(response.read().decode("utf-8"))
+    last_error: Exception | None = None
+    for attempt in range(1, 4):
+        try:
+            with urllib.request.urlopen(request, timeout=90) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except (TimeoutError, urllib.error.HTTPError, urllib.error.URLError) as exc:
+            last_error = exc
+            if attempt < 3:
+                time.sleep(float(attempt))
+    raise RuntimeError(f"TTS request failed after 3 attempts: {last_error}") from last_error
 
 
 def _decode_audio(payload: dict[str, object]) -> bytes:
@@ -103,11 +136,27 @@ def _repair_wav_sizes(audio: bytes) -> bytes:
 
 
 def _synthesize(
-    *, health_url: str, text: str, voice: str, speed: float
+    *,
+    health_url: str,
+    text: str,
+    voice: str,
+    speed: float,
+    model: str | None = None,
+    instruction: str | None = None,
 ) -> tuple[bytes, dict[str, object]]:
+    request_payload: dict[str, object] = {
+        "text": text,
+        "voice": voice,
+        "speed": speed,
+        "fmt": "wav",
+    }
+    if model:
+        request_payload["model"] = model
+    if instruction:
+        request_payload["instruction"] = instruction
     payload = _post_json(
         f"{health_url.rstrip('/')}/api/v1/voice/tts",
-        {"text": text, "voice": voice, "speed": speed, "fmt": "wav"},
+        request_payload,
     )
     if payload.get("ok") is not True:
         raise RuntimeError(str(payload.get("error") or "TTS request failed"))
@@ -129,11 +178,32 @@ def main() -> int:
     parser.add_argument("--health-url", default="http://127.0.0.1:8765")
     parser.add_argument("--voice", default="Serena", choices=BUILTIN_VOICES)
     parser.add_argument("--speed", type=float, default=1.0)
+    parser.add_argument(
+        "--model",
+        help="override the TTS model for this build, for example qwen3-tts-instruct-flash",
+    )
+    parser.add_argument(
+        "--instruction",
+        help="optional style instruction for instruction-capable TTS models",
+    )
     parser.add_argument("--audition", action="store_true")
     parser.add_argument(
         "--dynamic-clips",
         action="store_true",
         help="build the optional fixed-phrase and number clip dictionary",
+    )
+    parser.add_argument(
+        "--dynamic-only",
+        help="build one dynamic clip ID, for example fall.help.broadcast",
+    )
+    parser.add_argument(
+        "--text-override",
+        help="override the source text when building a single --dynamic-only clip",
+    )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="reuse existing WAV files and only synthesize missing targets",
     )
     parser.add_argument(
         "--only",
@@ -148,17 +218,32 @@ def main() -> int:
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    if args.audition and args.dynamic_clips:
-        parser.error("--audition and --dynamic-clips cannot be used together")
-    if args.dynamic_clips and args.only:
-        parser.error("--only cannot be combined with --dynamic-clips")
+    if args.audition and (args.dynamic_clips or args.dynamic_only):
+        parser.error("--audition cannot be combined with dynamic clip generation")
+    if args.only and (args.dynamic_clips or args.dynamic_only):
+        parser.error("--only cannot be combined with dynamic clip generation")
+    if args.dynamic_clips and args.dynamic_only:
+        parser.error("--dynamic-clips and --dynamic-only cannot be used together")
+    if args.text_override and not args.dynamic_only:
+        parser.error("--text-override requires --dynamic-only")
+    dynamic_phrases = dynamic_clip_phrases()
+    if args.dynamic_only and args.dynamic_only not in dynamic_phrases:
+        parser.error(f"unknown dynamic clip ID: {args.dynamic_only}")
 
     items = (
         [(voice, AUDITION_TEXT, f"audition_{voice}.wav") for voice in BUILTIN_VOICES]
         if args.audition
         else [
+            (
+                args.voice,
+                args.text_override or dynamic_phrases[args.dynamic_only],
+                clip_id_to_filename(args.dynamic_only),
+            )
+        ]
+        if args.dynamic_only
+        else [
             (args.voice, text, clip_id_to_filename(clip_id))
-            for clip_id, text in dynamic_clip_phrases().items()
+            for clip_id, text in dynamic_phrases.items()
         ]
         if args.dynamic_clips
         else [
@@ -176,13 +261,13 @@ def main() -> int:
     )
     manifest: dict[str, object] = {
         "provider": "health_new/api/v1/voice/tts",
-        "model": "qwen3-tts-flash",
+        "model": args.model or "qwen3-tts-flash",
         "voice": "audition" if args.audition else args.voice,
         "speed": args.speed,
         "files": [],
     }
     manifest_path = args.output_dir / "manifest.json"
-    if (args.only or args.dynamic_clips) and manifest_path.is_file():
+    if (args.only or args.dynamic_clips or args.dynamic_only) and manifest_path.is_file():
         try:
             existing = json.loads(manifest_path.read_text(encoding="utf-8"))
         except (OSError, ValueError, TypeError):
@@ -190,9 +275,11 @@ def main() -> int:
         if isinstance(existing, dict) and isinstance(existing.get("files"), list):
             manifest = existing
             manifest["provider"] = "health_new/api/v1/voice/tts"
-            manifest["model"] = "qwen3-tts-flash"
-            manifest["voice"] = args.voice
-            manifest["speed"] = args.speed
+            if args.dynamic_clips:
+                manifest["model"] = args.model or "qwen3-tts-flash"
+            if args.dynamic_clips:
+                manifest["voice"] = args.voice
+                manifest["speed"] = args.speed
             target_names = {filename for _voice, _text, filename in items}
             manifest["files"] = [
                 item
@@ -203,14 +290,28 @@ def main() -> int:
                 )
             ]
     for voice, text, filename in items:
+        target = args.output_dir / _safe_name(filename.removesuffix(".wav"))
+        target = target.with_suffix(".wav")
+        if args.skip_existing and target.is_file():
+            manifest["files"].append(
+                {
+                    "path": str(target.resolve()),
+                    "voice": voice,
+                    "text": text,
+                    "bytes": target.stat().st_size,
+                    "provider": "existing/local-file",
+                }
+            )
+            print(f"VOICE_PRESET_SKIPPED existing path={target}")
+            continue
         audio, response = _synthesize(
             health_url=args.health_url,
             text=text,
             voice=voice,
             speed=args.speed,
+            model=args.model,
+            instruction=args.instruction,
         )
-        target = args.output_dir / _safe_name(filename.removesuffix(".wav"))
-        target = target.with_suffix(".wav")
         target.write_bytes(audio)
         manifest["files"].append(
             {
@@ -219,6 +320,8 @@ def main() -> int:
                 "text": text,
                 "bytes": len(audio),
                 "provider": response.get("provider"),
+                "model": response.get("model") or args.model or "qwen3-tts-flash",
+                "instruction": args.instruction,
             }
         )
         print(f"VOICE_PRESET_WRITTEN voice={voice} path={target} bytes={len(audio)}")

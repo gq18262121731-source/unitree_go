@@ -1,0 +1,17 @@
+{
+  "provider": "health_new/api/v1/voice/tts",
+  "model": "qwen3-tts-instruct-flash",
+  "voice": "Bellona",
+  "speed": 0.88,
+  "files": [
+    {
+      "path": "E:\\unitree\\unitree_go\\go2_dev\\go2-gateway\\artifacts\\emergency_voice_audition\\bellona_instruct_088_more_urgent\\fall_help_broadcast.wav",
+      "voice": "Bellona",
+      "text": "请注意！这里有老人可能摔倒了！目前没有回应！已经通知了老人的家属。请附近人员立即过来帮忙查看！请附近人员立即过来帮忙查看！",
+      "bytes": 672044,
+      "provider": "dashscope/qwen3-tts-instruct-flash",
+      "model": "qwen3-tts-instruct-flash",
+      "instruction": "请使用更焦急、更严肃的公共安全广播语气。吐字必须清晰有力，语速中等偏慢，明显强调“没有回应”和“立即”。不要温柔，不要客服语气，不要尖叫。"
+    }
+  ]
+}

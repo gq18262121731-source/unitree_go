@@ -1,0 +1,70 @@
+[
+  {
+    "voice": "Cherry",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Serena",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Chelsie",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Momo",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Vivian",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Maia",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Bella",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Jennifer",
+    "selected_model": "qwen3-tts-flash"
+  },
+  {
+    "voice": "Katerina",
+    "selected_model": "qwen3-tts-flash"
+  },
+  {
+    "voice": "Mia",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Elias",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Nini",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Seren",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Stella",
+    "selected_model": "qwen3-tts-instruct-flash"
+  },
+  {
+    "voice": "Sonrisa",
+    "selected_model": "qwen3-tts-flash"
+  },
+  {
+    "voice": "Sohee",
+    "selected_model": "qwen3-tts-flash"
+  },
+  {
+    "voice": "Ono Anna",
+    "selected_model": "qwen3-tts-flash"
+  }
+]
