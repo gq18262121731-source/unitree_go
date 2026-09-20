@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from dataclasses import replace
 from typing import Any, Callable
 
 from app.voice.interaction_context import InteractionContext
@@ -39,6 +40,7 @@ class InteractionFlowController:
         self.auto_follow = bool(auto_follow)
         self.reply_timeout_seconds = max(1.0, float(reply_timeout_seconds))
         self._clock = clock
+        self._operator_replay_decisions: dict[str, XiaokangDecision] = {}
 
     def clear_pending_reply(self) -> None:
         if self.context.expected_reply == "medication_and_departure":
@@ -47,6 +49,20 @@ class InteractionFlowController:
 
     def reset_demo(self) -> None:
         self.context.reset_demo()
+        self._operator_replay_decisions.clear()
+
+    def _operator_replay_decision(
+        self,
+        event: str,
+    ) -> XiaokangDecision | None:
+        decision = self._operator_replay_decisions.get(event)
+        if decision is None:
+            return None
+        return replace(
+            decision,
+            intent=f"{decision.intent}_replay",
+            action=None,
+        )
 
     def handle_text(self, text: str) -> XiaokangDecision:
         normalized = _normalize_text(text)
@@ -81,43 +97,88 @@ class InteractionFlowController:
         return self._idle_ack()
 
     def handle_event(self, event: str, payload: dict[str, Any] | None = None) -> list[XiaokangDecision]:
-        del payload
         normalized = str(event or "").strip().upper()
+        event_payload = dict(payload or {})
+        if bool(event_payload.get("replay")):
+            decision = self._operator_replay_decision(normalized)
+            if decision is None:
+                return []
+            return [decision]
         if normalized == "FALL_SUSPECTED":
             self.context.reset_outing_reply_window()
             self.context.safety_state = "fall_check_1"
+            self.context.demo_phase = "fall_check_1"
             self.context.fall_user_response = None
             self.context.fall_visual_recovered = False
             return [
                 XiaokangDecision(
                     intent="fall_suspected",
-                    action="stop_follow",
+                    action=(
+                        None
+                        if bool(event_payload.get("motion_already_stopped"))
+                        else "stop_follow"
+                    ),
                     clips=("fall.confirm",),
                     reply="我看到您可能摔倒了。您现在还好吗？",
                 )
             ]
         if normalized == "FALL_RESPONSE_TIMEOUT":
+            if self.context.safety_state not in {"fall_check_1", "fall_check_2"}:
+                return []
+            if (
+                bool(event_payload.get("skip_second_prompt"))
+                and self.context.safety_state == "fall_check_1"
+            ):
+                self.context.safety_state = "fall_check_2"
+                self.context.demo_phase = "fall_check_2"
             return [self._handle_fall_timeout()]
         if normalized == "FALL_RECOVERED":
+            if self.context.safety_state not in {
+                "fall_check_1",
+                "fall_check_2",
+                "helping",
+            }:
+                return []
             self.context.fall_visual_recovered = True
+            if bool((payload or {}).get("force_recovered")):
+                self.context.fall_user_response = "ok"
             if self.context.fall_user_response == "ok":
                 return [self._fall_recovered()]
             return []
         if normalized == "NORMAL_ACTIVITY_READING":
+            if self.context.safety_state == "helping":
+                return []
             self.context.safety_state = "normal"
-            self.context.set_expected_reply(
-                "reading_reply",
-                now=self._clock(),
-                timeout_seconds=self.reply_timeout_seconds,
-            )
-            return [
-                XiaokangDecision(
-                    intent="normal_activity_reading",
-                    action=None,
-                    clips=("fall.normal_activity", "reading.ask_book"),
-                    reply="看起来您只是坐下来看看书，没有发生跌倒。",
-                )
-            ]
+            self.context.demo_phase = "wait_resume"
+            self.context.clear_expected_reply()
+            return []
+        if normalized == "OPERATOR_OUTING_ASSESSMENT":
+            replay = self._operator_replay_decision(normalized)
+            if replay is not None:
+                return [replay]
+            self.context.clear_expected_reply()
+            decision = self._operator_outing_assessment()
+            self.context.skill2_done = True
+            self.context.outing_state = "idle"
+            self.context.demo_phase = "skill3_ready"
+            self.context.clear_expected_reply()
+            self._operator_replay_decisions[normalized] = decision
+            return [decision]
+        if normalized == "OPERATOR_MEDICATION_CHECK":
+            replay = self._operator_replay_decision(normalized)
+            if replay is not None:
+                return [replay]
+            self.context.clear_expected_reply()
+            decision = self._operator_medication_check()
+            self._operator_replay_decisions[normalized] = decision
+            return [decision]
+        if normalized == "OPERATOR_DEPART":
+            replay = self._operator_replay_decision(normalized)
+            if replay is not None:
+                return [replay]
+            decision = self._outing_start()
+            self._operator_replay_decisions[normalized] = decision
+            return [decision]
         return []
 
     def _handle_outing_request(self) -> XiaokangDecision:
@@ -125,6 +186,7 @@ class InteractionFlowController:
         if self.context.health_assessment_valid and self.context.medication_taken:
             self.context.departure_confirmed = True
             self.context.outing_state = "wait_start_playback"
+            self.context.demo_phase = "following_start_pending"
             return XiaokangDecision(
                 intent="outing_resume",
                 action="start_follow" if self.auto_follow else None,
@@ -141,6 +203,7 @@ class InteractionFlowController:
                 self.context.health_assessment_valid = True
                 self.context.medication_reminded = True
                 self.context.outing_state = "wait_medication"
+                self.context.demo_phase = "skill2_wait_ack"
                 self.context.set_expected_reply(
                     "medication_and_departure",
                     now=self._clock(),
@@ -148,6 +211,7 @@ class InteractionFlowController:
                 )
                 return decision
             self.context.outing_state = "wait_medication_confirm"
+            self.context.demo_phase = "skill3_wait_depart"
             self.context.set_expected_reply(
                 "medication_and_departure",
                 now=self._clock(),
@@ -175,6 +239,7 @@ class InteractionFlowController:
         elif _is_soft_ack(normalized):
             self.context.medication_acknowledged = True
             self.context.outing_state = "idle"
+            self.context.demo_phase = "skill3_ready"
             self.context.clear_expected_reply()
             return XiaokangDecision(
                 intent="medication_reminder_ack",
@@ -188,6 +253,7 @@ class InteractionFlowController:
             self.context.clear_expected_reply()
             return self._outing_start()
         self.context.outing_state = "wait_medication_confirm"
+        self.context.demo_phase = "skill3_wait_depart"
         self.context.set_expected_reply(
             "medication_and_departure",
             now=self._clock(),
@@ -200,11 +266,54 @@ class InteractionFlowController:
             reply="刚才提醒您的药已经吃过了吗？",
         )
 
+    def _operator_medication_check(self) -> XiaokangDecision:
+        health = self._health_for_profile("outing_after_medication")
+        weather = self.weather_provider.get_weather()
+        condition = _weather_value(weather.condition)
+        self.context.outing_state = "wait_medication_confirm"
+        self.context.demo_phase = "skill3_wait_depart"
+        self.context.set_expected_reply(
+            "medication_and_departure",
+            now=self._clock(),
+            timeout_seconds=self.reply_timeout_seconds,
+        )
+        decision = XiaokangDecision(
+            intent="outing_medication_check",
+            allowed=True,
+            health_status=health.status,
+            weather=None if condition is WeatherCondition.UNKNOWN else condition.value,
+            temperature=weather.temperature,
+            action=None,
+            reply="刚才提醒您的药已经吃过了吗？",
+        )
+        return XiaokangDecision(
+            **{
+                **decision.__dict__,
+                "clips": tuple(
+                    self.clip_assembler.medication_check(
+                        weather=decision.weather,
+                        temperature=decision.temperature,
+                    )
+                ),
+            }
+        )
+
+    def _operator_outing_assessment(self) -> XiaokangDecision:
+        decision = self._outing_assessment(
+            health=self._health_for_profile("outing_before_medication"),
+            medication_reminder=True,
+            action=None,
+        )
+        self.context.health_assessment_valid = True
+        self.context.medication_reminded = True
+        return decision
+
     def _outing_start(self) -> XiaokangDecision:
         self.context.health_assessment_valid = True
         self.context.medication_taken = True
         self.context.departure_confirmed = True
         self.context.outing_state = "wait_start_playback"
+        self.context.demo_phase = "skill3_first_start_pending"
         return XiaokangDecision(
             intent="outing_start",
             allowed=True,
@@ -274,6 +383,7 @@ class InteractionFlowController:
     def _handle_fall_timeout(self) -> XiaokangDecision:
         if self.context.safety_state == "fall_check_1":
             self.context.safety_state = "fall_check_2"
+            self.context.demo_phase = "fall_check_2"
             return XiaokangDecision(
                 intent="fall_confirm_second",
                 action=None,
@@ -281,6 +391,7 @@ class InteractionFlowController:
                 reply="您能听到我说话吗？如果可以，请回答我。",
             )
         self.context.safety_state = "helping"
+        self.context.demo_phase = "helping"
         return XiaokangDecision(
             intent="fall_help_broadcast",
             action=None,
@@ -290,6 +401,7 @@ class InteractionFlowController:
 
     def _fall_recovered(self) -> XiaokangDecision:
         self.context.safety_state = "normal"
+        self.context.demo_phase = "wait_reading"
         self.context.fall_user_response = None
         self.context.fall_visual_recovered = False
         self.context.outing_state = "idle"

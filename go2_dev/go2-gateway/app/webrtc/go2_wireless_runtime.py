@@ -486,11 +486,14 @@ class Go2WirelessRuntime:
         self._audio_hub: Any = None
         self._audio_uuid_cache: dict[str, str] = {}
         self._audio_play_seq = 0
+        self._audio_playback_generation = 0
+        self._audio_playback_cancel = threading.Event()
         # Half-duplex recording/playback must be serialized, but a background
         # AudioHub cache upload must never hold up live microphone capture.
         self._audio_io_lock = threading.Lock()
         self._audio_preload_lock = threading.Lock()
         self._audio_channel_available = False
+        self._voice_channel_requested = False
         self._audio_callback_generation = 0
         self._microphone_recording = False
         self._microphone_frames: list[bytes] = []
@@ -723,6 +726,7 @@ class Go2WirelessRuntime:
             self._audio_hub = None
             self._audio_uuid_cache = {}
             self._audio_channel_available = False
+            self._voice_channel_requested = False
             self._microphone_recording = False
             self._microphone_frames = []
             self._microphone_complete.clear()
@@ -764,13 +768,20 @@ class Go2WirelessRuntime:
         """Subscribe companion topics on the existing BASE PeerConnection."""
 
         timeout = max(0.5, float(timeout_seconds))
-        self._run_runtime_coroutine(
-            self._activate_companion_inputs_async(
-                enable_multiple_state=enable_multiple_state
-            ),
-            "WebRTC companion input activation",
-            timeout=min(timeout, 2.0),
-        )
+        with self._lock:
+            already_active = bool(
+                self.enable_sport_state
+                and self.enable_uwb
+                and (not enable_multiple_state or self.enable_multiple_state)
+            )
+        if not already_active:
+            self._run_runtime_coroutine(
+                self._activate_companion_inputs_async(
+                    enable_multiple_state=enable_multiple_state
+                ),
+                "WebRTC companion input activation",
+                timeout=min(timeout, 2.0),
+            )
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             status = self.status()
@@ -924,6 +935,8 @@ class Go2WirelessRuntime:
     ) -> int:
         """Upload/cache and play a WAV file through this runtime's DataChannel."""
 
+        with self._lock:
+            requested_generation = self._audio_playback_generation
         source = os.path.abspath(os.fspath(audio_file))
         if not os.path.isfile(source):
             raise ValueError(f"audio file does not exist: {source}")
@@ -933,6 +946,10 @@ class Go2WirelessRuntime:
         stem = self._safe_audio_name(os.path.splitext(os.path.basename(source))[0])
         custom_name = f"go2_{stem}_{digest}"
         with self._audio_io_lock:
+            with self._lock:
+                if requested_generation != self._audio_playback_generation:
+                    raise RuntimeError("AudioHub playback interrupted before start")
+            self._audio_playback_cancel.clear()
             with tempfile.TemporaryDirectory(prefix="go2-audio-") as temp_dir:
                 upload_path = os.path.join(temp_dir, f"{custom_name}.wav")
                 self._prepare_audiohub_wav(source, upload_path)
@@ -972,9 +989,12 @@ class Go2WirelessRuntime:
         *,
         timeout_seconds: float | None = None,
         inter_clip_gap_seconds: float | list[float] | tuple[float, ...] = 0.08,
+        on_playback_started: Callable[[], Any] | None = None,
     ) -> int:
         """Play multiple prepared WAV files as one contiguous AudioHub session."""
 
+        with self._lock:
+            requested_generation = self._audio_playback_generation
         sources: list[str] = []
         for audio_file in audio_files:
             source = os.path.abspath(os.fspath(audio_file))
@@ -996,6 +1016,10 @@ class Go2WirelessRuntime:
             gaps.append(0.08)
 
         with self._audio_io_lock:
+            with self._lock:
+                if requested_generation != self._audio_playback_generation:
+                    raise RuntimeError("AudioHub batch playback interrupted before start")
+            self._audio_playback_cancel.clear()
             with tempfile.TemporaryDirectory(prefix="go2-audio-batch-") as temp_dir:
                 prepared: list[tuple[str, str, str, float]] = []
                 total_duration = 0.0
@@ -1030,6 +1054,8 @@ class Go2WirelessRuntime:
                     self._play_audio_files_async(
                         prepared,
                         inter_clip_gaps=gaps,
+                        generation=requested_generation,
+                        on_playback_started=on_playback_started,
                     ),
                     "AudioHub batch playback",
                     timeout=playback_timeout,
@@ -1042,19 +1068,23 @@ class Go2WirelessRuntime:
         reason: str = "operator",
         timeout_seconds: float | None = None,
     ) -> int:
-        """Stop any current Go2 AudioHub playback without touching WebRTC tracks."""
+        """Interrupt AudioHub playback without touching WebRTC media tracks."""
 
         playback_timeout = (
             max(self.command_timeout_seconds + 1.0, 3.0)
             if timeout_seconds is None
             else max(0.5, float(timeout_seconds))
         )
-        with self._audio_io_lock:
-            self._run_runtime_coroutine(
-                self._stop_audio_playback_async(reason=reason),
-                "AudioHub stop playback",
-                timeout=playback_timeout,
-            )
+        self._audio_playback_cancel.set()
+        with self._lock:
+            self._audio_playback_generation += 1
+        # Deliberately bypass _audio_io_lock: a batch owns that lock for its
+        # full duration, and an operator recovery must still be able to pause it.
+        self._run_runtime_coroutine(
+            self._stop_audio_playback_async(reason=reason),
+            "AudioHub stop playback",
+            timeout=playback_timeout,
+        )
         return 0
 
     def preload_audio_file(
@@ -1654,6 +1684,7 @@ class Go2WirelessRuntime:
                 },
                 "microphone": {
                     "available": self._audio_channel_available,
+                    "listenerRequested": self._voice_channel_requested,
                     "recording": self._microphone_recording,
                     "lastError": self._microphone_error,
                     "lastCapture": deepcopy(self._last_microphone_capture),
@@ -2084,6 +2115,7 @@ class Go2WirelessRuntime:
             if connection is None or not self._connected:
                 raise RuntimeError("WebRTC connection is unavailable")
             self.enable_audio = True
+            self._voice_channel_requested = True
             self._microphone_frame_probe_logged = False
         self._attach_audio_callback(connection, generation)
         audio = getattr(connection, "audio", None)
@@ -2094,6 +2126,7 @@ class Go2WirelessRuntime:
         with self._lock:
             connection = self._connection
             self.enable_audio = False
+            self._voice_channel_requested = False
             self._audio_channel_available = False
             self._microphone_recording = False
         audio = None if connection is None else getattr(connection, "audio", None)
@@ -2399,6 +2432,18 @@ class Go2WirelessRuntime:
                     )
         if self.enable_audio:
             self._attach_audio_callback(connection, generation)
+            with self._lock:
+                restore_voice_channel = self._voice_channel_requested
+                if restore_voice_channel:
+                    self._microphone_frame_probe_logged = False
+            if restore_voice_channel:
+                audio = getattr(connection, "audio", None)
+                if audio is not None and hasattr(audio, "switchAudioChannel"):
+                    audio.switchAudioChannel(True)
+                    LOGGER.info(
+                        "GO2_AUDIO_CHANNEL_RESTORED generation=%s",
+                        generation,
+                    )
         else:
             audio = getattr(connection, "audio", None)
             if audio is not None and hasattr(audio, "switchAudioChannel"):
@@ -3854,9 +3899,12 @@ class Go2WirelessRuntime:
         prepared: list[tuple[str, str, str, float]],
         *,
         inter_clip_gaps: list[float],
+        generation: int,
+        on_playback_started: Callable[[], Any] | None = None,
     ) -> None:
         playable: list[tuple[str, str, float]] = []
         for _source, upload_path, custom_name, duration in prepared:
+            self._raise_if_audio_playback_cancelled(generation)
             unique_id = await self._preload_audio_file_async(upload_path, custom_name)
             playable.append((custom_name, unique_id, max(0.0, float(duration))))
 
@@ -3923,6 +3971,7 @@ class Go2WirelessRuntime:
         except (TypeError, ValueError):
             supports_play_context = False
         for index, (custom_name, unique_id, duration) in enumerate(playable):
+            self._raise_if_audio_playback_cancelled(generation)
             with self._lock:
                 self._audio_play_seq += 1
                 play_seq = self._audio_play_seq
@@ -3948,8 +3997,32 @@ class Go2WirelessRuntime:
                 play_seq,
                 unique_id,
             )
+            if index == 0 and on_playback_started is not None:
+                on_playback_started()
             gap = inter_clip_gaps[index] if index < len(inter_clip_gaps) else 0.0
-            await asyncio.sleep(max(0.0, duration + gap))
+            await self._wait_for_audio_playback_or_cancel(
+                max(0.0, duration + gap),
+                generation,
+            )
+
+    def _raise_if_audio_playback_cancelled(self, generation: int) -> None:
+        with self._lock:
+            stale = generation != self._audio_playback_generation
+        if stale or self._audio_playback_cancel.is_set():
+            raise RuntimeError("AudioHub playback interrupted")
+
+    async def _wait_for_audio_playback_or_cancel(
+        self,
+        duration_seconds: float,
+        generation: int,
+    ) -> None:
+        deadline = time.monotonic() + max(0.0, duration_seconds)
+        while True:
+            self._raise_if_audio_playback_cancelled(generation)
+            remaining = deadline - time.monotonic()
+            if remaining <= 0.0:
+                return
+            await asyncio.sleep(min(0.05, remaining))
 
     async def _stop_audio_playback_async(self, *, reason: str) -> None:
         with self._lock:
@@ -3980,6 +4053,28 @@ class Go2WirelessRuntime:
             audio_hub = self._audio_hub_factory(connection)
             with self._lock:
                 self._audio_hub = audio_hub
+
+        cached_catalogue = {
+            custom_name: self._audio_uuid_cache[custom_name]
+            for _source, _upload_path, custom_name, _upload_timeout in prepared
+            if custom_name in self._audio_uuid_cache
+        }
+        if len(cached_catalogue) == len(prepared):
+            LOGGER.info(
+                "AUDIOHUB_PRELOAD_UUID_CACHE_HIT clips=%d",
+                len(prepared),
+            )
+            return {
+                source: AudioPreloadResult(
+                    path=source,
+                    custom_name=custom_name,
+                    ready=True,
+                    uploaded=False,
+                    attempts=0,
+                    unique_id=cached_catalogue[custom_name],
+                )
+                for source, _upload_path, custom_name, _upload_timeout in prepared
+            }
 
         catalogue = await self._query_audio_catalog(
             audio_hub,

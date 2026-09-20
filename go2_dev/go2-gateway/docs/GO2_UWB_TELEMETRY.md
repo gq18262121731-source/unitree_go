@@ -18,6 +18,9 @@ Go2 UWB伴随实时监测
 - 当前距离：同一个无线 Runtime 最新 `rt/uwbstate.distance_est` 只读快照。
 - 方位角：同一帧 `orientation_est` 经现有 Runtime 校准链得到，不在 Dashboard
   内重新计算另一套控制输入。
+- 展示平滑：Dashboard 对当前距离和方位角使用轻量一维卡尔曼滤波，只作用于
+  数字、相对位置图和历史曲线；Runtime 的原始 UWB 数据、失联判断和运动控制
+  不受影响。UWB 无效时页面仍显示无效，不使用旧滤波值冒充实时数据。
 - 目标距离：当前 Companion YAML 配置，由状态接口返回；相对位置图的期望点
   位于真实当前方位的目标距离处，因此会随 UWB 方位变化。
 - `vx/wz`：无线伴随控制循环经过对齐状态与最终限幅后实际交给
@@ -50,12 +53,27 @@ python tools/go2_uwb_telemetry.py --mock
 再在第二个 PowerShell 窗口启动只读 Dashboard：
 
 ```powershell
-python tools/go2_uwb_telemetry.py --wireless
+.\uwb.ps1
 ```
+
+`uwb.ps1` 会先检查 `8093/api/v1/robot/companion/status` 是否可访问，
+并避免重复占用 `8050`。如果提示 Runtime 不可访问，先确认第一个窗口的
+`start.ps1` 已经启动完成。
+
+如果页面窗口已经关闭但 `8050` 仍被旧进程占用，执行：
+
+```powershell
+.\uwb.ps1 -Stop
+```
+
+这只停止 UWB Dashboard，不停止 `8093` Runtime 或机器狗运动控制。
 
 只有在无线 Runtime 控制台执行 `START`、状态进入 `FOLLOWING` 后，最终
 `vx/wz` 才会显示真实非零伴随输出。未启动伴随时仍可读取真实 UWB 距离和方位，
 但运动输出应如实为 `0.00`。
+
+人工接管时按 `F11` 进入键盘控制；需要继续伴随时直接按 `F5`。F5 会先安全释放
+人工控制，再重新创建伴随控制线程；跌倒风险锁、WebRTC 和 UWB 预检仍然有效。
 
 无线 Runtime 状态接口为
 `http://127.0.0.1:8093/api/v1/robot/companion/status`。当前无线伴随链是

@@ -5,6 +5,8 @@ from dataclasses import dataclass
 
 @dataclass
 class InteractionContext:
+    demo_phase: str = "skill2_ready"
+    skill2_done: bool = False
     health_assessment_valid: bool = False
     medication_reminded: bool = False
     medication_acknowledged: bool = False
@@ -36,6 +38,8 @@ class InteractionContext:
         self.clear_expected_reply()
 
     def reset_demo(self) -> None:
+        self.demo_phase = "skill2_ready"
+        self.skill2_done = False
         self.health_assessment_valid = False
         self.medication_reminded = False
         self.medication_acknowledged = False

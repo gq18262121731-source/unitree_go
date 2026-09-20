@@ -88,6 +88,36 @@ def test_two_no_responses_escalate_and_keep_monitoring() -> None:
     assert LifecycleAction.PLAY_ESCALATION in second.actions
 
 
+def test_clear_risk_after_escalation_moves_to_wait_resume() -> None:
+    lifecycle = CompetitionLifecycle(monotonic_clock=Clock())
+    lifecycle.ingest_fall(incident_id="FALL-ESCALATED", confirmed=True)
+    lifecycle.no_response()
+    escalated = lifecycle.no_response()
+    assert escalated.snapshot.state is CompanionState.ESCALATED_EMERGENCY
+    assert lifecycle.risk_active is True
+
+    cleared = lifecycle.clear_risk(incident_id="FALL-ESCALATED")
+
+    assert cleared.accepted
+    assert cleared.snapshot.state is CompanionState.WAIT_RESUME
+    assert lifecycle.risk_active is False
+    assert cleared.snapshot.help_required is False
+    assert cleared.snapshot.emergency_escalated is False
+    assert LifecycleAction.RESUME_COMPANION not in cleared.actions
+
+
+def test_explicit_stop_can_return_cleared_wait_resume_to_idle() -> None:
+    lifecycle = CompetitionLifecycle(monotonic_clock=Clock())
+    lifecycle.ingest_fall(incident_id="FALL-IDLE", confirmed=True)
+    lifecycle.clear_risk(incident_id="FALL-IDLE")
+    assert lifecycle.state is CompanionState.WAIT_RESUME
+
+    stopped = lifecycle.stop(reason="fall_recovered_from_idle")
+
+    assert stopped.accepted
+    assert stopped.snapshot.state is CompanionState.IDLE
+
+
 def test_reset_clears_demo_context_without_restarting_transports() -> None:
     lifecycle = CompetitionLifecycle(monotonic_clock=Clock())
     lifecycle.ingest_fall(incident_id="FALL-003", confirmed=True)

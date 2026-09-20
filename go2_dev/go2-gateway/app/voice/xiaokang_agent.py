@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 import os
+import threading
+import time
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 
 from app.iot.mqtt_contract import (
     MQTT_TOPIC_PREFIX_DEFAULT,
@@ -98,6 +100,7 @@ class PendingAction:
     request_id: str
     session_id: str
     action: str
+    generation: int
 
 
 class HealthProvider(Protocol):
@@ -176,7 +179,7 @@ class OpenMeteoWeatherProvider:
         latitude: float = 39.9042,
         longitude: float = 116.4074,
         api_url: str = "https://api.open-meteo.com/v1/forecast",
-        timeout_seconds: float = 3.0,
+        timeout_seconds: float = 1.5,
     ) -> None:
         self.city = str(city or "北京").strip() or "北京"
         self.latitude = float(latitude)
@@ -197,7 +200,7 @@ class OpenMeteoWeatherProvider:
                 "XIAOKANG_WEATHER_API_URL",
                 "https://api.open-meteo.com/v1/forecast",
             ),
-            timeout_seconds=float(os.environ.get("XIAOKANG_WEATHER_TIMEOUT", "3")),
+            timeout_seconds=float(os.environ.get("XIAOKANG_WEATHER_TIMEOUT", "1.5")),
         )
 
     def get_weather(self) -> WeatherContext:
@@ -244,6 +247,104 @@ class OpenMeteoWeatherProvider:
             feels_like=feels_like,
             precipitation=precipitation,
         )
+
+
+class CachedWeatherProvider:
+    """Serve weather immediately while refreshing Open-Meteo in the background."""
+
+    def __init__(
+        self,
+        source: WeatherProvider,
+        *,
+        fallback: WeatherContext,
+        refresh_interval_seconds: float = 300.0,
+        clock: Any = time.monotonic,
+        on_update: Callable[[WeatherContext], None] | None = None,
+    ) -> None:
+        self.source = source
+        self.fallback = fallback
+        self.refresh_interval_seconds = max(1.0, float(refresh_interval_seconds))
+        self._clock = clock
+        self._on_update = on_update
+        self._lock = threading.Lock()
+        self._cached: WeatherContext | None = None
+        self._cached_at: float | None = None
+        self._refresh_thread: threading.Thread | None = None
+        self._refresh_done = threading.Event()
+
+    def start_prefetch(self) -> bool:
+        with self._lock:
+            active = self._refresh_thread
+            if active is not None and active.is_alive():
+                return False
+            self._refresh_done.clear()
+            thread = threading.Thread(
+                target=self._refresh_worker,
+                name="xiaokang-weather-prefetch",
+                daemon=True,
+            )
+            self._refresh_thread = thread
+            thread.start()
+        return True
+
+    def get_weather(self) -> WeatherContext:
+        now = self._clock()
+        with self._lock:
+            cached = self._cached
+            cached_at = self._cached_at
+        stale = cached_at is None or now - cached_at >= self.refresh_interval_seconds
+        if stale:
+            self.start_prefetch()
+        return cached or self.fallback
+
+    def wait_for_live_weather(self, timeout_seconds: float = 1.8) -> WeatherContext:
+        """Wait for an active refresh when a caller needs a live snapshot.
+
+        Normal reads remain non-blocking. Demo actions use this explicit gate so
+        their clip list is assembled after the startup weather prefetch finishes.
+        """
+
+        with self._lock:
+            cached = self._cached
+        if cached is not None:
+            return cached
+
+        self.start_prefetch()
+        try:
+            timeout = max(0.0, float(timeout_seconds))
+        except (TypeError, ValueError):
+            timeout = 1.8
+        self._refresh_done.wait(timeout)
+        with self._lock:
+            cached = self._cached
+        return cached or self.fallback
+
+    def _refresh_worker(self) -> None:
+        try:
+            weather = self.source.get_weather()
+            condition = _weather_value(weather.condition)
+            usable = (
+                condition not in {None, WeatherCondition.UNKNOWN}
+                and weather.temperature is not None
+            )
+            if usable:
+                with self._lock:
+                    self._cached = weather
+                    self._cached_at = self._clock()
+                if self._on_update is not None:
+                    try:
+                        self._on_update(weather)
+                    except Exception:
+                        pass
+        except Exception:
+            # Live weather is optional during the demonstration. Keep serving
+            # the last good value or the explicit competition fallback.
+            pass
+        finally:
+            self._refresh_done.set()
+            with self._lock:
+                if self._refresh_thread is threading.current_thread():
+                    self._refresh_thread = None
 
 
 class StaticMedicationProvider:
@@ -331,6 +432,32 @@ class ClipAssembler:
 
     def wake_ack(self) -> list[str]:
         return ["sess.wake_ack"] if self._available("sess.wake_ack") else []
+
+    def medication_check(
+        self,
+        *,
+        weather: WeatherCondition | str | None,
+        temperature: int | None,
+    ) -> list[str]:
+        """Build the short scene-3 check without repeating all health metrics."""
+
+        clips: list[str] = []
+        self._add_optional(clips, "outing.allow.health_good")
+        condition = _weather_value(weather)
+        if (
+            condition not in {None, WeatherCondition.UNKNOWN}
+            and temperature is not None
+        ):
+            self._extend_optional_group(
+                clips,
+                [
+                    f"weather.condition.{condition.value}",
+                    "weather.temperature.prefix",
+                    _safe_temperature_value_clip(temperature),
+                ],
+            )
+        self._add_optional(clips, "outing.medication_check")
+        return clips
 
     def _extend_body_temperature(self, clips: list[str], value: float) -> None:
         full_clip = _safe_health_temperature_clip(value)
@@ -467,6 +594,24 @@ class LocalFirstXiaokangAgent:
         self._printer = printer
         self._speech_enabled = bool(speech_enabled)
         self._pending_actions: dict[str, PendingAction] = {}
+        self._pending_actions_lock = threading.RLock()
+        self._pending_action_generation = 0
+        self._cancelled_action_request_ids: set[str] = set()
+
+    def cancel_pending_actions(self, *, reason: str) -> int:
+        """Invalidate actions waiting for a TTS clip_done callback."""
+
+        with self._pending_actions_lock:
+            cancelled = len(self._pending_actions)
+            self._cancelled_action_request_ids.update(self._pending_actions)
+            self._pending_actions.clear()
+            self._pending_action_generation += 1
+            generation = self._pending_action_generation
+        self._printer(
+            "[AGENT] pending_actions_cancelled "
+            f"reason={str(reason or 'unspecified')} count={cancelled} generation={generation}"
+        )
+        return cancelled
 
     def bind(self) -> None:
         if self._speech_enabled:
@@ -519,11 +664,13 @@ class LocalFirstXiaokangAgent:
                 else f"xiaokang-tts-{session_id}"
             )
             if decision.action:
-                self._pending_actions[request_id] = PendingAction(
-                    request_id=request_id,
-                    session_id=session_id,
-                    action=decision.action,
-                )
+                with self._pending_actions_lock:
+                    self._pending_actions[request_id] = PendingAction(
+                        request_id=request_id,
+                        session_id=session_id,
+                        action=decision.action,
+                        generation=self._pending_action_generation,
+                    )
             self._printer(f"[VOICE] reply clips={clips}")
             self.transport.publish(
                 build_command_message(
@@ -546,7 +693,7 @@ class LocalFirstXiaokangAgent:
             if callable(handle_event):
                 event = str(payload.get("event") or "").strip()
                 if event == "FALL_SUSPECTED":
-                    self._pending_actions.clear()
+                    self.cancel_pending_actions(reason="fall_suspected")
                 for decision in handle_event(event, payload):
                     self._publish_decision(decision, payload)
             return
@@ -555,34 +702,52 @@ class LocalFirstXiaokangAgent:
             return
         session_id = str(payload.get("session_id") or "").strip()
         request_id = str(payload.get("request_id") or "").strip()
-        if request_id:
-            pending = self._pending_actions.pop(request_id, None)
-        else:
-            pending = None
-            self._clear_pending_for_session(session_id)
-        if pending is None or pending.session_id != session_id:
-            return
-        if payload.get("status") != "done":
-            return
-        if pending.action != "start_follow":
-            return
-        self._printer("[ROBOT] start_follow")
-        self.transport.publish(
-            build_command_message(
-                self.device_id,
-                command="start_follow",
-                request_id=f"xiaokang-follow-{session_id}",
-                payload={
-                    "session_id": session_id,
-                    "duration_minutes": 3,
-                    "skip_start_announcement": True,
-                },
-                source="simulator",
-                topic_prefix=self.topic_prefix,
+        with self._pending_actions_lock:
+            if request_id:
+                pending = self._pending_actions.pop(request_id, None)
+                cancelled = request_id in self._cancelled_action_request_ids
+                self._cancelled_action_request_ids.discard(request_id)
+            else:
+                pending = None
+                cancelled = False
+                self._clear_pending_for_session_locked(session_id)
+            if cancelled:
+                self._printer(
+                    "[ROBOT] IGNORED_STALE_START "
+                    f"request_id={request_id} session_id={session_id}"
+                )
+                return
+            if (
+                pending is None
+                or pending.session_id != session_id
+                or pending.generation != self._pending_action_generation
+                or payload.get("status") != "done"
+                or pending.action != "start_follow"
+            ):
+                return
+            self._printer(
+                f"[ROBOT] start_follow generation={pending.generation}"
             )
-        )
+            self.transport.publish(
+                build_command_message(
+                    self.device_id,
+                    command="start_follow",
+                    request_id=f"xiaokang-follow-{session_id}",
+                    payload={
+                        "session_id": session_id,
+                        "duration_minutes": 3,
+                        "skip_start_announcement": True,
+                    },
+                    source="simulator",
+                    topic_prefix=self.topic_prefix,
+                )
+            )
 
     def _clear_pending_for_session(self, session_id: str) -> None:
+        with self._pending_actions_lock:
+            self._clear_pending_for_session_locked(session_id)
+
+    def _clear_pending_for_session_locked(self, session_id: str) -> None:
         stale_keys = [
             key
             for key, action in self._pending_actions.items()

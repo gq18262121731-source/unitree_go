@@ -12,17 +12,24 @@ import pytest
 from app.companion.competition_lifecycle import CompetitionLifecycle, LifecycleReadiness
 from app.companion.models import CompanionState
 from app.motion.scripted_motion import MotionActionResult
-from app.iot import Go2ControlAdapter, MockTransport, contract_topic
+from app.iot import Go2ControlAdapter, MockTransport
 from app.webrtc.follow_target_forwarder import FollowTargetState
 from tools.go2_wireless_runtime import (
+    CompetitionAction,
     CONFIRM_APP_CLOSED,
     CONFIRM_AREA,
     CONFIRM_WRITER,
+    HOTKEY_ACTIONS,
+    RuntimeOutputSession,
     RuntimeConsole,
     WALK_FOLLOW_PRESET,
     WALK_FOLLOW_TEXT,
+    WirelessCompanionControlError,
     _console_hotkey_command,
     _confirm_startup,
+    _emit_demo_console,
+    _hotkey_label_for_keypress,
+    _normalize_console_command,
     _wait_for_video,
     discover_lan_ipv4,
 )
@@ -207,10 +214,13 @@ def test_xiaokang_runtime_preload_batches_business_clips(
         "outing_medication_check.wav",
         "outing_start.wav",
         "fall_confirm.wav",
+        "fall_alert_sound.wav",
         "fall_help_broadcast.wav",
     }
     for filename in filenames:
         (tmp_path / filename).write_bytes(b"RIFF" + b"\0" * 40)
+    _write_pcm16_wav(tmp_path / "fall_alert_sound.wav", [1000, -1000] * 120)
+    _write_pcm16_wav(tmp_path / "fall_help_broadcast.wav", [1200, -1200] * 120)
 
     class Runtime:
         def __init__(self) -> None:
@@ -241,7 +251,11 @@ def test_xiaokang_runtime_preload_batches_business_clips(
     assert "WAKE_READY.wav" in preloaded
     assert "outing_allow_health_good.wav" in preloaded
     assert "outing_start.wav" in preloaded
-    assert "fall_help_broadcast.wav" in preloaded
+    emergency_paths = [
+        path for path in runtime.calls[0][0] if path.parent.name == ".emergency_cache"
+    ]
+    assert len(emergency_paths) == 2
+    assert any("fall_help_broadcast_emergency" in path.name for path in emergency_paths)
     assert "temperature_value_22.wav" in preloaded
     assert "temperature_value_36_6.wav" in preloaded
     output = capsys.readouterr().out
@@ -253,7 +267,7 @@ def test_xiaokang_required_preload_is_small_and_covers_live_demo_values(
 ) -> None:
     import tools.go2_wireless_runtime as runtime_tool
 
-    for clip_id in runtime_tool.XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS:
+    for clip_id in runtime_tool.XIAOKANG_RUNTIME_REQUIRED_CLIPS:
         filename = (
             "WAKE_READY.wav"
             if clip_id == "sess.wake_ack"
@@ -285,14 +299,52 @@ def test_xiaokang_required_preload_is_small_and_covers_live_demo_values(
     console.preload_xiaokang_required_clips()
 
     assert len(runtime.calls) == 1
-    assert len(runtime.calls[0][0]) == len(runtime_tool.XIAOKANG_RUNTIME_PRELOAD_BASE_CLIPS)
+    assert len(runtime.calls[0][0]) == len(runtime_tool.XIAOKANG_RUNTIME_REQUIRED_CLIPS)
     assert len(runtime.calls[0][0]) < len(runtime_tool.XIAOKANG_RUNTIME_PRELOAD_CLIPS)
     preloaded = {path.name for path in runtime.calls[0][0]}
+    assert "temperature_value_0.wav" in preloaded
     assert "temperature_value_22.wav" in preloaded
+    assert "temperature_value_40.wav" in preloaded
     assert "temperature_value_36_6.wav" in preloaded
+    assert "temperature_value_37_5.wav" in preloaded
     output = capsys.readouterr().out
     assert "XIAOKANG_AUDIO_REQUIRED_PRELOAD_START" in output
     assert "XIAOKANG_AUDIO_REQUIRED_PRELOAD_DONE" in output
+
+
+def test_xiaokang_required_preload_fails_when_any_required_clip_is_missing(
+    tmp_path, monkeypatch
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    missing_clip = "temperature.value.22"
+    for clip_id in runtime_tool.XIAOKANG_RUNTIME_REQUIRED_CLIPS:
+        if clip_id == missing_clip:
+            continue
+        filename = (
+            "WAKE_READY.wav"
+            if clip_id == "sess.wake_ack"
+            else runtime_tool.clip_id_to_filename(clip_id)
+        )
+        (tmp_path / filename).write_bytes(b"RIFF" + b"\0" * 40)
+
+    class Runtime:
+        def preload_audio_files(self, paths, *, retry_attempts):
+            return {
+                str(Path(path).resolve()): SimpleNamespace(
+                    ready=True,
+                    attempts=1,
+                    error=None,
+                )
+                for path in paths
+            }
+
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+
+    with pytest.raises(RuntimeError, match="required clips are not ready"):
+        console.preload_xiaokang_required_clips()
 
 
 def test_voice_clip_playback_uses_batch_audiohub_session(
@@ -401,6 +453,100 @@ def test_voice_clip_playback_uses_batch_audiohub_session(
     output = capsys.readouterr().out
     assert "[AUDIO] PLAY_BATCH_REQ" in output
     assert "VOICE_CLIPS_PLAYED: 12/12" in output
+
+
+@pytest.mark.parametrize(
+    ("playback_fails", "expected_statuses"),
+    (
+        (
+            False,
+            ["语音任务已接收", "正在准备播报...", "语音播报中", "播报完成"],
+        ),
+        (
+            True,
+            ["语音任务已接收", "正在准备播报...", "语音播报失败，请重试"],
+        ),
+    ),
+)
+def test_operator_voice_status_reports_acceptance_before_playback_result(
+    tmp_path, monkeypatch, playback_fails, expected_statuses
+) -> None:
+    import tools.go2_wireless_runtime as runtime_tool
+
+    _write_pcm16_wav(
+        tmp_path / "outing_allow_health_good.wav",
+        [1000, -1000] * 120,
+    )
+
+    class Runtime:
+        def preload_audio_files(self, paths, *, retry_attempts):
+            del retry_attempts
+            return {
+                str(Path(path).resolve()): SimpleNamespace(ready=True)
+                for path in paths
+            }
+
+        def play_audio_files(
+            self,
+            _paths,
+            *,
+            timeout_seconds,
+            inter_clip_gap_seconds,
+            on_playback_started,
+        ):
+            del timeout_seconds, inter_clip_gap_seconds
+            if playback_fails:
+                raise TimeoutError("AudioHub unavailable")
+            on_playback_started()
+
+        def stop_audio_playback(self, *, reason, timeout_seconds):
+            del reason, timeout_seconds
+
+    statuses: list[str] = []
+
+    class ObservedLock:
+        def __enter__(self):
+            assert statuses == ["语音任务已接收"]
+            return self
+
+        def __exit__(self, _exc_type, _exc, _traceback):
+            return False
+
+    decision = SimpleNamespace(
+        intent="outing_assessment",
+        clips=("outing.allow.health_good",),
+        action="",
+    )
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.runtime = Runtime()
+    console.demo_console = False
+    console.lifecycle = SimpleNamespace(
+        risk_active=False,
+        state=CompanionState.IDLE,
+    )
+    console._interaction_flow_controller = SimpleNamespace(
+        context=SimpleNamespace(demo_phase="skill2_ready"),
+        handle_event=lambda _event, _payload: [decision],
+    )
+    console._go2_asr_bridge = None
+    console._last_script_action = None
+    console._hotkey_action_lock = ObservedLock()
+    console._demo_event = lambda _message: None
+    console._print_demo_guidance = lambda: None
+    console._print_operator_line = statuses.append
+    monkeypatch.setattr(runtime_tool, "VOICE_PRESET_DIR", tmp_path)
+    monkeypatch.setattr("tools.go2_wireless_runtime.time.sleep", lambda _seconds: None)
+
+    if playback_fails:
+        with pytest.raises(WirelessCompanionControlError):
+            console.execute_competition_action(CompetitionAction.SKILL2_REPORT)
+    else:
+        result = console.execute_competition_action(
+            CompetitionAction.SKILL2_REPORT
+        )
+        assert result["accepted"] is True
+
+    assert statuses == expected_statuses
 
 
 def test_voice_clip_playback_resolves_clip_ids_in_order(
@@ -784,6 +930,7 @@ def _start_command_console(*, manual_confirm_start: bool):
     console.video_port = 8093
     console.lan_ip = "192.168.8.254"
     console._motion_thread = None
+    console.lifecycle = CompetitionLifecycle()
     console.manual_confirm_start = manual_confirm_start
     def start_companion(*, before_start=None):
         if before_start is not None:
@@ -795,6 +942,12 @@ def _start_command_console(*, manual_confirm_start: bool):
 
     console.start_companion = start_companion
     console._play_start_announcement = lambda: None
+    console.play_voice_clips = lambda *_args, **_kwargs: {
+        "clips": ["follow.stop"],
+        "played": 1,
+        "status": "done",
+        "missing_clips": [],
+    }
     console.stop_motion = lambda: None
     console.shutdown_calls = shutdown_calls
     return console
@@ -822,16 +975,20 @@ def test_console_start_defaults_to_lifecycle_without_confirmation(
     assert console.shutdown_calls == [True]
 
 
-def test_console_start_plays_announcement_before_starting_follow(
+def test_console_start_bypasses_tts_and_starts_motion(
     monkeypatch,
 ) -> None:
     console = _start_command_console(manual_confirm_start=False)
-    events: list[str] = []
-    console._play_start_announcement = lambda: events.append("announcement")
+    events: list[object] = []
+    console.play_voice_clips = (
+        lambda clips, **_kwargs: events.append(("voice", tuple(clips)))
+        or {"status": "done", "played": len(clips)}
+    )
+
     def start_companion(*, before_start=None):
         if before_start is not None:
             before_start()
-        events.append("start")
+        events.append("start_motion")
         return {"state": "FOLLOWING", "runtime_active": True}
 
     console.start_companion = start_companion
@@ -839,7 +996,7 @@ def test_console_start_plays_announcement_before_starting_follow(
     monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
 
     assert console.run() == 0
-    assert events == ["announcement", "start"]
+    assert events == ["start_motion"]
 
 
 def test_console_start_and_stop_use_bound_control_adapter(monkeypatch) -> None:
@@ -861,16 +1018,492 @@ def test_console_start_and_stop_use_bound_control_adapter(monkeypatch) -> None:
 
     assert console.run() == 0
     assert calls == [
-        ("start", {"announce_before_start": True, "duration_minutes": 3, "runtime_command": "FOLLOW_3MIN", "follow_profile": "FOLLOW_3MIN"}),
+        ("start", {"duration_minutes": 3, "runtime_command": "FOLLOW_3MIN", "follow_profile": "FOLLOW_3MIN"}),
         ("stop", {}),
     ]
 
 
-def test_console_start_debug_switch_restores_single_confirmation(
+def test_f5_hotkey_uses_resume_when_lifecycle_waits_for_resume(monkeypatch) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    console.lifecycle = SimpleNamespace(
+        state=CompanionState.WAIT_RESUME,
+        risk_active=False,
+    )
+    console._was_following_before_fall = True
+    calls: list[str] = []
+    console._run_control_command = (
+        lambda command, *, request_id, payload: calls.append(command)
+        or {"state": "FOLLOWING", "runtime_active": True}
+    )
+    commands = iter(("Ctrl+F5", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert calls == ["resume_follow"]
+
+
+def test_f5_releases_manual_console_and_restarts_runtime_directly() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.acquire_manual()
+    console.manual_controller = SimpleNamespace(active=True)
+    console._manual_console_stop = threading.Event()
+    console._state_lock = threading.RLock()
+    console._motion_thread = None
+    console._motion_name = None
+    console._motion_generation = 0
+    console._demo_phase = lambda: "wait_resume"
+    console._set_demo_phase = lambda _phase: None
+    console._print_demo_guidance = lambda: None
+    console.play_voice_clips = lambda *_args, **_kwargs: {"status": "done"}
+    calls: list[str] = []
+
+    def release_manual(*, quiet=False):
+        assert quiet is True
+        console.manual_controller.active = False
+        if console.lifecycle.state is CompanionState.MANUAL_CONTROL:
+            console.lifecycle.release_manual()
+        return {"state": "IDLE"}
+
+    console.release_manual = release_manual
+    console.start_companion = lambda: calls.append("direct_start") or {
+        "state": "FOLLOWING",
+        "runtime_active": True,
+    }
+    console._run_control_command = lambda *_args, **_kwargs: pytest.fail(
+        "manual recovery must recreate the Runtime worker directly"
+    )
+
+    result = console.start_or_resume_follow(announce=False)
+
+    assert result["state"] == "FOLLOWING"
+    assert calls == ["direct_start"]
+    assert console._manual_console_stop.is_set()
+
+
+def test_f5_is_idempotent_when_companion_is_already_following(
+    monkeypatch, capsys
+) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    console._motion_thread = SimpleNamespace(is_alive=lambda: True)
+    console._motion_name = "companion"
+    console.companion_status = lambda: {
+        "state": "FOLLOWING",
+        "runtime_active": True,
+    }
+    commands = iter(("Ctrl+F5", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert "START accepted -> already FOLLOWING" in capsys.readouterr().out
+
+
+def test_f5_rejects_latched_fall_before_start_announcement(
+    monkeypatch, capsys
+) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    console.lifecycle.ingest_fall(incident_id="latched-fall", confirmed=False)
+    announcements: list[bool] = []
+    console.play_voice_clips = (
+        lambda *_args, **_kwargs: announcements.append(True) or {"status": "done"}
+    )
+    commands = iter(("Ctrl+F5", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert announcements == []
+    assert console.lifecycle.risk_active is True
+    assert (
+        "ACTION_REJECTED:FOLLOW_RESUME:COMPANION_STATE_CONFLICT:risk_active"
+        in capsys.readouterr().out
+    )
+
+
+def test_f5_does_not_start_when_motion_generation_changes_during_voice(
+    monkeypatch, capsys
+) -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    starts: list[bool] = []
+    console.start_companion = lambda **_kwargs: starts.append(True) or {"state": "FOLLOWING"}
+
+    def interrupted_voice(_clips, **_kwargs):
+        console._cancel_pending_motion_actions(reason="test_fall_during_voice")
+        return {"status": "done", "played": 1}
+
+    console.play_voice_clips = interrupted_voice
+    commands = iter(("Ctrl+F5", "EXIT"))
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    assert console.run() == 0
+    assert starts == []
+    assert "ACTION_REJECTED:FOLLOW_RESUME:START_CANCELLED" in capsys.readouterr().out
+
+
+def test_f9_recovery_clears_latched_lifecycle_and_stops_emergency_worker() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.ingest_fall(incident_id="hotkey-fall-1", confirmed=False)
+    console._was_following_before_fall = True
+    console._emergency_voice_cancel = threading.Event()
+    console._emergency_voice_cancel.clear()
+    console.stop_motion = lambda: None
+    console._wait_for_motion_stop = lambda: None
+    events: list[tuple[str, dict]] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: events.append((event, dict(payload or {})))
+    )
+    console.companion_status = lambda: {"state": "IDLE"}
+
+    result = console.recover_fall_from_hotkey()
+
+    assert result["recovered"] is True
+    assert console.lifecycle.risk_active is False
+    assert console.lifecycle.state is CompanionState.IDLE
+    assert console._emergency_voice_cancel.is_set()
+    assert events == [("FALL_RECOVERED", {"force_recovered": True})]
+
+
+def test_f9_recovery_from_idle_returns_to_idle_for_next_f5_start() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.ingest_fall(incident_id="hotkey-fall-from-idle", confirmed=False)
+    console._was_following_before_fall = False
+    console._emergency_voice_cancel = threading.Event()
+    console.stop_motion = lambda: None
+    console._wait_for_motion_stop = lambda: None
+    console.execute_local_interaction_event = lambda _event, *, payload=None: None
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+
+    result = console.recover_fall_from_hotkey()
+
+    assert result["recovered"] is True
+    assert console.lifecycle.risk_active is False
+    assert console.lifecycle.state is CompanionState.IDLE
+
+
+def test_f6_from_idle_enters_fall_manual_without_global_motion_stop() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    sequence: list[str] = []
+    console.stop_motion = lambda: sequence.append("stop")
+    console._wait_for_motion_stop = lambda: None
+    console._record_lifecycle_actions = lambda _payload: None
+    events: list[tuple[str, dict]] = []
+    console._start_fall_manual_mode = lambda: sequence.append("manual") or True
+
+    def execute_local(event: str, *, payload=None) -> None:
+        sequence.append("prompt")
+        events.append((event, dict(payload or {})))
+
+    console.execute_local_interaction_event = execute_local
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+
+    result = console.trigger_fall_from_hotkey()
+
+    assert result["fallTriggered"] is True
+    assert console.lifecycle.risk_active is True
+    assert console.lifecycle.state is CompanionState.VOICE_CHECK
+    assert result["fallManualReady"] is True
+    assert sequence == ["manual", "prompt"]
+    assert events[0][0] == "FALL_SUSPECTED"
+    assert events[0][1]["incident_id"] == result["incident_id"]
+    assert events[0][1]["motion_already_stopped"] is True
+
+
+def test_f6_stops_active_companion_before_fall_manual_and_prompt() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.start(LifecycleReadiness())
+    console._state_lock = threading.RLock()
+    console._motion_thread = SimpleNamespace(is_alive=lambda: True)
+    console._motion_name = "companion"
+    sequence: list[str] = []
+    console.stop_motion = lambda: sequence.append("stop_companion")
+    console._wait_for_motion_stop = lambda: sequence.append("wait")
+    console._record_lifecycle_actions = lambda _payload: None
+    console._start_fall_manual_mode = lambda: sequence.append("manual") or True
+    console._interrupt_voice_playback = lambda *, reason: sequence.append(
+        ("interrupt", reason)
+    )
+    console._cancel_pending_motion_actions = lambda *, reason: 0
+    console._demo_event = lambda _message: None
+    console.execute_local_interaction_event = (
+        lambda _event, *, payload=None: sequence.append("prompt")
+    )
+    console._print_demo_guidance = lambda: None
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+
+    console.trigger_fall()
+
+    assert sequence == [
+        "stop_companion",
+        "wait",
+        ("interrupt", "fall_suspected"),
+        "manual",
+        "prompt",
+    ]
+
+
+def test_fall_manual_mode_keeps_existing_keyboard_control() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.manual_controller = SimpleNamespace(active=True)
+    console.fall_manual_controller = SimpleNamespace(active=False)
+
+    assert console._start_fall_manual_mode() is True
+    assert console.manual_controller.active is True
+    assert console.fall_manual_controller.active is False
+
+
+def test_f3_submits_departure_voice_without_waiting_for_f2_phase() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    events: list[str] = []
+    console._interaction_flow_controller = SimpleNamespace(
+        context=SimpleNamespace(demo_phase="skill3_ready"),
+        handle_event=lambda _event, _payload: [],
+    )
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: events.append(event)
+    )
+    console._print_demo_guidance = lambda: None
+
+    result = console.trigger_script_step_from_hotkey("SCENE3_DEPART")
+
+    assert result["accepted"] is True
+    assert events == ["OPERATOR_DEPART"]
+
+
+def test_f2_still_submits_after_f1_voice_playback_failure() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    context = SimpleNamespace(demo_phase="unrelated")
+    console.lifecycle = SimpleNamespace(state=CompanionState.IDLE, risk_active=False)
+    console._interaction_flow_controller = SimpleNamespace(
+        context=context,
+        handle_event=lambda _event, _payload: [],
+    )
+    console._last_script_action = None
+    console._demo_event = lambda _message: None
+    console._print_demo_guidance = lambda: None
+    events: list[str] = []
+
+    def execute_local(event: str, *, payload=None) -> None:
+        del payload
+        events.append(event)
+        if event == "OPERATOR_OUTING_ASSESSMENT":
+            raise WirelessCompanionControlError(
+                "VOICE_PLAYBACK_FAILED",
+                "error",
+                503,
+            )
+        context.demo_phase = "skill3_wait_depart"
+
+    console.execute_local_interaction_event = execute_local
+
+    with pytest.raises(WirelessCompanionControlError):
+        console.trigger_script_action(CompetitionAction.SKILL2_REPORT)
+
+    result = console.trigger_script_action(CompetitionAction.MEDICATION_RECHECK)
+
+    assert result["accepted"] is True
+    assert events == [
+        "OPERATOR_OUTING_ASSESSMENT",
+        "OPERATOR_MEDICATION_CHECK",
+    ]
+
+
+def test_reading_event_is_rejected_while_emergency_helping_is_active() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = SimpleNamespace(
+        state=CompanionState.ESCALATED_EMERGENCY,
+        risk_active=True,
+    )
+    console._interaction_flow_controller = SimpleNamespace(
+        context=SimpleNamespace(safety_state="helping")
+    )
+
+    with pytest.raises(WirelessCompanionControlError) as exc_info:
+        console.trigger_reading_from_hotkey()
+
+    assert exc_info.value.code == "READING_REJECTED"
+
+
+def test_f4_stops_motion_before_interrupting_and_playing_formal_voice() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    events: list[object] = []
+    console._cancel_pending_motion_actions = (
+        lambda *, reason: events.append(("cancel_motion", reason))
+    )
+    console._interrupt_voice_playback = (
+        lambda *, reason: events.append(("interrupt_voice", reason))
+    )
+    console._run_control_command = (
+        lambda command, *, request_id, payload: events.append(("control", command))
+        or {"state": "IDLE"}
+    )
+    context = SimpleNamespace(demo_phase="skill3_first_following")
+    console._interaction_flow_controller = SimpleNamespace(context=context)
+    console.play_voice_clips = (
+        lambda clips, **_kwargs: events.append(("voice", tuple(clips)))
+        or {"status": "done"}
+    )
+    console._print_demo_guidance = lambda: events.append("guidance")
+
+    assert console.stop_from_hotkey() == {"state": "IDLE"}
+    assert events.index(("control", "stop_follow")) < events.index(
+        ("interrupt_voice", "operator_stop")
+    )
+    assert events.index(("control", "stop_follow")) < events.index(
+        ("voice", ("follow.stop",))
+    )
+    assert context.demo_phase == "skill3_first_follow_stopped"
+
+
+def test_f4_only_marks_demo_complete_after_final_follow() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    context = SimpleNamespace(demo_phase="final_following")
+    console._interaction_flow_controller = SimpleNamespace(context=context)
+    console._cancel_pending_motion_actions = lambda *, reason: 0
+    console._interrupt_voice_playback = lambda *, reason: None
+    console._run_control_command = (
+        lambda command, *, request_id, payload: {"state": "IDLE"}
+    )
+    console.play_voice_clips = lambda *_args, **_kwargs: {"status": "done"}
+    console._print_demo_guidance = lambda: None
+
+    console.stop_from_hotkey()
+
+    assert context.demo_phase == "complete"
+
+
+def test_priority_hotkey_suppression_is_consumed_once() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+
+    console._suppress_buffered_priority_hotkey("Ctrl+F5")
+
+    assert console._consume_priority_hotkey_suppression("Ctrl+F5") is True
+    assert console._consume_priority_hotkey_suppression("Ctrl+F5") is False
+
+
+def test_priority_hotkey_dispatch_uses_direct_handlers() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    calls: list[CompetitionAction] = []
+    console.execute_competition_action = lambda action: calls.append(action)
+
+    for label in ("Ctrl+F4", "Ctrl+F6", "Ctrl+F9", "Ctrl+F10", "Ctrl+F12"):
+        console._dispatch_priority_hotkey(label)
+
+    assert calls == [
+        CompetitionAction.FOLLOW_STOP,
+        CompetitionAction.FALL_PROMPT_1,
+        CompetitionAction.QUICK_FOLLOW_RECOVERY,
+        CompetitionAction.DIRECT_FOLLOW_STOP,
+        CompetitionAction.KEYBOARD_CLOSE,
+    ]
+
+
+def test_control_dispatch_error_output_uses_business_status_only(capsys) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.execute_competition_action = lambda _action: (_ for _ in ()).throw(
+        RuntimeError("offline")
+    )
+    console._demo_rejection = lambda: None
+
+    console._dispatch_priority_hotkey("Ctrl+F1")
+
+    output = capsys.readouterr().out
+    assert "系统操作失败:RuntimeError:offline" in output
+    for forbidden in ("F1", "F2", "F3", "HOTKEY", "快捷键", "按键", "触发", "键盘操作"):
+        assert forbidden not in output
+
+
+def test_f9_wake_ack_plays_only_the_prepared_wake_reply() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    calls: list[tuple[tuple[str, ...], dict[str, object]]] = []
+    console.play_voice_clips = (
+        lambda clips, **kwargs: calls.append((tuple(clips), kwargs))
+        or {"status": "done", "played": 1}
+    )
+    console._demo_event = lambda _message: None
+
+    result = console.play_xiaokang_wake_ack()
+
+    assert result["status"] == "done"
+    assert calls == [
+        (
+            ("sess.wake_ack",),
+            {
+                "session_id": "terminal-wake-ack",
+                "source": "operator_action",
+            },
+        )
+    ]
+
+
+def test_priority_hotkeys_consider_voice_preparation_busy() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console._voice_playback_lock = threading.Lock()
+    console._voice_playback_busy = True
+    console._voice_playback_active = False
+    console._voice_playback_signature = ("outing.start",)
+    console._voice_playback_seq = 1
+    console._voice_playback_generation = 0
+
+    assert console.is_voice_playback_active() is False
+    assert console.is_voice_playback_busy() is True
+
+
+def test_reading_clears_false_alarm_risk_and_runs_local_reading_event() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.ingest_fall(incident_id="hotkey-fall-2", confirmed=False)
+    console._was_following_before_fall = True
+    console._emergency_voice_cancel = threading.Event()
+    stop_calls: list[bool] = []
+    console.stop_motion = lambda: stop_calls.append(True)
+    console._wait_for_motion_stop = lambda: None
+    events: list[tuple[str, dict]] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: events.append((event, dict(payload or {})))
+    )
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+
+    result = console.trigger_reading_from_hotkey()
+
+    assert result["readingTriggered"] is True
+    assert console.lifecycle.risk_active is False
+    assert console.lifecycle.state is CompanionState.WAIT_RESUME
+    assert stop_calls == [True]
+    assert console._emergency_voice_cancel.is_set()
+    assert events == [("NORMAL_ACTIVITY_READING", {})]
+
+
+def test_reading_creates_new_silent_event_after_f9_cleared_risk() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console._was_following_before_fall = False
+    console._emergency_voice_cancel = threading.Event()
+    stop_calls: list[bool] = []
+    console.stop_motion = lambda: stop_calls.append(True)
+    console._wait_for_motion_stop = lambda: None
+    events: list[str] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: events.append(event)
+    )
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+
+    result = console.trigger_reading_from_hotkey()
+
+    assert result["readingTriggered"] is True
+    assert console.lifecycle.risk_active is False
+    assert stop_calls == [True]
+    assert events == ["NORMAL_ACTIVITY_READING"]
+
+
+def test_console_start_ignores_removed_manual_confirmation_switch(
     monkeypatch, capsys
 ) -> None:
     console = _start_command_console(manual_confirm_start=True)
-    commands = iter(("START", "WIRELESS_COMPANION_START_APPROVED", "EXIT"))
+    commands = iter(("START", "EXIT"))
     prompts: list[str] = []
 
     def command_input(prompt: str) -> str:
@@ -881,11 +1514,7 @@ def test_console_start_debug_switch_restores_single_confirmation(
 
     assert console.run() == 0
 
-    assert prompts == [
-        "wireless> ",
-        "Type WIRELESS_COMPANION_START_APPROVED: ",
-        "wireless> ",
-    ]
+    assert prompts == ["wireless> ", "wireless> "]
     assert "START accepted -> FOLLOWING" in capsys.readouterr().out
 
 
@@ -908,26 +1537,469 @@ def test_console_start_reports_lifecycle_rejection_reason_without_prompt(
     assert console.run() == 0
 
     assert (
-        "START_REJECTED:UWB_NOT_READY:uwb_not_fresh"
+        "ACTION_REJECTED:DIRECT_FOLLOW_START:UWB_NOT_READY:uwb_not_fresh"
         in capsys.readouterr().out
     )
 
 
 def test_onsite_hotkey_scan_codes_stay_small_and_memorable() -> None:
-    assert _console_hotkey_command(";") == ("F1", "START")
-    assert _console_hotkey_command("<") == ("F2", "STOP")
-    assert _console_hotkey_command("?") == ("F5", "FALL_SUSPECTED")
-    assert _console_hotkey_command("@") == ("F6", "FALL_RECOVERED")
-    assert _console_hotkey_command("A") == ("F7", "READING")
-    assert _console_hotkey_command("C") == ("F9", "RESET_DEMO")
-    assert _console_hotkey_command("D") == ("F10", "TOGGLE_VOICE_LISTENER")
-    assert _console_hotkey_command("\x86") == ("F12", "SAFETY_STOP")
-    assert _console_hotkey_command("b") == ("Ctrl+F5", "PLAY_FALL_CONFIRM")
-    assert _console_hotkey_command("c") == ("Ctrl+F6", "PLAY_FALL_CONFIRM_SECOND")
-    assert _console_hotkey_command("d") == ("Ctrl+F7", "PLAY_FALL_HELP")
+    assert _console_hotkey_command(";") is None
+    assert _console_hotkey_command("^") == ("Ctrl+F1", "SKILL2_REPORT")
+    assert _console_hotkey_command("_") == ("Ctrl+F2", "MEDICATION_RECHECK")
+    assert _console_hotkey_command("`") == ("Ctrl+F3", "OUTING_START")
+    assert _console_hotkey_command("a") == ("Ctrl+F4", "FOLLOW_STOP")
+    assert _console_hotkey_command("b") == ("Ctrl+F5", "FOLLOW_RESUME")
+    assert _console_hotkey_command("c") == ("Ctrl+F6", "FALL_PROMPT_1")
+    assert _console_hotkey_command("d") == ("Ctrl+F7", "FALL_HELP")
+    assert _console_hotkey_command("e") == ("Ctrl+F8", "XIAOKANG_WAKE_ACK")
+    assert _console_hotkey_command("f") == ("Ctrl+F9", "QUICK_FOLLOW_RECOVERY")
+    assert _console_hotkey_command("g") == ("Ctrl+F10", "DIRECT_FOLLOW_STOP")
+    assert _console_hotkey_command("\x89") == ("Ctrl+F11", "MANUAL_TAKEOVER")
+    assert _console_hotkey_command("\x8a") == ("Ctrl+F12", "KEYBOARD_CLOSE")
+    assert _console_hotkey_command("f", shift_down=True) == (
+        "Ctrl+Shift+F9",
+        "DEMO_RESET",
+    )
+    assert _console_hotkey_command("g", shift_down=True) == (
+        "Ctrl+Shift+F10",
+        "VOICE_RECOVERY",
+    )
 
 
-def test_onsite_safety_stop_does_not_shutdown_video_or_voice_runtime(capsys) -> None:
+def test_physical_hotkeys_require_exact_modifiers() -> None:
+    assert _hotkey_label_for_keypress("F1", ctrl_down=False, shift_down=False) is None
+    assert _hotkey_label_for_keypress("F1", ctrl_down=True, shift_down=False) == (
+        "CTRL+F1"
+    )
+    assert _hotkey_label_for_keypress("F1", ctrl_down=True, shift_down=True) is None
+    assert _hotkey_label_for_keypress("F9", ctrl_down=True, shift_down=False) == (
+        "CTRL+F9"
+    )
+    assert _hotkey_label_for_keypress("F9", ctrl_down=True, shift_down=True) == (
+        "CTRL+SHIFT+F9"
+    )
+    assert _hotkey_label_for_keypress("F10", ctrl_down=True, shift_down=True) == (
+        "CTRL+SHIFT+F10"
+    )
+
+
+def test_typed_function_key_names_are_command_aliases() -> None:
+    assert _normalize_console_command("F1") == "F1"
+    assert _normalize_console_command("Ctrl+F1") == "SKILL2_REPORT"
+    assert _normalize_console_command("Ctrl+F3") == "OUTING_START"
+    assert _normalize_console_command("Ctrl+F4") == "FOLLOW_STOP"
+    assert _normalize_console_command("Ctrl+F7") == "FALL_HELP"
+    assert _normalize_console_command("Ctrl+F8") == "XIAOKANG_WAKE_ACK"
+    assert _normalize_console_command("Ctrl+F9") == "QUICK_FOLLOW_RECOVERY"
+    assert _normalize_console_command("Ctrl+F10") == "DIRECT_FOLLOW_STOP"
+    assert _normalize_console_command("Ctrl+F11") == "MANUAL_TAKEOVER"
+    assert _normalize_console_command("TOGGLE_VOICE_LISTENER") == "VOICE_LISTENER_TOGGLE"
+    assert _normalize_console_command(" Ctrl+F12 ") == "KEYBOARD_CLOSE"
+    assert _normalize_console_command("Ctrl+Shift+F9") == "DEMO_RESET"
+    assert _normalize_console_command("Ctrl+Shift+F10") == "VOICE_RECOVERY"
+    assert _normalize_console_command("START") == "DIRECT_FOLLOW_START"
+    assert _normalize_console_command("STOP") == "DIRECT_FOLLOW_STOP"
+    assert _normalize_console_command("RESET") == "DEMO_RESET"
+    assert _normalize_console_command("SCENE2_ASSESSMENT") == "SKILL2_REPORT"
+    assert _normalize_console_command("STATUS") == "STATUS"
+
+
+def test_hotkey_remap_changes_only_the_binding_table(monkeypatch) -> None:
+    monkeypatch.setitem(
+        HOTKEY_ACTIONS,
+        "CTRL+F4",
+        CompetitionAction.FOLLOW_STOP,
+    )
+
+    assert _console_hotkey_command("a") == ("Ctrl+F4", "FOLLOW_STOP")
+    assert _normalize_console_command("Ctrl+F4") == "FOLLOW_STOP"
+    assert CompetitionAction.SKILL2_REPORT.value == "SKILL2_REPORT"
+    assert HOTKEY_ACTIONS["CTRL+F12"] is CompetitionAction.KEYBOARD_CLOSE
+
+
+def test_competition_actions_route_to_business_methods_only() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    calls: list[object] = []
+    console.trigger_script_action = lambda action, **_kwargs: calls.append(action)
+    console.start_or_resume_follow = lambda **kwargs: calls.append(
+        ("follow_resume", kwargs)
+    )
+    console.stop_follow = lambda **kwargs: calls.append(("follow_stop", kwargs))
+    console.trigger_fall = lambda: calls.append("fall_prompt_1")
+    console._play_fall_voice_fallback = lambda clips: calls.append(tuple(clips))
+    console.advance_fall_timeout = lambda *, stage: calls.append(("fall_stage", stage))
+    console.recover_fall = lambda: calls.append("fall_recover")
+    console.play_xiaokang_wake_ack = lambda: calls.append("xiaokang_wake_ack")
+    console.trigger_reading = lambda: calls.append("reading_normal")
+    console.manual_takeover = lambda: calls.append("manual_takeover")
+    console.reset_demo = lambda: calls.append("demo_reset")
+    console.toggle_voice_listener = lambda: calls.append("voice_toggle")
+    console.quick_follow_recovery = lambda: calls.append("quick_follow_recovery")
+    console.recover_voice_pipeline = lambda: calls.append("voice_recovery")
+    console.close_keyboard_control = lambda: calls.append("keyboard_close")
+
+    for action in CompetitionAction:
+        console.execute_competition_action(action)
+
+    assert calls == [
+        CompetitionAction.SKILL2_REPORT,
+        CompetitionAction.MEDICATION_RECHECK,
+        CompetitionAction.OUTING_START,
+        ("follow_resume", {}),
+        ("follow_stop", {}),
+        "fall_prompt_1",
+        ("fall.confirm",),
+        ("fall_stage", 1),
+        ("fall_stage", 2),
+        "fall_recover",
+        "xiaokang_wake_ack",
+        "reading_normal",
+        "manual_takeover",
+        "demo_reset",
+        "voice_toggle",
+        "quick_follow_recovery",
+        "voice_recovery",
+        "keyboard_close",
+        ("follow_resume", {"announce": False}),
+        ("follow_stop", {"announce": False}),
+    ]
+
+
+def test_f10_manual_takeover_interrupts_voice_and_enters_quiet_keyboard_mode() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    calls: list[object] = []
+    console._cancel_pending_motion_actions = (
+        lambda *, reason: calls.append(("cancel_motion", reason))
+    )
+    console._cancel_emergency_voice = (
+        lambda *, reason: calls.append(("cancel_emergency", reason))
+    )
+    console._interrupt_voice_playback = (
+        lambda *, reason: calls.append(("interrupt_voice", reason))
+    )
+    console._manual_console = (
+        lambda *, demo_takeover=False: calls.append(
+            ("manual_console", demo_takeover)
+        )
+    )
+
+    console.manual_takeover()
+
+    assert calls == [
+        ("cancel_motion", "manual_takeover"),
+        ("cancel_emergency", "manual_takeover"),
+        ("interrupt_voice", "manual_takeover"),
+        ("manual_console", True),
+    ]
+
+
+def test_f10_uses_fall_camera_control_while_risk_state_is_active() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = SimpleNamespace(risk_active=True)
+    calls: list[object] = []
+    console._cancel_pending_motion_actions = lambda *, reason: calls.append(
+        ("cancel_motion", reason)
+    )
+    console._cancel_emergency_voice = lambda *, reason: calls.append(
+        ("cancel_emergency", reason)
+    )
+    console._interrupt_voice_playback = lambda *, reason: calls.append(
+        ("interrupt_voice", reason)
+    )
+    console._start_fall_manual_mode = lambda: calls.append("fall_manual") or True
+    console._demo_event = lambda message: calls.append(("event", message))
+    console._manual_console = lambda **_kwargs: pytest.fail(
+        "fall risk must use the dedicated camera control"
+    )
+
+    console.manual_takeover()
+
+    assert calls == [
+        ("cancel_motion", "manual_takeover"),
+        ("cancel_emergency", "manual_takeover"),
+        ("interrupt_voice", "manual_takeover"),
+        "fall_manual",
+        ("event", "检测到异常情况"),
+    ]
+
+
+def test_repeated_f10_does_not_start_a_second_manual_control_loop() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console._manual_takeover_lock = threading.Lock()
+    console._manual_takeover_lock.acquire()
+    console._cancel_pending_motion_actions = lambda **_kwargs: pytest.fail(
+        "duplicate F10 must not execute"
+    )
+
+    try:
+        console.manual_takeover()
+    finally:
+        console._manual_takeover_lock.release()
+
+
+def test_keyboard_interaction_runs_locally_without_transport_publish(
+    monkeypatch,
+) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    transport = MockTransport()
+    played: list[tuple[str, ...]] = []
+    decision = SimpleNamespace(
+        intent="outing_request",
+        action=None,
+        clips=("outing.allow.health_good",),
+        heart_rate=78,
+        health_status="good",
+        weather="sunny",
+        temperature=23,
+    )
+    console._interaction_flow_controller = SimpleNamespace(
+        handle_event=lambda event, payload: [decision]
+    )
+    console._go2_asr_bridge = None
+    console.play_voice_clips = (
+        lambda clips, **_kwargs: played.append(tuple(clips))
+        or {"status": "done", "played": len(clips)}
+    )
+    monkeypatch.setattr("tools.go2_wireless_runtime.time.sleep", lambda _seconds: None)
+
+    result = console.execute_local_interaction_event(
+        "OPERATOR_OUTING_ASSESSMENT"
+    )
+
+    assert result["decisions"] == 1
+    assert played == [("outing.allow.health_good",)]
+    assert transport.published == []
+
+
+def test_local_outing_start_waits_for_voice_then_calls_local_control(
+    monkeypatch,
+) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    order: list[str] = []
+    decision = SimpleNamespace(
+        intent="outing_start",
+        action="start_follow",
+        clips=("outing.start",),
+        heart_rate=None,
+        health_status="good",
+        weather=None,
+        temperature=None,
+    )
+    console.lifecycle = SimpleNamespace(risk_active=False)
+    console._interaction_flow_controller = SimpleNamespace(
+        handle_event=lambda event, payload: [decision]
+    )
+    console._go2_asr_bridge = None
+    console.play_voice_clips = (
+        lambda clips, **_kwargs: order.append("voice")
+        or {"status": "done", "played": len(clips)}
+    )
+    console._run_control_command = (
+        lambda command, *, request_id, payload: order.append(command) or {}
+    )
+    monkeypatch.setattr("tools.go2_wireless_runtime.time.sleep", lambda _seconds: None)
+
+    result = console.execute_local_interaction_event("OPERATOR_DEPART")
+
+    assert order == ["voice", "start_follow"]
+    assert result["actions"] == ["start_follow"]
+
+
+def test_demo_output_router_hides_debug_and_keeps_full_log(tmp_path, capsys) -> None:
+    debug_log = tmp_path / "runtime_debug.log"
+    output = RuntimeOutputSession(debug_log, demo_console=True)
+    output.install()
+    try:
+        print("[HOTKEY] F3 -> SCENE2_ASSESSMENT")
+        print("[VAD] short_silence 200ms")
+        _emit_demo_console("外出健康评估开始", timestamp=False)
+    finally:
+        output.restore()
+
+    visible = capsys.readouterr().out
+    logged = debug_log.read_text(encoding="utf-8")
+    assert visible == "外出健康评估开始\n"
+    assert "[HOTKEY] F3" in logged
+    assert "[VAD] short_silence" in logged
+    assert "外出健康评估开始" in logged
+    assert "GO2_DEMO" not in logged
+
+
+def test_debug_output_router_shows_all_lines_without_internal_marker(
+    tmp_path, capsys
+) -> None:
+    debug_log = tmp_path / "runtime_debug.log"
+    output = RuntimeOutputSession(debug_log, demo_console=False)
+    output.install()
+    try:
+        print("[HOTKEY] F3 -> SCENE2_ASSESSMENT")
+        _emit_demo_console("外出健康评估开始", timestamp=False)
+    finally:
+        output.restore()
+
+    visible = capsys.readouterr().out
+    assert "[HOTKEY] F3" in visible
+    assert "外出健康评估开始" in visible
+    assert "GO2_DEMO" not in visible
+
+
+def test_demo_command_input_has_no_prompt_or_typed_hotkey_echo(monkeypatch, capsys) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.demo_console = True
+    prompts: list[str] = []
+    monkeypatch.setattr(
+        "tools.go2_wireless_runtime._windows_hotkeys_available",
+        lambda: False,
+    )
+    monkeypatch.setattr(
+        "builtins.input",
+        lambda prompt: prompts.append(prompt) or "Ctrl+F1",
+    )
+
+    assert console._read_command("wireless> ") == "SKILL2_REPORT"
+    assert prompts == [""]
+    assert "Ctrl+F1" not in capsys.readouterr().out
+
+
+def test_f1_advances_directly_to_f2_without_exposing_hotkey_names(monkeypatch) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    context = SimpleNamespace(demo_phase="skill2_ready", skill2_done=False)
+    console.demo_console = True
+    console.lifecycle = SimpleNamespace(risk_active=False, state=CompanionState.IDLE)
+    console._interaction_flow_controller = SimpleNamespace(
+        context=context,
+        handle_event=lambda _event, _payload: [],
+    )
+    console._print_demo_guidance = lambda: None
+    visible_events: list[str] = []
+    monkeypatch.setattr(
+        "tools.go2_wireless_runtime._emit_demo_console",
+        lambda message, **_kwargs: visible_events.append(message),
+    )
+
+    def execute_local(event: str, *, payload=None) -> None:
+        del payload
+        if event == "OPERATOR_OUTING_ASSESSMENT":
+            context.skill2_done = True
+            context.demo_phase = "skill3_ready"
+        elif event == "OPERATOR_MEDICATION_CHECK":
+            context.demo_phase = "skill3_wait_depart"
+
+    console.execute_local_interaction_event = execute_local
+
+    assessment = console.trigger_script_step_from_hotkey("SCENE2_ASSESSMENT")
+    medication_check = console.trigger_script_step_from_hotkey(
+        "SCENE3_MEDICATION_CHECK"
+    )
+
+    assert assessment["phase"] == "skill3_ready"
+    assert context.skill2_done is True
+    assert medication_check["phase"] == "skill3_wait_depart"
+    assert visible_events == [
+        "外出健康评估开始",
+        "健康状态数据已获取",
+        "外出条件满足",
+        "出行前健康复查开始",
+        "等待服药确认",
+    ]
+    assert not any("F1" in message or "F2" in message for message in visible_events)
+
+
+def test_f1_waits_for_live_weather_before_assembling_assessment() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    context = SimpleNamespace(demo_phase="skill2_ready", skill2_done=False)
+    weather = SimpleNamespace(
+        condition=SimpleNamespace(value="cloudy"),
+        temperature=28,
+        error=None,
+    )
+    order: list[str] = []
+    wait_calls: list[float] = []
+    console.lifecycle = SimpleNamespace(risk_active=False)
+    console._interaction_flow_controller = SimpleNamespace(
+        context=context,
+        weather_provider=SimpleNamespace(
+            wait_for_live_weather=lambda timeout: (
+                wait_calls.append(timeout),
+                order.append("weather"),
+                weather,
+            )[-1]
+        ),
+        handle_event=lambda _event, _payload: [],
+    )
+    console._demo_event = lambda _message: None
+    console._print_demo_guidance = lambda: None
+    console._print_operator_line = lambda _message: None
+
+    def execute_local(event: str, *, payload=None) -> None:
+        del payload
+        assert event == "OPERATOR_OUTING_ASSESSMENT"
+        order.append("assessment")
+        context.skill2_done = True
+        context.demo_phase = "skill3_ready"
+
+    console.execute_local_interaction_event = execute_local
+
+    result = console.trigger_script_action(CompetitionAction.SKILL2_REPORT)
+
+    assert result["phase"] == "skill3_ready"
+    assert wait_calls == [1.8]
+    assert order == ["weather", "assessment"]
+
+
+def test_current_business_key_replay_gets_unique_session_without_state_change() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    context = SimpleNamespace(demo_phase="skill3_ready")
+    console.lifecycle = SimpleNamespace(risk_active=False)
+    console._interaction_flow_controller = SimpleNamespace(
+        context=context,
+        handle_event=lambda _event, _payload: [],
+    )
+    console._last_script_action = CompetitionAction.SKILL2_REPORT
+    console._demo_event = lambda _message: None
+    dispatched: list[tuple[str, dict]] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: dispatched.append(
+            (event, dict(payload or {}))
+        )
+    )
+
+    result = console.trigger_script_action(CompetitionAction.SKILL2_REPORT)
+
+    assert result["replay"] is True
+    assert context.demo_phase == "skill3_ready"
+    assert dispatched[0][0] == "OPERATOR_OUTING_ASSESSMENT"
+    assert dispatched[0][1]["replay"] is True
+    assert dispatched[0][1]["session_id"].startswith(
+        "terminal-operator_outing_assessment-replay-"
+    )
+
+
+def test_demo_uwb_status_is_compact_and_throttled(monkeypatch) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console._state_lock = threading.RLock()
+    console._follow_status = {}
+    console._last_follow_progress_log_at = 0.0
+    visible_events: list[str] = []
+    console._demo_event = visible_events.append
+    times = iter((10.0, 10.2, 11.2))
+    monkeypatch.setattr(
+        "tools.go2_wireless_runtime.time.monotonic",
+        lambda: next(times),
+    )
+    row = {"distance_m": 1.42, "bearing_deg": -8.3, "state": "TRACKING"}
+
+    console._record_follow_progress(row)
+    console._record_follow_progress(row)
+    console._record_follow_progress(row)
+
+    assert visible_events == [
+        "UWB READY | Target VALID | Distance 1.42 m | Direction -8.3°",
+        "UWB READY | Target VALID | Distance 1.42 m | Direction -8.3°",
+    ]
+
+
+def test_f12_outside_keyboard_control_does_not_stop_motion_or_runtime() -> None:
     console = RuntimeConsole.__new__(RuntimeConsole)
     shutdown_calls: list[bool] = []
     stop_calls: list[bool] = []
@@ -936,27 +2008,18 @@ def test_onsite_safety_stop_does_not_shutdown_video_or_voice_runtime(capsys) -> 
         status=lambda: {"uwb": {}},
     )
     console.stop_motion = lambda: stop_calls.append(True)
-    console.lifecycle = CompetitionLifecycle()
-    console._state_lock = threading.RLock()
-    console._motion_thread = None
-    console._motion_name = None
-    console._follow_status = {
+    console.fall_manual_controller = SimpleNamespace(active=False)
+    console.manual_controller = SimpleNamespace(active=False)
+    console.companion_status = lambda: {
         "state": "FOLLOWING",
-        "motion": "MOVING",
-        "autoRecovery": "ENABLED_FOR_UWB_AND_SPORT_STALE",
+        "runtime_active": True,
     }
-    console._lifecycle_notifications = []
-    console.follow_target_source = None
-    console.service = SimpleNamespace(settings=SimpleNamespace(max_vx=0.3, max_wz=0.8))
 
-    status = console._safety_stop_motion_only()
+    status = console.close_keyboard_control()
 
-    assert stop_calls == [True]
+    assert stop_calls == []
     assert shutdown_calls == []
-    assert status["state"] == "IDLE"
-    assert status["motion"]["vx"] == 0.0
-    assert status["motion"]["wz"] == 0.0
-    assert "WebRTC video/audio and voice services remain active" in capsys.readouterr().out
+    assert status == {"state": "FOLLOWING", "runtime_active": True}
 
 
 def test_ctrl_fall_voice_hotkeys_only_play_fallback_clips(capsys) -> None:
@@ -979,7 +2042,7 @@ def test_ctrl_fall_voice_hotkeys_only_play_fallback_clips(capsys) -> None:
     assert '"status": "done"' in capsys.readouterr().out
 
 
-def test_f10_toggles_voice_business_listener_without_runtime_shutdown() -> None:
+def test_voice_business_listener_toggle_does_not_shutdown_runtime() -> None:
     console = RuntimeConsole.__new__(RuntimeConsole)
     shutdown_calls: list[bool] = []
     console.runtime = SimpleNamespace(request_shutdown=lambda: shutdown_calls.append(True))
@@ -1018,6 +2081,178 @@ def test_f10_toggles_voice_business_listener_without_runtime_shutdown() -> None:
     assert shutdown_calls == []
 
 
+def test_f11_quick_follow_recovery_releases_resets_and_starts_without_speech() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    calls: list[object] = []
+    console.close_keyboard_control = lambda: calls.append("keyboard_close")
+    console.reset_demo = lambda: calls.append("demo_reset")
+    console.start_or_resume_follow = lambda **kwargs: (
+        calls.append(("follow_resume", kwargs)) or {"state": "FOLLOWING"}
+    )
+
+    result = console.quick_follow_recovery()
+
+    assert result == {"state": "FOLLOWING"}
+    assert calls == [
+        "keyboard_close",
+        "demo_reset",
+        ("follow_resume", {"announce": False}),
+    ]
+
+
+def test_f7_and_f8_advance_real_fall_state() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.ingest_fall(incident_id="manual-fall", confirmed=False)
+    console.stop_motion = lambda: None
+    console._record_lifecycle_actions = lambda _payload: None
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+    events: list[tuple[str, dict]] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: events.append((event, dict(payload or {})))
+    )
+
+    first = console.advance_fall_timeout_from_hotkey(stage=1)
+    second = console.advance_fall_timeout_from_hotkey(stage=2)
+
+    assert first["lifecycle"]["state"] == "RECHECK"
+    assert second["lifecycle"]["state"] == "ESCALATED_EMERGENCY"
+    assert events == [
+        ("FALL_RESPONSE_TIMEOUT", {"stage": 1}),
+        ("FALL_RESPONSE_TIMEOUT", {"stage": 2}),
+    ]
+
+
+def test_f7_skips_second_prompt_and_enters_emergency_help_directly() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.ingest_fall(incident_id="direct-help", confirmed=False)
+    console.stop_motion = lambda: None
+    console._record_lifecycle_actions = lambda _payload: None
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+    events: list[tuple[str, dict]] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: events.append((event, dict(payload or {})))
+    )
+
+    result = console.advance_fall_timeout(stage=2)
+
+    assert result["lifecycle"]["state"] == "ESCALATED_EMERGENCY"
+    assert console.lifecycle.snapshot().response_attempts == 2
+    assert events == [
+        (
+            "FALL_RESPONSE_TIMEOUT",
+            {"stage": 2, "skip_second_prompt": True},
+        )
+    ]
+
+
+def test_f7_and_f8_replay_audio_without_advancing_fall_state_twice() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.ingest_fall(incident_id="replay-fall", confirmed=False)
+    console.lifecycle.no_response()
+    played: list[tuple[str, ...]] = []
+    console.play_voice_clips = (
+        lambda clips, **_kwargs: played.append(tuple(clips))
+        or {"status": "done", "played": len(clips)}
+    )
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+
+    second_prompt = console.advance_fall_timeout(stage=1)
+
+    assert second_prompt["replay"] is True
+    assert console.lifecycle.state is CompanionState.RECHECK
+    assert console.lifecycle.snapshot().response_attempts == 1
+
+    console.lifecycle.no_response()
+    help_broadcast = console.advance_fall_timeout(stage=2)
+
+    assert help_broadcast["replay"] is True
+    assert console.lifecycle.state is CompanionState.ESCALATED_EMERGENCY
+    assert console.lifecycle.snapshot().response_attempts == 2
+    assert played == [
+        ("fall.confirm.second",),
+        ("fall.alert.sound", "fall.help.broadcast"),
+    ]
+
+
+def test_f12_closes_keyboard_control_without_creating_a_motion_lock() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.fall_manual_controller = SimpleNamespace(active=False)
+    console.manual_controller = SimpleNamespace(active=True)
+    calls: list[object] = []
+
+    def release_manual(*, quiet=False):
+        calls.append(("release", quiet))
+        console.manual_controller.active = False
+        return {"state": "IDLE"}
+
+    console.release_manual = release_manual
+    console._stop_fall_manual_mode = lambda *, reason: calls.append(
+        ("fall_release", reason)
+    )
+    console._demo_event = lambda message: calls.append(("event", message))
+    console.companion_status = lambda: {"state": "IDLE"}
+
+    result = console.close_keyboard_control()
+
+    assert result == {"state": "IDLE"}
+    assert calls == [("release", True), ("event", "键盘控制已关闭")]
+
+
+def test_voice_recovery_preserves_demo_context_and_resets_live_voice() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console._state_lock = threading.RLock()
+    console._local_voice_agent = SimpleNamespace(
+        cancel_pending_actions=lambda **_kwargs: 1
+    )
+    stopped: list[str] = []
+    console.runtime = SimpleNamespace(
+        stop_audio_playback=lambda *, reason, timeout_seconds: stopped.append(reason)
+    )
+
+    class Bridge:
+        def __init__(self) -> None:
+            self.quiet_gate_armed = False
+
+        def clear_pending_audio(self) -> int:
+            return 7
+
+        def arm_post_playback_quiet_gate(self) -> None:
+            self.quiet_gate_armed = True
+
+    class Manager:
+        def __init__(self) -> None:
+            self.reasons: list[str] = []
+
+        def recover_to_wake_guard(self, *, reason: str) -> None:
+            self.reasons.append(reason)
+
+    bridge = Bridge()
+    manager = Manager()
+    console._go2_asr_bridge = bridge
+    console._voice_session_manager = manager
+    flow = SimpleNamespace(
+        context=SimpleNamespace(
+            medication_reminded=True,
+            medication_taken=False,
+            outing_state="wait_medication",
+        )
+    )
+    console._interaction_flow_controller = flow
+
+    result = console.recover_voice_pipeline()
+
+    assert result["pcmFramesCleared"] == 7
+    assert bridge.quiet_gate_armed is True
+    assert manager.reasons == ["voice_recovery"]
+    assert flow.context.medication_reminded is True
+    assert flow.context.medication_taken is False
+    assert flow.context.outing_state == "wait_medication"
+    assert stopped == ["interrupt:voice_recovery"]
+
+
 def test_console_walk_follow_command_dispatches_without_changing_manual(
     monkeypatch,
 ) -> None:
@@ -1032,23 +2267,26 @@ def test_console_walk_follow_command_dispatches_without_changing_manual(
     assert console.shutdown_calls == [True]
 
 
-def test_console_can_publish_internal_safety_event_without_stopping_voice(
+def test_console_hotkey_safety_event_does_not_use_interaction_transport(
     monkeypatch,
 ) -> None:
     console = _start_command_console(manual_confirm_start=False)
     transport = MockTransport()
     console.service = SimpleNamespace(settings=SimpleNamespace(robot_id="DOG-LJG-001"))
-    console.set_interaction_event_transport(transport, topic_prefix="aiot")
+    console._wait_for_motion_stop = lambda: None
+    console._record_lifecycle_actions = lambda _payload: None
+    console.companion_status = lambda: {"state": console.lifecycle.state.value}
+    local_events: list[str] = []
+    console.execute_local_interaction_event = (
+        lambda event, *, payload=None: local_events.append(event)
+    )
     commands = iter(("FALL_SUSPECTED", "EXIT"))
     monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
 
     assert console.run() == 0
 
-    assert any(
-        message.topic == contract_topic("DOG-LJG-001", "event")
-        and message.payload.get("event") == "FALL_SUSPECTED"
-        for message in transport.published
-    )
+    assert local_events == ["FALL_SUSPECTED"]
+    assert transport.published == []
 
 
 class FakeRuntime:
@@ -1317,13 +2555,16 @@ class _HttpFollowSession:
             reason="operator_stop",
             uwb_dropout_count=0,
             auto_recovery_count=0,
+            sport_state_dropout_count=0,
+            sport_state_auto_recovery_count=0,
+            uwb_stale_escalation_count=0,
             last_dropout_duration_seconds=None,
             maximum_dropout_duration_seconds=0.0,
             to_dict=lambda: {"reason": "operator_stop"},
         )
 
 
-def test_http_companion_control_starts_and_stops_same_console_session(monkeypatch) -> None:
+def test_companion_control_supports_repeated_start_stop_cycles(monkeypatch) -> None:
     runtime = _HttpControlRuntime()
     controller = _HttpControlController()
     source = _HttpFollowSource()
@@ -1353,33 +2594,130 @@ def test_http_companion_control_starts_and_stops_same_console_session(monkeypatc
         lambda: _HttpFollowSession(console._motion_cancel),
     )
 
-    started = console.start_companion()
-    stopped = console.stop_companion()
+    adapter = Go2ControlAdapter(
+        start_follow=lambda _message: console.start_companion(),
+        stop_follow=lambda _message: console.stop_companion(),
+        resume_follow=lambda _message: console.resume_companion(),
+        play_clips=lambda _message: {"status": "done", "played": 0},
+        ping=lambda message: {"nonce": message.request_id},
+    )
+    console.set_control_adapter(adapter)
+    monkeypatch.setattr(
+        console,
+        "play_voice_clips",
+        lambda clips, **_kwargs: {
+            "clips": list(clips),
+            "played": len(clips),
+            "status": "done",
+        },
+    )
 
-    assert started["state"] == "FOLLOWING"
-    assert started["runtime_active"] is True
-    assert started["uwb"]["valid"] is True
-    assert started["uwb"]["bearing_rad"] == pytest.approx(math.radians(5.0))
-    assert started["uwb"]["orientation_est_rad"] == pytest.approx(0.1)
-    assert started["configuration"]["target_distance_m"] == pytest.approx(1.35)
-    assert started["configuration"]["motion_limits_aligned"] is True
-    assert started["configuration"]["control_frequency_hz"] == pytest.approx(4.0)
-    assert started["configuration"]["effective_control_frequency_hz"] == pytest.approx(
-        4.0
-    )
-    assert started["configuration"]["config_source"] == (
-        "configs/webrtc_uwb_follow_3min.yaml"
-    )
-    assert started["runtime"]["worker_alive"] is True
-    assert started["runtime"]["control"]["execution_status"] == "SENT"
-    assert started["lidar"]["state"] == "UNAVAILABLE"
-    assert stopped["state"] == "IDLE"
-    assert stopped["runtime_active"] is False
+    for _cycle in range(2):
+        started = console.execute_competition_action(CompetitionAction.FOLLOW_RESUME)
+
+        assert started["state"] == "FOLLOWING"
+        assert started["runtime_active"] is True
+        assert started["uwb"]["valid"] is True
+        assert started["uwb"]["bearing_rad"] == pytest.approx(math.radians(5.0))
+        assert started["uwb"]["orientation_est_rad"] == pytest.approx(0.1)
+        assert started["configuration"]["target_distance_m"] == pytest.approx(1.35)
+        assert started["configuration"]["motion_limits_aligned"] is True
+        assert started["configuration"]["control_frequency_hz"] == pytest.approx(4.0)
+        assert started["configuration"]["effective_control_frequency_hz"] == pytest.approx(
+            4.0
+        )
+        assert started["configuration"]["config_source"] == (
+            "configs/webrtc_uwb_follow_3min.yaml"
+        )
+        assert started["runtime"]["worker_alive"] is True
+        assert started["runtime"]["control"]["execution_status"] == "SENT"
+        assert started["lidar"]["state"] == "UNAVAILABLE"
+        assert adapter.state.value == "FOLLOWING"
+
+        stopped = console.execute_competition_action(CompetitionAction.FOLLOW_STOP)
+
+        assert stopped["state"] == "IDLE"
+        assert stopped["runtime_active"] is False
+        assert adapter.state.value == "IDLE"
+        assert console._motion_thread is None
+        assert console._motion_name is None
+        assert console.lifecycle.state is CompanionState.IDLE
+        assert source.active is False
+
     assert controller.stop_count >= 1
-    assert runtime.companion_activation_count == 1
-    assert runtime.companion_deactivation_count >= 1
-    assert forwarder.start_count == 1
-    assert forwarder.close_count >= 1
+    assert runtime.companion_activation_count == 2
+    assert runtime.companion_deactivation_count == 0
+    assert forwarder.start_count == 2
+    assert forwarder.close_count == 0
+
+
+def test_follow_restart_waits_for_stop_announcement_to_finish() -> None:
+    console = _start_command_console(manual_confirm_start=False)
+    stop_announcement_started = threading.Event()
+    finish_stop_announcement = threading.Event()
+    calls: list[object] = []
+    failures: list[BaseException] = []
+
+    def run_control(command, *, request_id, payload):
+        del request_id, payload
+        calls.append(("control", command))
+        return {
+            "state": "IDLE" if command == "stop_follow" else "FOLLOWING",
+            "runtime_active": command != "stop_follow",
+        }
+
+    def play_voice(clips, **_kwargs):
+        clip_ids = tuple(clips)
+        calls.append(("voice", clip_ids))
+        if clip_ids == ("follow.stop",):
+            stop_announcement_started.set()
+            assert finish_stop_announcement.wait(1.0)
+        return {"clips": list(clips), "played": len(clips), "status": "done"}
+
+    def run_action(action):
+        try:
+            console.execute_competition_action(action)
+        except BaseException as exc:
+            failures.append(exc)
+
+    console._run_control_command = run_control
+    console.play_voice_clips = play_voice
+    console._interrupt_voice_playback = lambda *, reason: calls.append(
+        ("interrupt_voice", reason)
+    )
+    console._print_demo_guidance = lambda: None
+
+    stop_thread = threading.Thread(
+        target=run_action,
+        args=(CompetitionAction.FOLLOW_STOP,),
+    )
+    stop_thread.start()
+    assert stop_announcement_started.wait(1.0)
+
+    restart_thread = threading.Thread(
+        target=run_action,
+        args=(CompetitionAction.FOLLOW_RESUME,),
+    )
+    restart_thread.start()
+    time.sleep(0.05)
+
+    assert restart_thread.is_alive()
+    assert ("voice", ("follow.resume.safe",)) not in calls
+    assert ("control", "start_follow") not in calls
+
+    finish_stop_announcement.set()
+    stop_thread.join(timeout=1.0)
+    restart_thread.join(timeout=1.0)
+
+    assert not stop_thread.is_alive()
+    assert not restart_thread.is_alive()
+    assert failures == []
+    assert calls.index(("voice", ("follow.stop",))) < calls.index(
+        ("voice", ("follow.resume.safe",))
+    )
+    assert calls.index(("voice", ("follow.resume.safe",))) < calls.index(
+        ("control", "start_follow")
+    )
 
 
 def test_aborted_companion_worker_synchronizes_following_lifecycle_to_idle(

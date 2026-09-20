@@ -952,6 +952,57 @@ def test_supervisor_marks_loss_reconnects_and_ignores_old_callbacks() -> None:
     assert third.disconnect_count == 1
 
 
+def test_reconnect_restores_requested_voice_channel_and_pcm_consumer() -> None:
+    first = LifecycleConnection()
+    second = LifecycleConnection()
+    connections = iter((first, second))
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        reconnect_delay_seconds=0.02,
+        enable_video=False,
+        enable_audio=False,
+        connection_factory=lambda _ip, _key: (
+            next(connections),
+            TOPICS,
+            COMMANDS,
+        ),
+    )
+    frames: list[tuple[bytes, int, int]] = []
+    runtime.register_microphone_pcm_consumer(
+        lambda pcm, sample_rate, channels: frames.append(
+            (pcm, sample_rate, channels)
+        )
+    )
+    runtime.start()
+    try:
+        runtime.activate_voice()
+        wait_until(lambda: len(frames) == 1)
+        assert first.audio.switches[-1] is True
+        assert runtime.status()["microphone"]["listenerRequested"] is True
+
+        first.close_peer()
+        wait_until(
+            lambda: runtime.status()["connected"] is True
+            and runtime.status()["successfulConnectionCount"] == 2
+        )
+        wait_until(lambda: len(frames) == 2)
+
+        assert second.audio.switches[-1] is True
+        assert len(second.audio.track_callbacks) == 1
+        assert runtime.status()["microphone"] == {
+            "available": True,
+            "listenerRequested": True,
+            "recording": False,
+            "lastError": None,
+            "lastCapture": None,
+        }
+    finally:
+        runtime.close(send_stop=False)
+
+
 def test_reconnect_is_not_exposed_until_stopmove_is_acknowledged() -> None:
     first = LifecycleConnection()
     second = LifecycleConnection()
@@ -1353,7 +1404,10 @@ def test_video_stale_alone_marks_degraded_without_reconnect(caplog) -> None:
         status = runtime.status()
         assert status["connected"] is True
         assert status["reconnectCount"] == 0
-        assert status["videoDegradedReason"] == "raw_frame_stale"
+        assert status["videoDegradedReason"] in {
+            "raw_frame_stale",
+            "encoded_frame_stale",
+        }
         assert status["dataHealthState"] == "healthy"
         assert not second.connect_started.is_set()
         wait_until(lambda: "action=keep_transport" in caplog.text)
@@ -1933,6 +1987,14 @@ def test_base_video_runtime_activates_and_deactivates_optional_layers() -> None:
         }
         assert active["subscriptionProfile"]["multipleState"] is False
 
+        subscriptions_before = dict(connection.datachannel.pub_sub.subscriptions)
+        active_again = runtime.activate_companion_inputs(
+            timeout_seconds=0.5,
+            enable_multiple_state=False,
+        )
+        assert active_again["sportStateReady"] is True
+        assert connection.datachannel.pub_sub.subscriptions == subscriptions_before
+
         runtime.deactivate_companion_inputs()
         standby = runtime.status()
         assert standby["layers"]["companion"] == "standby"
@@ -2007,13 +2069,31 @@ def test_formal_launcher_uses_current_robot_and_lan_video_defaults() -> None:
     )
     assert '$env:GO2_WEBRTC_DISCONNECT_GRACE_SECONDS = "3"' in launcher
     assert "[switch]$ManualConfirmStart" in launcher
-    assert '$Arguments += "--manual-confirm-start"' in launcher
+    assert '$Arguments += "--manual-confirm-start"' not in launcher
+    assert "[switch]$DebugConsole" in launcher
+    assert "[switch]$VoiceListenerPaused" in launcher
+    assert '$Arguments += "--voice-listener-paused"' in launcher
+    assert "[switch]$DisableVoiceWake" in launcher
+    assert '$Arguments += "--disable-voice-wake"' in launcher
+    assert '$Arguments += "--demo-console"' in launcher
+    assert '$Arguments += "--debug-console"' in launcher
     assert '$Arguments += "--skip-startup-confirmations"' not in launcher
     assert '$RuntimeParameters["RequireStartupConfirmations"]' not in (
         Path(__file__).resolve().parents[1]
         / "scripts"
         / "Start-RobotVideoGateway-UnifiedWatchdog.ps1"
     ).read_text(encoding="utf-8")
+    assert '$RuntimeParameters["ManualConfirmStart"]' not in (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "Start-RobotVideoGateway-UnifiedWatchdog.ps1"
+    ).read_text(encoding="utf-8")
+
+    short_launcher = (
+        Path(__file__).resolve().parents[1] / "start.ps1"
+    ).read_text(encoding="utf-8")
+    assert "-VoiceListenerPaused" not in short_launcher
+    assert "-DisableVoiceWake" in short_launcher
 
 
 def test_runtime_tool_filters_only_expected_aioice_bind_noise() -> None:
@@ -2276,6 +2356,29 @@ def test_stop_audio_playback_pauses_existing_audiohub() -> None:
         runtime.close(send_stop=False)
 
 
+def test_stop_audio_playback_bypasses_busy_audio_io_lock() -> None:
+    connection = FakeConnection()
+    audio_hub = FakeAudioHub()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video=False,
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+        audio_hub_factory=lambda _connection: audio_hub,
+    )
+    runtime.start()
+    runtime._audio_hub = audio_hub
+    runtime._audio_io_lock.acquire()
+    try:
+        assert runtime.stop_audio_playback(reason="voice_recovery") == 0
+        assert audio_hub.pauses == 1
+    finally:
+        runtime._audio_io_lock.release()
+        runtime.close(send_stop=False)
+
+
 def test_audio_preload_uploads_without_playing(tmp_path) -> None:
     connection = FakeConnection()
     audio_hub = FakeAudioHub()
@@ -2340,6 +2443,37 @@ def test_audio_preset_batch_queries_catalogue_once_and_uploads_only_missing(
         assert audio_hub.audio_list_requests == 2
         assert audio_hub.deleted == []
         assert audio_hub.played == []
+    finally:
+        runtime.close(send_stop=False)
+
+
+def test_audio_preset_batch_skips_catalogue_when_all_uuids_are_cached(tmp_path) -> None:
+    connection = FakeConnection()
+    audio_hub = FakeAudioHub()
+    runtime = Go2WirelessRuntime(
+        "192.168.8.252",
+        enable_video=False,
+        command_timeout_seconds=0.5,
+        connect_timeout_seconds=0.5,
+        state_timeout_seconds=0.5,
+        connection_factory=lambda _ip, _key: (connection, TOPICS, COMMANDS),
+        audio_hub_factory=lambda _connection: audio_hub,
+    )
+    audio_file = tmp_path / "cached.wav"
+    audio_file.write_bytes(b"RIFF" + b"c" * 40)
+    custom_name = f"go2_cached_{runtime._audiohub_digest(str(audio_file))}"
+
+    runtime.start()
+    try:
+        runtime._audio_uuid_cache[custom_name] = "uuid-cached"
+        result = runtime.preload_audio_files((audio_file,))[str(audio_file.resolve())]
+
+        assert result.ready is True
+        assert result.uploaded is False
+        assert result.attempts == 0
+        assert result.unique_id == "uuid-cached"
+        assert audio_hub.audio_list_requests == 0
+        assert audio_hub.uploads == []
     finally:
         runtime.close(send_stop=False)
 
@@ -2409,16 +2543,21 @@ def test_audiohub_batch_playback_uses_one_pause_and_one_play_mode(
     write_pcm16_wav(first, [1000, -1000] * 120)
     write_pcm16_wav(second, [1000, -1000] * 120)
     monkeypatch.setattr("app.webrtc.go2_wireless_runtime.asyncio.sleep", fake_sleep)
+    playback_started_after: list[int] = []
 
     runtime.start()
     try:
         assert runtime.play_audio_files(
             (first, second),
             inter_clip_gap_seconds=(0.08,),
+            on_playback_started=lambda: playback_started_after.append(
+                len(audio_hub.played)
+            ),
         ) == 0
 
         assert len(audio_hub.uploads) == 2
         assert audio_hub.played == ["uuid-1", "uuid-2"]
+        assert playback_started_after == [1]
         assert audio_hub.pauses == 1
         assert audio_hub.play_modes == ["no_cycle"]
         assert audio_hub.play_mode_readbacks == 1

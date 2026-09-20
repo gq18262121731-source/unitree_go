@@ -87,6 +87,9 @@ class WindowsAsyncKeyState:
         "E": 0x45,
         "SPACE": 0x20,
         "ESC": 0x1B,
+        "SHIFT": 0x10,
+        "CTRL": 0x11,
+        "F12": 0x7B,
     }
 
     def __init__(self) -> None:

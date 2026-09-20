@@ -32,6 +32,7 @@ from .clip_composer import (
 from .interaction_context import InteractionContext
 from .interaction_flow import InteractionFlowController
 from .xiaokang_agent import (
+    CachedWeatherProvider,
     ClipAssembler,
     HealthContext,
     HealthProvider,
@@ -82,6 +83,7 @@ __all__ = [
     "weather_condition_clip",
     "InteractionContext",
     "InteractionFlowController",
+    "CachedWeatherProvider",
     "ClipAssembler",
     "HealthContext",
     "HealthProvider",

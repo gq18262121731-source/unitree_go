@@ -232,14 +232,13 @@ def test_wake_only_mode_accepts_wake_but_ignores_business_speech() -> None:
     assert transport.published[1].payload["payload"]["clips"] == ["sess.wake_ack"]
 
     repeated_wake = manager.process_transcript("小康，陪我出去走走")
-    assert len(repeated_wake) == 1
-    assert repeated_wake[0].payload["command"] == "tts_speak"
-    assert repeated_wake[0].payload["payload"]["clips"] == ["sess.wake_ack"]
+    assert repeated_wake == []
     assert manager.process_transcript("今天身体怎么样") == []
     assert manager.process_transcript("现在出发") == []
     assert manager.active_session_id == session_id
     assert not any(message.topic.endswith("/speech") for message in transport.published)
     assert any("wake_only" in line for line in logs)
+    assert any("wake_command_ready" in line for line in logs)
 
 
 def test_wake_only_mode_does_not_open_safety_reply_window_for_speech() -> None:
@@ -1094,6 +1093,28 @@ def test_voice_listener_pause_clears_safety_reply_window() -> None:
     manager.set_listener_enabled(True)
 
     assert manager.process_transcript("我没事") == []
+
+
+def test_forced_voice_wake_disable_survives_recovery_and_toggle() -> None:
+    transport = MockTransport()
+    logs: list[str] = []
+    manager = LocalVoiceSessionManager(
+        transport,
+        emergency_bypass_enabled=False,
+        wake_listener_forced_off=True,
+        printer=logs.append,
+    )
+
+    assert manager.listener_enabled is False
+    assert manager.voice_state is VoiceState.PAUSED
+    assert manager.process_transcript("小康") == []
+
+    manager.recover_to_wake_guard(reason="test_recovery")
+    assert manager.listener_enabled is False
+    assert manager.voice_state is VoiceState.PAUSED
+    assert manager.toggle_listener()[0] is False
+    assert manager.process_transcript("小康小康") == []
+    assert any("operator wake reply remains available" in line for line in logs)
 
 
 def test_local_pipeline_lists_audio_devices_without_real_hardware(capsys) -> None:

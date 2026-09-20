@@ -24,14 +24,16 @@ param(
     [string]$FunAsrDevice = "cuda",
     [string]$PythonPath = "",
     [string]$DpapiKeyFile = "",
-    # Deprecated: startup confirmation prompts were removed. Runtime safety
-    # interlocks, START/STOP checks, and manual debug confirmations remain in
-    # the Python runtime.
+    # Deprecated compatibility switches. They are intentionally ignored:
+    # startup and competition hotkeys never block stdin for confirmation.
     [switch]$RequireStartupConfirmations,
     [switch]$ManualConfirmStart,
     [switch]$NoAutoFollow,
     [switch]$NoVoiceDebug,
+    [switch]$VoiceListenerPaused,
+    [switch]$DisableVoiceWake,
     [switch]$EnableVideoActiveRecovery,
+    [switch]$DebugConsole,
     [switch]$NoOpenBrowser
 )
 
@@ -42,6 +44,22 @@ $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $DevRoot = Split-Path -Parent $ProjectRoot
 $WebRtcRoot = Join-Path $DevRoot "unitree_webrtc_connect"
 $Tool = Join-Path $ProjectRoot "tools\go2_wireless_runtime.py"
+$RuntimeDebugLog = Join-Path $ProjectRoot "logs\runtime_debug.log"
+
+function Write-DebugConsole {
+    param([Parameter(Mandatory = $true)][string]$Message)
+    try {
+        $LogDirectory = Split-Path -Parent $RuntimeDebugLog
+        [IO.Directory]::CreateDirectory($LogDirectory) | Out-Null
+        Add-Content -LiteralPath $RuntimeDebugLog -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss,fff') POWERSHELL $Message" -Encoding UTF8
+    }
+    catch {
+        # Logging must never prevent the robot runtime from starting.
+    }
+    if ($DebugConsole) {
+        Write-Host $Message
+    }
+}
 
 function Resolve-RuntimePython {
     if ($PythonPath) {
@@ -163,12 +181,12 @@ function Get-DpapiKeyCandidates {
 function Resolve-AesKey {
     $Existing = [Environment]::GetEnvironmentVariable("GO2_AES_KEY", "Process")
     if (Test-AesKeyFormat $Existing) {
-        Write-Host "[GO2] AES source=env"
-        Write-Host "[GO2] AES valid=yes"
+        Write-DebugConsole "[GO2] AES source=env"
+        Write-DebugConsole "[GO2] AES valid=yes"
         return $Existing.Trim()
     }
     if ($Existing) {
-        Write-Host "[GO2] AES source=env invalid format; trying DPAPI"
+        Write-DebugConsole "[GO2] AES source=env invalid format; trying DPAPI"
     }
 
     $Failures = New-Object System.Collections.Generic.List[string]
@@ -178,10 +196,10 @@ function Resolve-AesKey {
         }
         try {
             $Key = Read-DpapiAesKey -Path $Candidate
-            Write-Host "[GO2] AES key loaded from DPAPI"
-            Write-Host "[GO2] AES key validation passed"
-            Write-Host "[GO2] AES source=dpapi"
-            Write-Host "[GO2] AES valid=yes"
+            Write-DebugConsole "[GO2] AES key loaded from DPAPI"
+            Write-DebugConsole "[GO2] AES key validation passed"
+            Write-DebugConsole "[GO2] AES source=dpapi"
+            Write-DebugConsole "[GO2] AES valid=yes"
             return $Key
         }
         catch {
@@ -190,7 +208,7 @@ function Resolve-AesKey {
     }
 
     if ($Failures.Count -gt 0) {
-        $Failures | ForEach-Object { Write-Host "[GO2] AES candidate failed: $_" }
+        $Failures | ForEach-Object { Write-DebugConsole "[GO2] AES candidate failed: $_" }
     }
     throw "No valid Go2 AES key found. Set GO2_AES_KEY to 32 hex chars or import .go2_aes_key.dpapi."
 }
@@ -199,9 +217,9 @@ $Python = Resolve-RuntimePython
 $CondaEnv = [Environment]::GetEnvironmentVariable("CONDA_DEFAULT_ENV", "Process")
 $PythonEnv = Split-Path -Leaf (Split-Path -Parent $Python)
 $ResolvedAesKey = Resolve-AesKey
-Write-Host "[ENV] python=$Python"
-Write-Host "[ENV] conda_env=$($CondaEnv -replace '^$', 'none')"
-Write-Host "[ENV] python_env=$PythonEnv"
+Write-DebugConsole "[ENV] python=$Python"
+Write-DebugConsole "[ENV] conda_env=$($CondaEnv -replace '^$', 'none')"
+Write-DebugConsole "[ENV] python_env=$PythonEnv"
 
 if (Get-NetTCPConnection -LocalPort $VideoPort -State Listen -ErrorAction SilentlyContinue) {
     try {
@@ -288,20 +306,29 @@ try {
         "--funasr-model", $FunAsrModel,
         "--funasr-device", $FunAsrDevice
     )
+    if ($DebugConsole) {
+        $Arguments += "--debug-console"
+    }
+    else {
+        $Arguments += "--demo-console"
+    }
     if (-not $NoAutoFollow) {
         $Arguments += "--xiaokang-auto-follow"
     }
     if (-not $NoVoiceDebug) {
         $Arguments += "--voice-debug"
     }
+    if ($VoiceListenerPaused) {
+        $Arguments += "--voice-listener-paused"
+    }
+    if ($DisableVoiceWake) {
+        $Arguments += "--disable-voice-wake"
+    }
     if ($ElderName) {
         $Arguments += @("--elder-name", $ElderName)
     }
     if ($WeatherCity) {
         $Arguments += @("--weather-city", $WeatherCity)
-    }
-    if ($ManualConfirmStart) {
-        $Arguments += "--manual-confirm-start"
     }
     if ($DeviceMac) {
         $Arguments += @("--device-mac", $DeviceMac)
@@ -313,8 +340,8 @@ try {
         $Arguments += "--no-open-browser"
     }
     if ($ListenHost -eq "0.0.0.0") {
-        Write-Host "Video relay will listen on all interfaces at TCP $VideoPort."
-        Write-Host "Computer B also requires a Windows Firewall inbound allow rule for this port."
+        Write-DebugConsole "Video relay will listen on all interfaces at TCP $VideoPort."
+        Write-DebugConsole "Computer B also requires a Windows Firewall inbound allow rule for this port."
     }
     & $Python @Arguments
     $ToolExitCode = $LASTEXITCODE

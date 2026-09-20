@@ -295,9 +295,6 @@ try {
     if ($DeviceMac) {
         $RuntimeParameters["DeviceMac"] = $DeviceMac
     }
-    if ($ManualConfirmStart) {
-        $RuntimeParameters["ManualConfirmStart"] = $true
-    }
     if ($NoOpenBrowser) {
         $RuntimeParameters["NoOpenBrowser"] = $true
     }

@@ -8,13 +8,15 @@ import pytest
 from app.telemetry.uwb_dashboard import (
     CompanionStatusSource,
     MockTelemetrySource,
+    ScalarKalmanFilter,
     TelemetryHistory,
     TelemetrySample,
+    _TelemetryDisplayFilter,
     distance_history_figure,
     relative_position_figure,
     speed_history_figure,
 )
-from tools.go2_uwb_telemetry import build_parser
+from tools.go2_uwb_telemetry import _acquire_instance_lock, build_parser
 
 
 class _Response:
@@ -36,6 +38,18 @@ def test_cli_defaults_to_the_gateway_companion_status_port() -> None:
 
     assert args.status_url is None
     assert args.wireless is False
+
+
+def test_dashboard_instance_lock_rejects_duplicate_port(tmp_path) -> None:
+    first = _acquire_instance_lock(8050, lock_directory=tmp_path)
+    try:
+        with pytest.raises(RuntimeError, match="already running on port 8050"):
+            _acquire_instance_lock(8050, lock_directory=tmp_path)
+    finally:
+        first.close()
+
+    reopened = _acquire_instance_lock(8050, lock_directory=tmp_path)
+    reopened.close()
 
 
 def _status_payload() -> dict:
@@ -125,7 +139,9 @@ def test_status_source_waits_without_raising_when_gateway_is_unavailable(monkeyp
     assert sample.distance_m is None
     assert sample.vx == 0.0
     assert sample.wz == 0.0
-    assert sample.uwb_state == "等待数据"
+    assert sample.uwb_state == "Runtime离线"
+    assert sample.lidar_state == "Runtime离线"
+    assert sample.control_state == "Runtime离线"
     assert "读取错误" in sample.debug
 
 
@@ -164,6 +180,47 @@ def test_mock_source_stays_in_requested_distance_envelope() -> None:
 
     assert all(1.5 <= sample.distance_m <= 2.4 for sample in samples if sample.distance_m is not None)
     assert all(sample.simulated for sample in samples)
+
+
+def test_scalar_kalman_filter_reduces_a_single_distance_spike() -> None:
+    kalman = ScalarKalmanFilter()
+
+    filtered = [
+        kalman.update(value, timestamp)
+        for timestamp, value in enumerate((1.35, 1.37, 1.90, 1.36), start=1)
+    ]
+
+    assert filtered[0] == pytest.approx(1.35)
+    assert filtered[2] < 1.90
+    assert abs(filtered[2] - 1.36) < abs(1.90 - 1.36)
+    assert abs(filtered[3] - 1.36) < abs(1.90 - 1.36)
+
+
+def test_display_filter_keeps_invalid_uwb_invalid_and_exposes_raw_debug_value() -> None:
+    display_filter = _TelemetryDisplayFilter()
+    raw = _sample(1.0)
+
+    filtered = display_filter.apply(raw)
+
+    assert filtered.distance_m == pytest.approx(raw.distance_m)
+    assert filtered.bearing_rad == pytest.approx(raw.bearing_rad)
+    assert filtered.debug["原始距离"] == "1.820 m"
+    assert filtered.debug["卡尔曼距离"] == "1.820 m"
+
+    invalid = TelemetrySample(
+        captured_at=1.2,
+        distance_m=None,
+        bearing_rad=None,
+        target_distance_m=raw.target_distance_m,
+        target_bearing_rad=raw.target_bearing_rad,
+        vx=raw.vx,
+        wz=raw.wz,
+        uwb_state="等待数据",
+        lidar_state=raw.lidar_state,
+        control_state=raw.control_state,
+    )
+    assert display_filter.apply(invalid).distance_m is None
+    assert display_filter.apply(invalid).bearing_rad is None
 
 
 def test_history_is_bounded_and_ignores_waiting_samples() -> None:

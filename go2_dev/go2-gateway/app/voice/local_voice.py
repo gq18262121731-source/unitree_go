@@ -1671,6 +1671,7 @@ class LocalVoiceSessionManager:
         max_turns: int = DEFAULT_SESSION_MAX_TURNS,
         emergency_bypass_enabled: bool = True,
         wake_only: bool = False,
+        wake_listener_forced_off: bool = False,
         voice_debug: bool | None = None,
         printer: Callable[[str], None] = print,
         monotonic_clock: Callable[[], float] = time.monotonic,
@@ -1684,6 +1685,7 @@ class LocalVoiceSessionManager:
         self.max_turns = max(1, int(max_turns))
         self._emergency_bypass_enabled = bool(emergency_bypass_enabled)
         self._wake_only = bool(wake_only)
+        self._wake_listener_forced_off = bool(wake_listener_forced_off)
         if voice_debug is None:
             voice_debug = (
                 str(os.environ.get("GO2_VOICE_DEBUG", "0")).strip().lower()
@@ -1697,8 +1699,12 @@ class LocalVoiceSessionManager:
         self._last_activity_monotonic: float | None = None
         self._reply_without_wake_until: float | None = None
         self._post_playback_guard_until: float | None = None
-        self._listener_enabled = True
-        self.voice_state = VoiceState.WAKE_GUARD
+        self._listener_enabled = not self._wake_listener_forced_off
+        self.voice_state = (
+            VoiceState.PAUSED
+            if self._wake_listener_forced_off
+            else VoiceState.WAKE_GUARD
+        )
         try:
             self.transport.subscribe(
                 contract_topic(self.device_id, "event", topic_prefix=self.topic_prefix),
@@ -1715,8 +1721,22 @@ class LocalVoiceSessionManager:
     def listener_enabled(self) -> bool:
         return self._listener_enabled
 
+    @property
+    def wake_listener_forced_off(self) -> bool:
+        return self._wake_listener_forced_off
+
     def set_listener_enabled(self, enabled: bool) -> list[Any]:
         desired = bool(enabled)
+        if desired and self._wake_listener_forced_off:
+            self._listener_enabled = False
+            self._reply_without_wake_until = None
+            self._post_playback_guard_until = None
+            ended = self._end_session("wake_listener_disabled")
+            self.voice_state = VoiceState.PAUSED
+            self._printer(
+                "[VOICE] LISTENER PAUSED - operator wake reply remains available"
+            )
+            return ended
         if desired == self._listener_enabled:
             self._printer(
                 "[VOICE] LISTENER ACTIVE - waiting for Xiaokang"
@@ -1742,6 +1762,24 @@ class LocalVoiceSessionManager:
     def toggle_listener(self) -> tuple[bool, list[Any]]:
         messages = self.set_listener_enabled(not self._listener_enabled)
         return self._listener_enabled, messages
+
+    def recover_to_wake_guard(self, *, reason: str = "voice_recovery") -> list[Any]:
+        """Reset only the live voice session while preserving business context."""
+
+        self._reply_without_wake_until = None
+        self._post_playback_guard_until = None
+        ended = self._end_session(reason)
+        if self._wake_listener_forced_off:
+            self._listener_enabled = False
+            self.voice_state = VoiceState.PAUSED
+            self._printer(
+                "[VOICE] RECOVERED - operator wake reply remains available"
+            )
+        else:
+            self._listener_enabled = True
+            self.voice_state = VoiceState.WAKE_GUARD
+            self._printer("[VOICE] RECOVERED - waiting for Xiaokang")
+        return ended
 
     def process_transcript(
         self,
@@ -1781,7 +1819,13 @@ class LocalVoiceSessionManager:
         if self._wake_only:
             if wake_word is not None:
                 self._printer(f"[VOICE] wake: {wake_word}")
-                return self._publish_wake_ack()
+                if stripped == "":
+                    return self._publish_wake_ack()
+                self._printer(
+                    "[VOICE] wake_command_ready: business speech suppressed; "
+                    "waiting for operator action"
+                )
+                return []
             if self._session is not None:
                 self._debug(f"[VOICE] ignored: wake_only ({normalized})")
             return []

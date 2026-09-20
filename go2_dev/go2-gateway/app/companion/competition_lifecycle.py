@@ -115,7 +115,10 @@ class CompetitionLifecycle:
 
     def stop(self, *, reason: str = "explicit_stop") -> LifecycleResult:
         with self._lock:
-            emergency = _is_emergency_state(self._machine.state)
+            emergency = _is_emergency_state(self._machine.state) and not (
+                self._machine.state is CompanionState.WAIT_RESUME
+                and not self._risk_active
+            )
             changed = False if emergency else self._emit(CompanionEventType.STOP, reason)
             return self._result(
                 changed or emergency,
@@ -185,10 +188,16 @@ class CompetitionLifecycle:
                 return self._result(False, "incident_id_mismatch")
             self._risk_active = False
             self._fall_confirmed = False
+            self._help_required = False
+            self._emergency_escalated = False
             if self._machine.state in {
                 CompanionState.EMERGENCY_STOP,
                 CompanionState.VOICE_CHECK,
                 CompanionState.RECHECK,
+                CompanionState.HELP_REQUESTED,
+                CompanionState.ESCALATED_EMERGENCY,
+                CompanionState.MONITORING,
+                CompanionState.RECOVERING,
             }:
                 self._emit(CompanionEventType.RISK_CLEARED, "risk_cleared_wait_resume")
             return self._result(

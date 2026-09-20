@@ -55,8 +55,8 @@ def test_wrapper_defaults_start_confirmation_off_and_exposes_debug_switch() -> N
     source = LAUNCHER.read_text(encoding="utf-8")
 
     assert "[switch]$ManualConfirmStart" in source
-    assert "if ($ManualConfirmStart)" in source
-    assert "$LauncherArgs.ManualConfirmStart = $true" in source
+    assert "if ($ManualConfirmStart)" not in source
+    assert "$LauncherArgs.ManualConfirmStart = $true" not in source
 
 
 def test_wrapper_disables_low_state_by_default_and_has_explicit_opt_in() -> None:

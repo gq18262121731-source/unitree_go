@@ -3,9 +3,11 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import tempfile
 import threading
 import webbrowser
 from pathlib import Path
+from typing import BinaryIO
 
 from werkzeug.serving import make_server
 
@@ -88,26 +90,64 @@ def main(argv: list[str] | None = None) -> int:
         debug_mode=args.debug,
     )
     browser_url = f"http://127.0.0.1:{args.port}"
-    if not args.no_open_browser:
-        browser_timer = threading.Timer(1.0, lambda: webbrowser.open(browser_url))
-        browser_timer.daemon = True
-        browser_timer.start()
-
-    mode = "模拟数据" if args.mock else "真实 Runtime 只读状态"
-    print(f"Go2 UWB伴随实时监测：{browser_url}（{mode}）", flush=True)
-    server = make_server(args.host, args.port, app.server, threaded=True)
     try:
+        instance_lock = _acquire_instance_lock(args.port)
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr, flush=True)
+        return 2
+    server = None
+    try:
+        if not args.no_open_browser:
+            browser_timer = threading.Timer(1.0, lambda: webbrowser.open(browser_url))
+            browser_timer.daemon = True
+            browser_timer.start()
+        server = make_server(args.host, args.port, app.server, threaded=True)
+        mode = "模拟数据" if args.mock else "真实 Runtime 只读状态"
+        print(f"Go2 UWB伴随实时监测：{browser_url}（{mode}）", flush=True)
         server.serve_forever()
     except KeyboardInterrupt:
         pass
     finally:
-        server.server_close()
+        if server is not None:
+            server.server_close()
+        instance_lock.close()
     return 0
 
 
 def _resolve_config_path(value: str) -> Path:
     path = Path(value).expanduser()
     return path if path.is_absolute() else BUNDLE_ROOT / path
+
+
+def _acquire_instance_lock(
+    port: int,
+    *,
+    lock_directory: Path | None = None,
+) -> BinaryIO:
+    directory = lock_directory or Path(tempfile.gettempdir())
+    directory.mkdir(parents=True, exist_ok=True)
+    lock_path = directory / f"go2_uwb_telemetry_{int(port)}.lock"
+    handle = lock_path.open("a+b")
+    handle.seek(0, os.SEEK_END)
+    if handle.tell() == 0:
+        handle.write(b"\0")
+        handle.flush()
+    handle.seek(0)
+    try:
+        if os.name == "nt":
+            import msvcrt
+
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (BlockingIOError, OSError) as exc:
+        handle.close()
+        raise RuntimeError(
+            f"UWB Dashboard is already running on port {int(port)}."
+        ) from exc
+    return handle
 
 
 if __name__ == "__main__":

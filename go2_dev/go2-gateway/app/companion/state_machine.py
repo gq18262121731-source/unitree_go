@@ -92,13 +92,19 @@ _TRANSITIONS: dict[
         CompanionEventType.NO_RESPONSE: CompanionState.ESCALATED_EMERGENCY,
         CompanionEventType.RISK_CLEARED: CompanionState.WAIT_RESUME,
     },
-    CompanionState.HELP_REQUESTED: {},
-    CompanionState.ESCALATED_EMERGENCY: {},
+    CompanionState.HELP_REQUESTED: {
+        CompanionEventType.RISK_CLEARED: CompanionState.WAIT_RESUME,
+    },
+    CompanionState.ESCALATED_EMERGENCY: {
+        CompanionEventType.RISK_CLEARED: CompanionState.WAIT_RESUME,
+    },
     CompanionState.MONITORING: {
         CompanionEventType.RECOVERY_DETECTED: CompanionState.RECOVERING,
+        CompanionEventType.RISK_CLEARED: CompanionState.WAIT_RESUME,
     },
     CompanionState.RECOVERING: {
         CompanionEventType.RECOVERY_STABLE: CompanionState.WAIT_RESUME,
+        CompanionEventType.RISK_CLEARED: CompanionState.WAIT_RESUME,
     },
     CompanionState.WAIT_RESUME: {
         CompanionEventType.RESUME: CompanionState.FOLLOWING,

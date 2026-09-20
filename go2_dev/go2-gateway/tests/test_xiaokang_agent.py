@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import threading
+import time
+
 from app.iot import (
     BMachineState,
     CommandDispatcher,
@@ -13,6 +16,7 @@ from app.iot import (
     contract_topic,
 )
 from app.voice import (
+    CachedWeatherProvider,
     ClipAssembler,
     HealthContext,
     InteractionFlowController,
@@ -701,8 +705,8 @@ def test_interaction_flow_runs_competition_scenario_without_counting_turns() -> 
     assert [name for name, _payload in calls].count("start") == 2
 
     _publish_flow_event(transport, "NORMAL_ACTIVITY_READING", session_id="reading-1")
-    assert flow.context.expected_reply == "reading_reply"
-    assert any(
+    assert flow.context.expected_reply is None
+    assert not any(
         message.payload.get("payload", {}).get("clips") == [
             "fall.normal_activity",
             "reading.ask_book",
@@ -717,3 +721,264 @@ def test_interaction_flow_runs_competition_scenario_without_counting_turns() -> 
 
     say("停一下", session_id="stop-2", turn=1)
     assert [name for name, _payload in calls][-1] == "stop"
+
+
+def test_forced_recovery_event_completes_recovery_without_voice_reply() -> None:
+    flow = _flow_agent(auto_follow=False)
+
+    first = flow.handle_event("FALL_SUSPECTED")
+    assert first[0].intent == "fall_suspected"
+    assert flow.context.safety_state == "fall_check_1"
+
+    recovered = flow.handle_event(
+        "FALL_RECOVERED",
+        {"force_recovered": True, "source": "onsite_hotkey"},
+    )
+
+    assert [decision.intent for decision in recovered] == ["fall_recovered"]
+    assert recovered[0].clips == ("fall.recovered",)
+    assert flow.context.safety_state == "normal"
+
+
+def test_fall_timeout_can_skip_second_prompt_and_broadcast_help() -> None:
+    flow = _flow_agent(auto_follow=False)
+    flow.handle_event("FALL_SUSPECTED")
+
+    decisions = flow.handle_event(
+        "FALL_RESPONSE_TIMEOUT",
+        {"skip_second_prompt": True, "source": "onsite_hotkey"},
+    )
+
+    assert [decision.intent for decision in decisions] == ["fall_help_broadcast"]
+    assert decisions[0].clips == ("fall.alert.sound", "fall.help.broadcast")
+    assert flow.context.safety_state == "helping"
+    assert flow.context.demo_phase == "helping"
+
+
+def test_forced_recovery_event_completes_recovery_from_helping() -> None:
+    flow = _flow_agent(auto_follow=False)
+    flow.handle_event("FALL_SUSPECTED")
+    flow.handle_event("FALL_RESPONSE_TIMEOUT")
+    flow.handle_event("FALL_RESPONSE_TIMEOUT")
+    assert flow.context.safety_state == "helping"
+
+    recovered = flow.handle_event(
+        "FALL_RECOVERED",
+        {"force_recovered": True, "source": "onsite_hotkey"},
+    )
+
+    assert [decision.intent for decision in recovered] == ["fall_recovered"]
+    assert recovered[0].clips == ("fall.recovered",)
+    assert flow.context.safety_state == "normal"
+
+
+def test_operator_events_run_keyboard_only_outing_flow() -> None:
+    flow = _flow_agent(auto_follow=True)
+
+    assessment = flow.handle_event("OPERATOR_OUTING_ASSESSMENT")
+    assert assessment[0].intent == "outing_request"
+    assert "medication.reminder.before_outing" in assessment[0].clips
+    assert flow.context.medication_reminded is True
+    assert flow.context.medication_taken is False
+    assert flow.context.skill2_done is True
+    assert flow.context.demo_phase == "skill3_ready"
+    assert flow.handle_event("OPERATOR_REMINDER_ACK") == []
+    assessment_replay = flow.handle_event(
+        "OPERATOR_OUTING_ASSESSMENT",
+        {"replay": True},
+    )
+    assert assessment_replay[0].clips == assessment[0].clips
+    assert assessment_replay[0].action is None
+    assert flow.context.demo_phase == "skill3_ready"
+
+    medication_check = flow.handle_event("OPERATOR_MEDICATION_CHECK")
+    assert medication_check[0].intent == "outing_medication_check"
+    assert medication_check[0].heart_rate is None
+    assert medication_check[0].spo2 is None
+    assert medication_check[0].body_temperature is None
+    assert "health.hr.prefix" not in medication_check[0].clips
+    assert "health.spo2.98" not in medication_check[0].clips
+    assert "health.temperature.36_5" not in medication_check[0].clips
+    assert "outing.allow.suffix" not in medication_check[0].clips
+    assert medication_check[0].clips[:4] == (
+        "outing.allow.health_good",
+        "weather.condition.sunny",
+        "weather.temperature.prefix",
+        "temperature.value.24",
+    )
+    assert medication_check[0].clips[-1] == "outing.medication_check"
+
+    depart = flow.handle_event("OPERATOR_DEPART")
+    assert depart[0].intent == "outing_start"
+    assert depart[0].action == "start_follow"
+    assert depart[0].clips == ("outing.start",)
+    assert flow.context.demo_phase == "skill3_first_start_pending"
+    assert flow.context.medication_taken is True
+    assert flow.context.departure_confirmed is True
+    depart_replay = flow.handle_event("OPERATOR_DEPART", {"replay": True})
+    assert depart_replay[0].clips == ("outing.start",)
+    assert depart_replay[0].action is None
+    assert flow.context.demo_phase == "skill3_first_start_pending"
+
+
+def test_operator_voice_events_are_independent_and_repeatable() -> None:
+    flow = _flow_agent(auto_follow=True)
+    flow.context.demo_phase = "helping"
+
+    medication_check = flow.handle_event("OPERATOR_MEDICATION_CHECK")
+    flow.context.demo_phase = "complete"
+    assessment = flow.handle_event("OPERATOR_OUTING_ASSESSMENT")
+    flow.context.demo_phase = "wait_resume"
+    depart = flow.handle_event("OPERATOR_DEPART")
+
+    assessment_replay = flow.handle_event("OPERATOR_OUTING_ASSESSMENT")
+    medication_replay = flow.handle_event("OPERATOR_MEDICATION_CHECK")
+    depart_replay = flow.handle_event("OPERATOR_DEPART")
+
+    assert assessment_replay[0].clips == assessment[0].clips
+    assert medication_replay[0].clips == medication_check[0].clips
+    assert depart_replay[0].clips == depart[0].clips
+    assert assessment_replay[0].action is None
+    assert medication_replay[0].action is None
+    assert depart_replay[0].action is None
+
+
+def test_demo_reset_restores_skill2_start_phase() -> None:
+    flow = _flow_agent(auto_follow=True)
+    flow.context.demo_phase = "complete"
+    flow.context.medication_taken = True
+
+    flow.reset_demo()
+
+    assert flow.context.demo_phase == "skill2_ready"
+    assert flow.context.medication_taken is False
+
+
+def test_pre_stopped_fall_event_only_prompts_and_does_not_stop_manual_writer() -> None:
+    flow = _flow_agent(auto_follow=True)
+
+    decisions = flow.handle_event(
+        "FALL_SUSPECTED",
+        {"motion_already_stopped": True},
+    )
+
+    assert decisions[0].action is None
+    assert decisions[0].clips == ("fall.confirm",)
+    assert flow.context.safety_state == "fall_check_1"
+
+
+def test_cached_weather_provider_never_waits_for_live_prefetch() -> None:
+    started = threading.Event()
+    release = threading.Event()
+    live = WeatherContext(
+        city="北京",
+        condition=WeatherCondition.OVERCAST,
+        temperature=19,
+    )
+    fallback = WeatherContext(
+        city="北京",
+        condition=WeatherCondition.SUNNY,
+        temperature=22,
+        error="competition_static_fallback",
+    )
+
+    class BlockingWeatherProvider:
+        def get_weather(self) -> WeatherContext:
+            started.set()
+            release.wait(2.0)
+            return live
+
+    updates: list[WeatherContext] = []
+    provider = CachedWeatherProvider(
+        BlockingWeatherProvider(),
+        fallback=fallback,
+        on_update=updates.append,
+    )
+    assert provider.start_prefetch() is True
+    assert started.wait(1.0)
+
+    assert provider.get_weather() == fallback
+
+    release.set()
+    deadline = time.monotonic() + 1.0
+    while provider.get_weather() != live and time.monotonic() < deadline:
+        time.sleep(0.01)
+    assert provider.get_weather() == live
+    assert updates == [live]
+
+
+def test_cached_weather_provider_explicit_wait_uses_live_snapshot() -> None:
+    live = WeatherContext(
+        city="北京",
+        condition=WeatherCondition.CLOUDY,
+        temperature=28,
+    )
+    fallback = WeatherContext(
+        city="北京",
+        condition=WeatherCondition.SUNNY,
+        temperature=22,
+        error="competition_static_fallback",
+    )
+
+    class LiveWeatherProvider:
+        def get_weather(self) -> WeatherContext:
+            return live
+
+    provider = CachedWeatherProvider(LiveWeatherProvider(), fallback=fallback)
+
+    assert provider.wait_for_live_weather(timeout_seconds=1.0) == live
+    assert provider.get_weather() == live
+
+
+def test_recovered_fall_ignores_stale_timeout_and_reading_stays_silent() -> None:
+    flow = _flow_agent(auto_follow=False)
+    flow.handle_event("FALL_SUSPECTED")
+    flow.handle_event("FALL_RECOVERED", {"force_recovered": True})
+
+    assert flow.handle_event("FALL_RESPONSE_TIMEOUT") == []
+    assert flow.handle_event("NORMAL_ACTIVITY_READING") == []
+    assert flow.context.safety_state == "normal"
+    assert flow.context.expected_reply is None
+
+
+def test_cancelled_pending_start_ignores_late_clip_done() -> None:
+    transport = MockTransport()
+    logs: list[str] = []
+    agent = LocalFirstXiaokangAgent(
+        transport,
+        "DOG-LJG-001",
+        _agent(auto_follow=True),
+        printer=logs.append,
+    )
+    agent.bind()
+    agent._publish_decision(
+        XiaokangDecision(
+            intent="outing_start",
+            action="start_follow",
+            clips=("outing.start",),
+        ),
+        {"session_id": "late-session", "turn": 1},
+    )
+    tts_command = next(
+        message
+        for message in transport.published
+        if message.payload.get("command") == "tts_speak"
+    )
+
+    assert agent.cancel_pending_actions(reason="operator_stop") == 1
+    transport.publish(
+        build_clip_done_message(
+            "DOG-LJG-001",
+            session_id="late-session",
+            request_id=str(tts_command.payload["request_id"]),
+            clips=["outing.start"],
+            played=1,
+            status="done",
+        )
+    )
+
+    assert not any(
+        message.payload.get("command") == "start_follow"
+        for message in transport.published
+    )
+    assert any("IGNORED_STALE_START" in line for line in logs)

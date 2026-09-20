@@ -8,7 +8,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, Mapping, Protocol
 
 import plotly.graph_objects as go
@@ -46,6 +46,132 @@ class TelemetrySource(Protocol):
     def read(self) -> TelemetrySample: ...
 
 
+class ScalarKalmanFilter:
+    """Small 1D Kalman filter for smoothing a scalar telemetry measurement."""
+
+    def __init__(
+        self,
+        *,
+        process_variance: float = 0.0022,
+        measurement_variance: float = 0.010,
+        nominal_interval_seconds: float = 0.20,
+    ) -> None:
+        if process_variance <= 0.0 or not math.isfinite(process_variance):
+            raise ValueError("process_variance must be finite and positive")
+        if measurement_variance <= 0.0 or not math.isfinite(measurement_variance):
+            raise ValueError("measurement_variance must be finite and positive")
+        if nominal_interval_seconds <= 0.0 or not math.isfinite(nominal_interval_seconds):
+            raise ValueError(
+                "nominal_interval_seconds must be finite and positive"
+            )
+        self.process_variance = process_variance
+        self.measurement_variance = measurement_variance
+        self.nominal_interval_seconds = nominal_interval_seconds
+        self._estimate: float | None = None
+        self._covariance = measurement_variance
+        self._last_timestamp: float | None = None
+
+    @property
+    def estimate(self) -> float | None:
+        return self._estimate
+
+    def reset(self) -> None:
+        self._estimate = None
+        self._covariance = self.measurement_variance
+        self._last_timestamp = None
+
+    def update(self, value: float, timestamp: float) -> float:
+        if not math.isfinite(value):
+            raise ValueError("value must be finite")
+        if not math.isfinite(timestamp):
+            raise ValueError("timestamp must be finite")
+        if self._estimate is None:
+            self._estimate = value
+            self._last_timestamp = timestamp
+            return value
+
+        elapsed = (
+            self.nominal_interval_seconds
+            if self._last_timestamp is None
+            else max(0.001, timestamp - self._last_timestamp)
+        )
+        process_scale = elapsed / self.nominal_interval_seconds
+        self._covariance += self.process_variance * process_scale
+        gain = self._covariance / (
+            self._covariance + self.measurement_variance
+        )
+        self._estimate += gain * (value - self._estimate)
+        self._covariance = (1.0 - gain) * self._covariance
+        self._last_timestamp = timestamp
+        return self._estimate
+
+
+class _AngleKalmanFilter(ScalarKalmanFilter):
+    """Kalman filter variant whose innovation follows the shortest angle path."""
+
+    def update(self, value: float, timestamp: float) -> float:
+        if not math.isfinite(value):
+            raise ValueError("value must be finite")
+        if not math.isfinite(timestamp):
+            raise ValueError("timestamp must be finite")
+        normalized = _wrap_angle(value)
+        if self._estimate is None:
+            self._estimate = normalized
+            self._last_timestamp = timestamp
+            return normalized
+
+        elapsed = (
+            self.nominal_interval_seconds
+            if self._last_timestamp is None
+            else max(0.001, timestamp - self._last_timestamp)
+        )
+        process_scale = elapsed / self.nominal_interval_seconds
+        self._covariance += self.process_variance * process_scale
+        gain = self._covariance / (
+            self._covariance + self.measurement_variance
+        )
+        innovation = _wrap_angle(normalized - self._estimate)
+        self._estimate = _wrap_angle(self._estimate + gain * innovation)
+        self._covariance = (1.0 - gain) * self._covariance
+        self._last_timestamp = timestamp
+        return self._estimate
+
+
+class _TelemetryDisplayFilter:
+    """Smooth display telemetry without changing the motion-control inputs."""
+
+    def __init__(self) -> None:
+        self._distance = ScalarKalmanFilter()
+        self._bearing = _AngleKalmanFilter()
+
+    def apply(self, sample: TelemetrySample) -> TelemetrySample:
+        distance = sample.distance_m
+        bearing = sample.bearing_rad
+        if distance is None:
+            self._distance.reset()
+        else:
+            distance = self._distance.update(distance, sample.captured_at)
+
+        if bearing is None:
+            self._bearing.reset()
+        else:
+            bearing = self._bearing.update(bearing, sample.captured_at)
+
+        debug = dict(sample.debug)
+        if sample.distance_m is not None and distance is not None:
+            debug["原始距离"] = f"{sample.distance_m:.3f} m"
+            debug["卡尔曼距离"] = f"{distance:.3f} m"
+        if sample.bearing_rad is not None and bearing is not None:
+            debug["原始bearing"] = f"{sample.bearing_rad:+.3f} rad"
+            debug["卡尔曼bearing"] = f"{bearing:+.3f} rad"
+        return replace(
+            sample,
+            distance_m=distance,
+            bearing_rad=bearing,
+            debug=debug,
+        )
+
+
 class _RateTracker:
     def __init__(self) -> None:
         self._last_count: int | None = None
@@ -67,6 +193,8 @@ class _RateTracker:
 
 class CompanionStatusSource:
     """GET-only adapter for the running Companion Runtime status endpoint."""
+
+    _UWB_STALE_AFTER_MS = 1000.0
 
     def __init__(
         self,
@@ -97,24 +225,57 @@ class CompanionStatusSource:
                 payload = json.loads(response.read().decode("utf-8"))
             data = _mapping(payload.get("data"), "status.data")
             return self._from_status(data, now)
-        except Exception as exc:
-            return TelemetrySample(
-                captured_at=now,
-                distance_m=None,
-                bearing_rad=None,
-                target_distance_m=self.target_distance_m,
-                target_bearing_rad=self.target_bearing_rad,
-                vx=0.0,
-                wz=0.0,
-                uwb_state="等待数据",
-                lidar_state="等待数据",
-                control_state="等待数据",
-                debug={
-                    "状态接口": self.status_url,
-                    "网络接口": self.interface or "由 Gateway 管理",
-                    "读取错误": f"{type(exc).__name__}: {exc}",
-                },
+        except urllib.error.HTTPError as exc:
+            return self._error_sample(
+                now,
+                "接口错误",
+                f"HTTP {exc.code}: {exc.reason}",
             )
+        except urllib.error.URLError as exc:
+            return self._error_sample(
+                now,
+                "Runtime离线",
+                f"{type(exc.reason).__name__}: {exc.reason}",
+            )
+        except (ConnectionError, TimeoutError, OSError) as exc:
+            return self._error_sample(
+                now,
+                "Runtime离线",
+                f"{type(exc).__name__}: {exc}",
+            )
+        except (UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+            return self._error_sample(
+                now,
+                "接口格式错误",
+                f"{type(exc).__name__}: {exc}",
+            )
+        except Exception as exc:
+            return self._error_sample(
+                now,
+                "接口错误",
+                f"{type(exc).__name__}: {exc}",
+            )
+
+    def _error_sample(
+        self, now: float, state: str, error: str
+    ) -> TelemetrySample:
+        return TelemetrySample(
+            captured_at=now,
+            distance_m=None,
+            bearing_rad=None,
+            target_distance_m=self.target_distance_m,
+            target_bearing_rad=self.target_bearing_rad,
+            vx=0.0,
+            wz=0.0,
+            uwb_state=state,
+            lidar_state=state,
+            control_state=state,
+            debug={
+                "状态接口": self.status_url,
+                "网络接口": self.interface or "由 Gateway 管理",
+                "读取错误": error,
+            },
+        )
 
     def _from_status(
         self, data: Mapping[str, object], now: float
@@ -142,6 +303,11 @@ class CompanionStatusSource:
         runtime_active = bool(data.get("runtime_active"))
         worker_alive = bool(runtime.get("worker_alive"))
         runtime_failed = bool(runtime.get("failure"))
+        runtime_connected = bool(
+            data.get("connected")
+            if "connected" in data
+            else data.get("robot_online")
+        )
         execution_status = str(control.get("execution_status") or "NOT_STARTED")
         control_ok = (
             runtime_active
@@ -151,20 +317,21 @@ class CompanionStatusSource:
             in {"SENT", "RATE_LIMITED", "DUPLICATE_DECISION"}
         )
         uwb_error = str(uwb.get("error") or "")
-        uwb_state = (
-            "正常"
-            if uwb_valid
-            else (
-                "等待数据"
-                if not uwb_error or uwb_error == "uwb_not_ready"
-                else "异常"
-            )
+        uwb_age_ms = _optional_finite_float(uwb.get("age_ms"))
+        uwb_state = self._uwb_state(
+            uwb=uwb,
+            valid=uwb_valid,
+            connected=runtime_connected,
+            age_ms=uwb_age_ms,
+            error=uwb_error,
         )
         control_state = (
             "正常"
             if control_ok
             else (
-                "异常"
+                "Runtime离线"
+                if not runtime_connected
+                else "异常"
                 if runtime_failed
                 or (
                     runtime_active
@@ -227,11 +394,37 @@ class CompanionStatusSource:
                 "最终vx": f"{_finite_float(motion.get('vx'), 0.0):+.3f} m/s",
                 "最终wz": f"{_finite_float(motion.get('wz'), 0.0):+.3f} rad/s",
                 "执行状态": execution_status,
+                "Runtime链路": "在线" if runtime_connected else "离线",
                 "SportClient链路": "在线" if data.get("robot_online") else "离线",
                 "状态接口": self.status_url,
                 "网络接口": self.interface or "由 Gateway 管理",
             },
         )
+
+    def _uwb_state(
+        self,
+        *,
+        uwb: Mapping[str, object],
+        valid: bool,
+        connected: bool,
+        age_ms: float | None,
+        error: str,
+    ) -> str:
+        if not connected:
+            return "Runtime离线"
+        if valid:
+            return "正常"
+        if error and error != "uwb_not_ready":
+            return "UWB异常"
+        if uwb.get("error_state") not in {None, 0, "0"}:
+            return "UWB异常"
+        if uwb.get("enabled_from_app") not in {None, 1, "1"}:
+            return "UWB未启用"
+        if age_ms is not None and age_ms > self._UWB_STALE_AFTER_MS:
+            return "UWB数据过期"
+        if _integer(uwb.get("sample_count")) == 0:
+            return "等待UWB数据"
+        return "等待UWB数据"
 
 
 class MockTelemetrySource:
@@ -305,7 +498,8 @@ def create_dashboard(
     history_points: int = 300,
 ) -> Dash:
     history = TelemetryHistory(history_points)
-    initial = source.read()
+    display_filter = _TelemetryDisplayFilter()
+    initial = display_filter.apply(source.read())
     history.append(initial)
     app = Dash(
         __name__,
@@ -329,7 +523,7 @@ def create_dashboard(
         Input("telemetry-tick", "n_intervals"),
     )
     def update_dashboard(_tick: int):
-        sample = source.read()
+        sample = display_filter.apply(source.read())
         history.append(sample)
         samples = history.snapshot()
         return (
@@ -635,7 +829,7 @@ def _legend_style() -> dict[str, object]:
         "y": 1.02,
         "xanchor": "left",
         "yanchor": "bottom",
-        "font": {"color": MUTED, "size": 11},
+        "font": {"color": MUTED, "size": 17},
         "bgcolor": "rgba(0,0,0,0)",
     }
 
@@ -661,8 +855,12 @@ def _status_item(label: str, state: str) -> html.Span:
         if state == "正常"
         else (
             "error"
-            if state == "异常"
-            else ("unavailable" if state == "不可用" else "waiting")
+            if state in {"异常", "Runtime离线", "接口错误", "接口格式错误", "UWB异常"}
+            else (
+                "unavailable"
+                if state in {"不可用", "UWB未启用"}
+                else "waiting"
+            )
         )
     )
     return html.Span(
@@ -731,6 +929,10 @@ def _format_age(value: object) -> str:
 def _format_radians(value: object) -> str:
     parsed = _optional_finite_float(value)
     return "--" if parsed is None else f"{parsed:+.3f} rad"
+
+
+def _wrap_angle(value: float) -> float:
+    return math.atan2(math.sin(value), math.cos(value))
 
 
 def quiet_dashboard_logs(debug_mode: bool) -> None:

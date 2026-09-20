@@ -110,9 +110,6 @@ try {
     if ($NoOpenBrowser) {
         $LauncherArgs.NoOpenBrowser = $true
     }
-    if ($ManualConfirmStart) {
-        $LauncherArgs.ManualConfirmStart = $true
-    }
     if ($EnableVideoActiveRecovery) {
         $LauncherArgs.EnableVideoActiveRecovery = $true
     }
