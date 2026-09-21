@@ -531,6 +531,22 @@ def _coerce_competition_action(
     return CompetitionAction(_normalize_console_command(action))
 
 
+def _is_quiet_fall_rejection(
+    action: CompetitionAction,
+    exc: WirelessCompanionControlError,
+) -> bool:
+    if action not in {
+        CompetitionAction.FALL_PROMPT_2,
+        CompetitionAction.FALL_HELP,
+        CompetitionAction.FALL_RECOVER,
+    }:
+        return False
+    return str(getattr(exc, "code", "") or "") in {
+        "FALL_RECOVERY_REJECTED",
+        "FALL_STAGE_CONFLICT",
+    }
+
+
 def _hotkey_label_for_action(action: CompetitionAction) -> str:
     for label, mapped_action in HOTKEY_ACTIONS.items():
         if mapped_action is action:
@@ -708,6 +724,7 @@ class RuntimeConsole:
         self._fall_manual_stop = threading.Event()
         self._fall_manual_thread: threading.Thread | None = None
         self._manual_console_stop = threading.Event()
+        self._manual_console_active = threading.Event()
         self._motion_lock = threading.Lock()
         self._state_lock = threading.RLock()
         self._motion_thread: threading.Thread | None = None
@@ -782,6 +799,10 @@ class RuntimeConsole:
             self._priority_hotkey_suppressed_until: dict[str, float] = {}
         if not hasattr(self, "_follow_stop_lock"):
             self._follow_stop_lock = threading.Lock()
+        if not hasattr(self, "_manual_console_stop"):
+            self._manual_console_stop = threading.Event()
+        if not hasattr(self, "_manual_console_active"):
+            self._manual_console_active = threading.Event()
 
     def set_interaction_flow_controller(
         self,
@@ -1119,11 +1140,15 @@ class RuntimeConsole:
         try:
             self.execute_competition_action(action)
         except WirelessCompanionControlError as exc:
-            print(f"操作未执行:{exc.code}:{exc.message}", flush=True)
-            self._demo_rejection()
+            print(
+                f"操作未执行:{action.value}:{exc.code}:{exc.message}",
+                flush=True,
+            )
+            if not _is_quiet_fall_rejection(action, exc):
+                self._demo_rejection()
         except Exception as exc:
             print(
-                f"系统操作失败:{type(exc).__name__}:{exc}",
+                f"系统操作失败:{action.value}:{type(exc).__name__}:{exc}",
                 flush=True,
             )
             self._demo_rejection()
@@ -1545,12 +1570,17 @@ class RuntimeConsole:
         """Release regular keyboard control before F5 restarts Companion."""
 
         manual_controller = getattr(self, "manual_controller", None)
+        manual_console_active = bool(
+            getattr(self, "_manual_console_active", threading.Event()).is_set()
+        )
         lifecycle_is_manual = (
             getattr(getattr(self, "lifecycle", None), "state", None)
             is CompanionState.MANUAL_CONTROL
         )
         manual_active = bool(
-            getattr(manual_controller, "active", False) or lifecycle_is_manual
+            manual_console_active
+            or getattr(manual_controller, "active", False)
+            or lifecycle_is_manual
         )
         if not manual_active:
             return False
@@ -1561,15 +1591,27 @@ class RuntimeConsole:
             self._manual_console_stop = stop_event
         stop_event.set()
 
-        deadline = time.monotonic() + 0.8
-        while (
-            bool(getattr(manual_controller, "active", False))
-            and time.monotonic() < deadline
+        if manual_console_active:
+            deadline = time.monotonic() + 1.0
+            while (
+                bool(
+                    getattr(self, "_manual_console_active", threading.Event()).is_set()
+                )
+                and time.monotonic() < deadline
+            ):
+                time.sleep(0.01)
+        if bool(
+            getattr(self, "_manual_console_active", threading.Event()).is_set()
         ):
-            time.sleep(0.01)
+            raise WirelessCompanionControlError(
+                "MANUAL_STOP_NOT_CONFIRMED",
+                "Manual control did not stop before the next motion action.",
+                503,
+            )
 
         # MANUAL can also be entered through the HTTP/manual-key API, where no
-        # console loop exists to observe the event.
+        # console loop exists to observe the event. Once a console thread has
+        # exited, these checks only clean up any incomplete release it left.
         if bool(getattr(manual_controller, "active", False)):
             self.release_manual(quiet=True)
         elif lifecycle_is_manual and self.lifecycle.state is CompanionState.MANUAL_CONTROL:
@@ -1582,6 +1624,16 @@ class RuntimeConsole:
         self._ensure_control_runtime_state()
         with self._follow_stop_lock:
             observed_phase = self._demo_phase()
+            # F4 must also release an active F11 manual-control session before
+            # issuing the regular follow stop.
+            try:
+                self._stop_manual_console_for_follow_resume()
+            except WirelessCompanionControlError as exc:
+                LOGGER.warning(
+                    "MANUAL_STOP_BEFORE_FOLLOW_STOP_FAILED: %s: %s",
+                    exc.code,
+                    exc.message,
+                )
             self._cancel_pending_motion_actions(reason="operator_stop")
             stopped = self._run_control_command(
                 "stop_follow",
@@ -1940,7 +1992,8 @@ class RuntimeConsole:
                         f"ACTION_REJECTED:{action.value}:{exc.code}:{exc.message}",
                         flush=True,
                     )
-                    self._demo_rejection()
+                    if not _is_quiet_fall_rejection(action, exc):
+                        self._demo_rejection()
                 except Exception as exc:
                     print(
                         f"ACTION_FAILED:{action.value}:"
@@ -2307,7 +2360,9 @@ class RuntimeConsole:
         *,
         before_start: Callable[[], None] | None = None,
     ) -> dict[str, object]:
+        self._ensure_control_runtime_state()
         with self._state_lock:
+            start_generation = self._motion_generation
             if self._motion_thread is not None and self._motion_thread.is_alive():
                 if self._motion_name == "companion":
                     return self.companion_status()
@@ -2341,9 +2396,28 @@ class RuntimeConsole:
                 "reason": "http_start_requested",
                 "autoRecovery": "ENABLED_FOR_UWB_AND_SPORT_STALE",
             }
-        if not self._start_motion("companion", self._companion_session):
-            self.lifecycle.stop(reason="start_worker_busy")
+        if not self._start_motion(
+            "companion",
+            self._companion_session,
+            expected_generation=start_generation,
+        ):
+            with self._state_lock:
+                start_cancelled = start_generation != self._motion_generation
+            if self.lifecycle.state is CompanionState.FOLLOWING:
+                self.lifecycle.stop(
+                    reason=(
+                        "start_cancelled"
+                        if start_cancelled
+                        else "start_worker_busy"
+                    )
+                )
             self._deactivate_companion_layer()
+            if start_cancelled:
+                raise WirelessCompanionControlError(
+                    "START_CANCELLED",
+                    "motion generation changed before companion worker start",
+                    409,
+                )
             raise WirelessCompanionControlError(
                 "CONTROL_BUSY", "Motion control became busy before START.", 409
             )
@@ -2393,6 +2467,9 @@ class RuntimeConsole:
         return self.companion_status()
 
     def resume_companion(self) -> dict[str, object]:
+        self._ensure_control_runtime_state()
+        with self._state_lock:
+            start_generation = self._motion_generation
         try:
             self._activate_companion_layer()
             self._build_follow_session().preflight()
@@ -2414,9 +2491,28 @@ class RuntimeConsole:
                 "reason": "explicit_resume_requested",
                 "autoRecovery": "ENABLED_FOR_UWB_AND_SPORT_STALE",
             }
-        if not self._start_motion("companion", self._companion_session):
-            self.lifecycle.stop(reason="resume_worker_busy")
+        if not self._start_motion(
+            "companion",
+            self._companion_session,
+            expected_generation=start_generation,
+        ):
+            with self._state_lock:
+                start_cancelled = start_generation != self._motion_generation
+            if self.lifecycle.state is CompanionState.FOLLOWING:
+                self.lifecycle.stop(
+                    reason=(
+                        "resume_cancelled"
+                        if start_cancelled
+                        else "resume_worker_busy"
+                    )
+                )
             self._deactivate_companion_layer()
+            if start_cancelled:
+                raise WirelessCompanionControlError(
+                    "START_CANCELLED",
+                    "motion generation changed before companion worker resume",
+                    409,
+                )
             raise WirelessCompanionControlError(
                 "CONTROL_BUSY", "Motion control became busy before RESUME.", 409
             )
@@ -2799,14 +2895,21 @@ class RuntimeConsole:
     def close_keyboard_control(self) -> dict[str, object]:
         """Stop and release keyboard motion control without latching a lock."""
 
+        self._ensure_control_runtime_state()
         closed = False
         fall_controller = getattr(self, "fall_manual_controller", None)
         if fall_controller is not None and fall_controller.active:
             self._stop_fall_manual_mode(reason="keyboard_close")
             closed = True
         manual_controller = getattr(self, "manual_controller", None)
-        if manual_controller is not None and manual_controller.active:
-            self.release_manual(quiet=True)
+        manual_active = bool(
+            getattr(manual_controller, "active", False)
+            or self._manual_console_active.is_set()
+            or getattr(getattr(self, "lifecycle", None), "state", None)
+            is CompanionState.MANUAL_CONTROL
+        )
+        if manual_active:
+            self._stop_manual_console_for_follow_resume()
             closed = True
         if closed:
             self._demo_event("键盘控制已关闭")
@@ -2888,11 +2991,24 @@ class RuntimeConsole:
                 if self._start_fall_manual_mode():
                     self._demo_event("检测到异常情况")
                 return
-            self._manual_console(demo_takeover=True)
+            self._manual_console_stop.clear()
+            self._manual_console_active.set()
+            try:
+                self._manual_console(
+                    demo_takeover=True,
+                    reset_stop_event=False,
+                )
+            finally:
+                self._manual_console_active.clear()
         finally:
             self._manual_takeover_lock.release()
 
-    def _manual_console(self, *, demo_takeover: bool = False) -> None:
+    def _manual_console(
+        self,
+        *,
+        demo_takeover: bool = False,
+        reset_stop_event: bool = True,
+    ) -> None:
         if os.name != "nt":
             if not demo_takeover:
                 print("MANUAL_REJECTED: Windows operator console is required")
@@ -2900,7 +3016,8 @@ class RuntimeConsole:
                 LOGGER.warning("MANUAL_REJECTED: Windows operator control is required")
             return
         self._ensure_control_runtime_state()
-        self._manual_console_stop.clear()
+        if reset_stop_event:
+            self._manual_console_stop.clear()
         try:
             self.enter_manual()
         except Exception as exc:
@@ -2948,7 +3065,8 @@ class RuntimeConsole:
                     return
                 pressed = key_state.snapshot()
                 if {"CTRL", "F12"}.issubset(pressed) and "SHIFT" not in pressed:
-                    self.close_keyboard_control()
+                    self._manual_console_stop.set()
+                    self.release_manual(quiet=True)
                     return
                 if "ESC" in pressed:
                     self.release_manual(quiet=demo_takeover)
@@ -3693,8 +3811,19 @@ class RuntimeConsole:
         print(f"VIDEO={'ACTIVE' if status['videoReady'] else 'NOT_READY'}")
         print(f"WEBRTC={'CONNECTED' if status['connected'] else 'DISCONNECTED'}")
 
-    def _start_motion(self, name: str, target) -> bool:
+    def _start_motion(
+        self,
+        name: str,
+        target,
+        *,
+        expected_generation: int | None = None,
+    ) -> bool:
         with self._state_lock:
+            if (
+                expected_generation is not None
+                and expected_generation != self._motion_generation
+            ):
+                return False
             if self._motion_thread and self._motion_thread.is_alive():
                 print("MOTION_BUSY")
                 return False

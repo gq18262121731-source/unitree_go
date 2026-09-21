@@ -2093,7 +2093,7 @@ def test_formal_launcher_uses_current_robot_and_lan_video_defaults() -> None:
         Path(__file__).resolve().parents[1] / "start.ps1"
     ).read_text(encoding="utf-8")
     assert "-VoiceListenerPaused" not in short_launcher
-    assert "-DisableVoiceWake" in short_launcher
+    assert "-DisableVoiceWake" not in short_launcher
 
 
 def test_runtime_tool_filters_only_expected_aioice_bind_noise() -> None:

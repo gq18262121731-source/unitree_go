@@ -1081,6 +1081,50 @@ def test_f5_releases_manual_console_and_restarts_runtime_directly() -> None:
     assert console._manual_console_stop.is_set()
 
 
+def test_f5_waits_for_manual_console_thread_to_exit() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.acquire_manual()
+    console.manual_controller = SimpleNamespace(active=True)
+    console._manual_console_stop = threading.Event()
+    console._manual_console_active = threading.Event()
+    console._manual_console_active.set()
+
+    def finish_manual_console() -> None:
+        assert console._manual_console_stop.wait(1.0)
+        time.sleep(0.03)
+        console.manual_controller.active = False
+        console._manual_console_active.clear()
+
+    worker = threading.Thread(target=finish_manual_console)
+    worker.start()
+    try:
+        assert console._stop_manual_console_for_follow_resume() is True
+    finally:
+        worker.join(timeout=1.0)
+
+    assert not console._manual_console_active.is_set()
+    assert console.lifecycle.state is CompanionState.IDLE
+
+
+def test_f5_rejects_when_manual_console_does_not_exit(monkeypatch) -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.acquire_manual()
+    console.manual_controller = SimpleNamespace(active=False)
+    console._manual_console_stop = threading.Event()
+    console._manual_console_active = threading.Event()
+    console._manual_console_active.set()
+    now = iter((0.0, 2.0, 2.0, 3.0, 3.0, 4.0))
+    monkeypatch.setattr("tools.go2_wireless_runtime.time.monotonic", lambda: next(now))
+
+    with pytest.raises(WirelessCompanionControlError) as exc_info:
+        console._stop_manual_console_for_follow_resume()
+
+    assert exc_info.value.code == "MANUAL_STOP_NOT_CONFIRMED"
+    assert console._manual_console_stop.is_set()
+
+
 def test_f5_is_idempotent_when_companion_is_already_following(
     monkeypatch, capsys
 ) -> None:
@@ -1139,31 +1183,35 @@ def test_f5_does_not_start_when_motion_generation_changes_during_voice(
     assert "ACTION_REJECTED:FOLLOW_RESUME:START_CANCELLED" in capsys.readouterr().out
 
 
-def test_f9_recovery_clears_latched_lifecycle_and_stops_emergency_worker() -> None:
+def test_fall_recovery_action_clears_latched_lifecycle_and_stays_stopped() -> None:
     console = RuntimeConsole.__new__(RuntimeConsole)
     console.lifecycle = CompetitionLifecycle()
     console.lifecycle.ingest_fall(incident_id="hotkey-fall-1", confirmed=False)
+    console.lifecycle.no_response()
+    console.lifecycle.no_response()
     console._was_following_before_fall = True
     console._emergency_voice_cancel = threading.Event()
     console._emergency_voice_cancel.clear()
-    console.stop_motion = lambda: None
-    console._wait_for_motion_stop = lambda: None
+    calls: list[str] = []
+    console.stop_motion = lambda: calls.append("stop_motion")
+    console._wait_for_motion_stop = lambda: calls.append("wait_for_stop")
     events: list[tuple[str, dict]] = []
     console.execute_local_interaction_event = (
         lambda event, *, payload=None: events.append((event, dict(payload or {})))
     )
     console.companion_status = lambda: {"state": "IDLE"}
 
-    result = console.recover_fall_from_hotkey()
+    result = console.execute_competition_action(CompetitionAction.FALL_RECOVER)
 
     assert result["recovered"] is True
     assert console.lifecycle.risk_active is False
     assert console.lifecycle.state is CompanionState.IDLE
     assert console._emergency_voice_cancel.is_set()
+    assert calls == ["stop_motion", "wait_for_stop"]
     assert events == [("FALL_RECOVERED", {"force_recovered": True})]
 
 
-def test_f9_recovery_from_idle_returns_to_idle_for_next_f5_start() -> None:
+def test_fall_recovery_from_idle_returns_to_idle_for_next_f5_start() -> None:
     console = RuntimeConsole.__new__(RuntimeConsole)
     console.lifecycle = CompetitionLifecycle()
     console.lifecycle.ingest_fall(incident_id="hotkey-fall-from-idle", confirmed=False)
@@ -1333,6 +1381,9 @@ def test_f4_stops_motion_before_interrupting_and_playing_formal_voice() -> None:
     console._cancel_pending_motion_actions = (
         lambda *, reason: events.append(("cancel_motion", reason))
     )
+    console._stop_manual_console_for_follow_resume = (
+        lambda: events.append("stop_manual_console") or False
+    )
     console._interrupt_voice_playback = (
         lambda *, reason: events.append(("interrupt_voice", reason))
     )
@@ -1351,6 +1402,9 @@ def test_f4_stops_motion_before_interrupting_and_playing_formal_voice() -> None:
     assert console.stop_from_hotkey() == {"state": "IDLE"}
     assert events.index(("control", "stop_follow")) < events.index(
         ("interrupt_voice", "operator_stop")
+    )
+    assert events.index("stop_manual_console") < events.index(
+        ("control", "stop_follow")
     )
     assert events.index(("control", "stop_follow")) < events.index(
         ("voice", ("follow.stop",))
@@ -1411,12 +1465,22 @@ def test_control_dispatch_error_output_uses_business_status_only(capsys) -> None
     console._dispatch_priority_hotkey("Ctrl+F1")
 
     output = capsys.readouterr().out
-    assert "系统操作失败:RuntimeError:offline" in output
+    assert "系统操作失败:SKILL2_REPORT:RuntimeError:offline" in output
     for forbidden in ("F1", "F2", "F3", "HOTKEY", "快捷键", "按键", "触发", "键盘操作"):
         assert forbidden not in output
 
 
-def test_f9_wake_ack_plays_only_the_prepared_wake_reply() -> None:
+def test_ctrl_f8_dispatches_wake_ack() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    calls: list[CompetitionAction] = []
+    console.execute_competition_action = lambda action: calls.append(action)
+
+    console._dispatch_priority_hotkey("Ctrl+F8")
+
+    assert calls == [CompetitionAction.XIAOKANG_WAKE_ACK]
+
+
+def test_wake_ack_plays_only_the_prepared_wake_reply() -> None:
     console = RuntimeConsole.__new__(RuntimeConsole)
     calls: list[tuple[tuple[str, ...], dict[str, object]]] = []
     console.play_voice_clips = (
@@ -1677,10 +1741,8 @@ def test_f10_manual_takeover_interrupts_voice_and_enters_quiet_keyboard_mode() -
     console._interrupt_voice_playback = (
         lambda *, reason: calls.append(("interrupt_voice", reason))
     )
-    console._manual_console = (
-        lambda *, demo_takeover=False: calls.append(
-            ("manual_console", demo_takeover)
-        )
+    console._manual_console = lambda *, demo_takeover=False, **_kwargs: calls.append(
+        ("manual_console", demo_takeover)
     )
 
     console.manual_takeover()
@@ -1691,6 +1753,60 @@ def test_f10_manual_takeover_interrupts_voice_and_enters_quiet_keyboard_mode() -
         ("interrupt_voice", "manual_takeover"),
         ("manual_console", True),
     ]
+    assert not console._manual_console_active.is_set()
+
+
+def test_f11_cancels_a_pending_f5_start() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console._state_lock = threading.RLock()
+    console._motion_generation = 3
+    console.lifecycle = SimpleNamespace(risk_active=False)
+    console._manual_console_stop = threading.Event()
+    console._manual_console_active = threading.Event()
+    console._manual_takeover_lock = threading.Lock()
+    console._cancel_pending_motion_actions = RuntimeConsole._cancel_pending_motion_actions.__get__(
+        console, RuntimeConsole
+    )
+    console._cancel_emergency_voice = lambda *, reason: None
+    console._interrupt_voice_playback = lambda *, reason: None
+    console._manual_console = lambda **_kwargs: None
+
+    console.manual_takeover()
+
+    assert console._motion_generation == 4
+    assert not console._manual_console_active.is_set()
+
+
+def test_f11_cancels_companion_before_worker_creation(monkeypatch) -> None:
+    runtime = _HttpControlRuntime()
+    controller = _HttpControlController()
+    console = RuntimeConsole(
+        runtime,
+        SimpleNamespace(),
+        controller,
+        video_host="0.0.0.0",
+        video_port=8093,
+        lan_ip="192.168.8.254",
+    )
+    monkeypatch.setattr(
+        console,
+        "_build_follow_session",
+        lambda: _HttpFollowSession(console._motion_cancel),
+    )
+    start_motion = console._start_motion
+
+    def cancel_before_worker(name, target, **kwargs):
+        console._cancel_pending_motion_actions(reason="manual_takeover")
+        return start_motion(name, target, **kwargs)
+
+    monkeypatch.setattr(console, "_start_motion", cancel_before_worker)
+
+    with pytest.raises(WirelessCompanionControlError) as exc_info:
+        console.start_companion()
+
+    assert exc_info.value.code == "START_CANCELLED"
+    assert console._motion_thread is None
+    assert console.lifecycle.state is CompanionState.IDLE
 
 
 def test_f10_uses_fall_camera_control_while_risk_state_is_active() -> None:
@@ -2081,7 +2197,7 @@ def test_voice_business_listener_toggle_does_not_shutdown_runtime() -> None:
     assert shutdown_calls == []
 
 
-def test_f11_quick_follow_recovery_releases_resets_and_starts_without_speech() -> None:
+def test_f9_quick_follow_recovery_releases_resets_and_starts_without_speech() -> None:
     console = RuntimeConsole.__new__(RuntimeConsole)
     calls: list[object] = []
     console.close_keyboard_control = lambda: calls.append("keyboard_close")
@@ -2199,6 +2315,41 @@ def test_f12_closes_keyboard_control_without_creating_a_motion_lock() -> None:
 
     assert result == {"state": "IDLE"}
     assert calls == [("release", True), ("event", "键盘控制已关闭")]
+
+
+def test_f12_waits_for_f11_manual_console_to_finish() -> None:
+    console = RuntimeConsole.__new__(RuntimeConsole)
+    console.lifecycle = CompetitionLifecycle()
+    console.lifecycle.acquire_manual()
+    console.fall_manual_controller = SimpleNamespace(active=False)
+    console.manual_controller = SimpleNamespace(active=True)
+    console._manual_console_stop = threading.Event()
+    console._manual_console_active = threading.Event()
+    console._manual_console_active.set()
+    console.companion_status = lambda: {
+        "state": console.lifecycle.state.value,
+        "runtime_active": False,
+    }
+    events: list[str] = []
+    console._demo_event = events.append
+
+    def finish_manual_console() -> None:
+        assert console._manual_console_stop.wait(1.0)
+        time.sleep(0.03)
+        console.manual_controller.active = False
+        console._manual_console_active.clear()
+
+    worker = threading.Thread(target=finish_manual_console)
+    worker.start()
+    try:
+        status = console.close_keyboard_control()
+    finally:
+        worker.join(timeout=1.0)
+
+    assert status["state"] == "IDLE"
+    assert console.lifecycle.state is CompanionState.IDLE
+    assert not console._manual_console_active.is_set()
+    assert events == ["键盘控制已关闭"]
 
 
 def test_voice_recovery_preserves_demo_context_and_resets_live_voice() -> None:
@@ -2620,7 +2771,7 @@ def test_companion_control_supports_repeated_start_stop_cycles(monkeypatch) -> N
         assert started["uwb"]["valid"] is True
         assert started["uwb"]["bearing_rad"] == pytest.approx(math.radians(5.0))
         assert started["uwb"]["orientation_est_rad"] == pytest.approx(0.1)
-        assert started["configuration"]["target_distance_m"] == pytest.approx(1.35)
+        assert started["configuration"]["target_distance_m"] == pytest.approx(1.50)
         assert started["configuration"]["motion_limits_aligned"] is True
         assert started["configuration"]["control_frequency_hz"] == pytest.approx(4.0)
         assert started["configuration"]["effective_control_frequency_hz"] == pytest.approx(
