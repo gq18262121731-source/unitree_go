@@ -72,7 +72,7 @@ def test_demo_yaml_loads_every_field_tunable_behavior() -> None:
 def test_real_yaml_uses_elder_follow_envelope_and_gateway_motion_limits() -> None:
     config = load_companion_demo_config(REAL_COMPANION_CONFIG)
 
-    assert config.follow.target_distance == pytest.approx(1.35)
+    assert config.follow.target_distance == pytest.approx(1.50)
     assert config.follow.follow_start_distance == pytest.approx(1.20)
     assert config.follow.follow_stop_distance == pytest.approx(1.05)
     assert config.follow.min_distance == pytest.approx(1.00)
@@ -132,9 +132,9 @@ def test_real_yaml_uses_elder_follow_envelope_and_gateway_motion_limits() -> Non
     assert stopped.vx == 0.0
     assert held.vx == 0.0
     assert resumed.vx == pytest.approx(0.24)
-    # The generic controller remains proportional; the wireless V2.1 layer
-    # adds the externalized distance curve that reaches 0.42 m/s at 2.0 m.
-    assert 0.30 < catch_up.vx <= 0.42
+    # The generic controller remains proportional; increasing the target
+    # distance reduces the catch-up error at the same measured distance.
+    assert 0.24 < catch_up.vx <= 0.42
 
 
 def test_loader_rejects_unknown_keys_and_automatic_resume(tmp_path: Path) -> None:

@@ -222,7 +222,7 @@ def config(**overrides) -> WirelessUwbFollowConfig:
 
 def v21_profile() -> FollowProfile:
     return FollowProfile(
-        target_distance=1.35,
+        target_distance=1.50,
         follow_start_distance=1.20,
         follow_stop_distance=1.05,
         bearing_deadband_radians=math.radians(5.0),

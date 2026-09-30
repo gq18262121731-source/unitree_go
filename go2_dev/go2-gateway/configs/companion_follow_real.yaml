@@ -2,7 +2,7 @@
 # Edit values only while the robot is stopped, then restart the real runtime.
 follow:
   # Companion V2: a closer indoor monitoring envelope.
-  target_distance_m: 1.35
+  target_distance_m: 1.50
   target_bearing_deg: 18.435
   start_distance_m: 1.20
   stop_distance_m: 1.05
