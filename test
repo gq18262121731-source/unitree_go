@@ -1,0 +1,281 @@
+import torch
+import torch.nn as nn
+from torch.distributions import Normal
+
+# ==================== PPO策略网络 ====================
+
+class PPOActorCritic(nn.Module):
+    def __init__(self, state_dim=4, action_dim=2):
+        super().__init__()
+        self.backbone = nn.Sequential(
+            nn.Linear(state_dim, 64),
+            nn.Tanh(),
+            nn.Linear(64, 64),
+            nn.Tanh()
+        )
+        # Actor输出连续运动策略
+        self.actor_mean = nn.Linear(64, action_dim)
+        self.log_std = nn.Parameter(torch.zeros(action_dim))
+        # Critic评估当前状态价值
+        self.critic = nn.Linear(64, 1)
+    def forward(self, state):
+        feature = self.backbone(state)
+        mean = self.actor_mean(feature)
+        std = self.log_std.exp().expand_as(mean)
+        value = self.critic(feature)
+        return Normal(mean, std), value
+
+# ==================== 跟随奖励计算 ====================
+
+class FollowReward:
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+        progress = last_error - error 
+
+        # 计算安全惩罚
+        safety = torch.relu(dist - safe)
+
+        # 计算稳定惩罚
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety - smooth
+
+    
+# ====================   PPO策略更新 ====================
+
+class PPOClipLoss:
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后变化比例
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo网络策略更新
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+
+        return loss
+
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+        progress = last_error - error
+
+        # 计算安全惩罚
+        safety = torch.relu(dist - safe)
+
+        # 计算平稳惩罚
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety - smooth
+
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后变化比例
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo策略更新
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+
+        return loss
+
+
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+        progress = last_error - error
+
+        #安全惩罚
+        safety = torch.relu(dist - safe)
+
+        # 平稳惩罚
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety -smooth
+
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后更新比例
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo策略更新
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+
+
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+
+        progress = last_error - error 
+
+        #计算安全惩罚
+        safety = torch.relu(dist - safe)
+
+        # 计算平稳惩罚
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety - smooth
+
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+        progress = last_error - error
+
+        # 计算安全惩罚
+        safety = torch.relu(dist - safe)
+
+        # 计算平稳惩罚
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety - smooth
+
+
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后变化比例
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo策略更新
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+        progress = last_error - error
+
+        # 计算安全误差
+        safety = torch.relu(dist - safe)
+
+        # 计算平缓惩罚
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety - smooth
+
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后变化幅度
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo策略更新
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+
+
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后变化幅度
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo策略更新
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
+
+        # 计算误差
+        error = abs(dist - target) + abs(angle)
+        last_error = abs(last_dist - target) + abs(last_angle)
+        progress = last_error - error
+
+        # 计算安全惩罚
+        safety = torch.relu(dist - safe)
+
+        # 计算平缓惩罚
+
+        smooth = torch.mean(action_change ** 2)
+
+        return progress - safety - smooth
+
+    def __call__(self, new_logp, old_logp, adv):
+        # 计算前后变化比例
+        ratio = torch.exp(new_logp - old_logp)
+
+        # 限制更新幅度
+        clip = torch.clamp(ratio, 0.8, 1.2)
+
+        # ppo策略网络
+        loss = -torch.min(
+            ratio * adv,
+            clip * adv
+        ).mean()
+        return loss
+
+
+
+    def __call__(self, state, last_state, action_change):
+        dist, angle = state
+        last_dist, last_angle = last_state
+        target = 1.5
+        safe = 1.0
